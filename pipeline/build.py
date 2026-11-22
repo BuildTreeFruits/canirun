@@ -30,10 +30,10 @@ from typing import Any, Dict, List, Mapping, Optional
 
 if __package__ in (None, ""):
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from pipeline import export, normalize, schema, seed_votes, util, votes as votes_mod
+    from pipeline import export, join as join_mod, normalize, schema, seed_votes, util, votes as votes_mod
 else:
     from . import export, normalize, schema, seed_votes, util
-    from . import votes as votes_mod
+    from . import join as join_mod, votes as votes_mod
 
 
 # ---------------------------------------------------------------------------
@@ -180,8 +180,9 @@ def build(
     norm = normalize.normalize(p, run_date=tday, taxonomy=taxonomy,
                               write=not dry_run, noisy=not quiet)
 
-    # --- 2/3. votes + misses --------------------------------------------
-    rows = norm["rows"] if not dry_run else norm["rows"]
+    # --- 2/3. join + votes + misses -------------------------------------
+    rows = norm["rows"]
+    rows = join_mod.apply_join(rows, run_date=tday)
     demo_file = os.path.join(p["root"], "data", "demo.votes.json")
     demo_misses = os.path.join(p["root"], "data", "demo.misses.jsonl")
     vote_maps = [votes_mod.load_votes(p["votes"])]
