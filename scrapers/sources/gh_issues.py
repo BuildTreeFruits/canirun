@@ -63,6 +63,13 @@ QUERIES = [
     ("ml-explore/mlx-lm", "mlx-lm", '"M4 Pro"', [("apple", "m4-pro")], True, "M4 Pro"),
     ("ml-explore/mlx-lm", "mlx-lm", '"M2 Ultra"', [("apple", "m2-ultra")], True, "M2 Ultra"),
     ("ml-explore/mlx-lm", "mlx-lm", '"M3 Max"', [("apple", "m3-max")], True, "M3 Max"),
+    ("ml-explore/mlx-lm", "mlx-lm", '"M1 Max"', [("apple", "m1-max")], True, "M1 Max"),
+    ("ml-explore/mlx-lm", "mlx-lm", '"M4 Max"', [("apple", "m4-max")], True, "M4 Max"),
+    ("ml-explore/mlx", "mlx", '"M3 Max"', [("apple", "m3-max")], True, "M3 Max"),
+    ("ml-explore/mlx", "mlx", '"M4 Max"', [("apple", "m4-max")], True, "M4 Max"),
+    ("ollama/ollama", "ollama", '"Apple Silicon"', [("apple", "m1")], True, "Apple Silicon"),
+    ("ggml-org/llama.cpp", "llama.cpp", '"M3 Max"', [("apple", "m3-max")], True, "M3 Max"),
+    ("ggml-org/llama.cpp", "llama.cpp", '"M4 Max"', [("apple", "m4-max")], True, "M4 Max"),
 ]
 
 # Verdict words are matched ONLY in the issue title. The body of an issue about card X

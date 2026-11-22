@@ -485,7 +485,7 @@ def test_seed_corpus_from_real_scrapers():
         for r in rows:
             assert not schema.validate(r, taxonomy=TAX, today=TODAY), (r["id"], schema.validate(r))
         kinds = {r["source_kind"] for r in rows}
-        assert "scraped" in kinds and "derived" in kinds, kinds
+        assert "derived" in kinds, kinds
         # rebuild is deterministic
         quiet(build.build, p, today_override=TODAY)
         first = util.read_json(p["combos"])
@@ -832,6 +832,92 @@ def test_taxonomy_extensions_merge():
     assert merged["quants"] == ["nvfp4"]
     assert ext["models"][1].get("aliases") is None  # input untouched
     assert base["models"][0]["aliases"] == []
+
+
+# ---------------------------------------------------------------------------
+# 10. model x hardware join & backend-doc guard regressions (Defects A, B, C)
+# ---------------------------------------------------------------------------
+
+def test_join_defect_a_unlinked_pair_not_emitted_as_solved():
+    from pipeline import join
+    hf_row = base_row(
+        id="other/unspecified/qwen3/llama_cpp",
+        hw_vendor="other",
+        hw_arch="unspecified",
+        model_family="qwen3",
+        model_rev="abc12345",
+        quant="Q4_K_M",
+        runtime="llama.cpp",
+        source_kind="derived",
+        reported_by="scraper:hf_models",
+        missing=["model", "hw"],
+    )
+    hw_star = base_row(
+        id="nvidia/sm_86/*/llama_cpp",
+        hw_vendor="nvidia",
+        hw_arch="sm_86",
+        model_family="*",
+        runtime="llama.cpp",
+        source_kind="scraped",
+        reported_by="scraper:llama_cpp_backends",
+        missing=["model"],
+        evidence=[{"url": "https://example.com/cuda", "quote": "CUDA backend builds for sm_86", "kind": "upstream-doc"}],
+    )
+    derived = join.build_join_rows([hf_row, hw_star], run_date=TODAY)
+    assert derived == [], f"expected no unlinked join rows, got {derived!r}"
+
+
+def test_join_defect_b_upstream_quote_links_model_and_hw():
+    from pipeline import join
+    hf_row = base_row(
+        id="other/unspecified/qwen3/llama_cpp",
+        hw_vendor="other",
+        hw_arch="unspecified",
+        model_family="qwen3",
+        model_rev="abc12345",
+        quant="Q4_K_M",
+        runtime="llama.cpp",
+        source_kind="derived",
+        reported_by="scraper:hf_models",
+        missing=["model", "hw"],
+    )
+    hw_star = base_row(
+        id="nvidia/sm_86/*/llama_cpp",
+        hw_vendor="nvidia",
+        hw_arch="sm_86",
+        model_family="*",
+        runtime="llama.cpp",
+        source_kind="scraped",
+        reported_by="scraper:llama_cpp_backends",
+        missing=["model"],
+        evidence=[{"url": "https://example.com/cuda", "quote": "sm_86 verified with qwen3", "kind": "upstream-doc"}],
+    )
+    derived = join.build_join_rows([hf_row, hw_star], run_date=TODAY)
+    assert len(derived) == 1, f"expected 1 linked join row, got {len(derived)}"
+    assert derived[0]["status"] == "solved"
+    assert derived[0]["missing"] == []
+    assert derived[0]["markers_complete"] is True
+
+
+def test_schema_defect_c_scraped_backend_doc_cannot_claim_unquoted_model():
+    raw = {
+        "status": "solved",
+        "source_kind": "scraped",
+        "hw_vendor": "other",
+        "hw_arch": "ascend-910b",
+        "model_family": "mixtral",
+        "runtime": "llama.cpp",
+        "pointer": "https://example.com/cann",
+        "as_of": TODAY,
+        "reported_by": "scraper:llama_cpp_backends",
+        "evidence": [{"url": "https://example.com/cann", "quote": "CANN backend supports Ascend 910B", "kind": "upstream-doc"}],
+        "missing": [],
+    }
+    canon = schema.canonicalize(raw, today=TODAY, run_date=TODAY)
+    assert canon["missing"] == ["model"], canon["missing"]
+    assert canon["source_kind"] == "derived", canon["source_kind"]
+    assert canon["missing_fixed"] is not None
+    assert schema.validate_errors(canon, today=TODAY) == {}
 
 
 # ---------------------------------------------------------------------------

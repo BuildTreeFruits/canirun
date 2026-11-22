@@ -26,6 +26,7 @@ from scrapers.common import Http, run_source  # noqa: E402
 SOURCES = [
     "llama_cpp_backends",
     "vllm_install",
+    "apple_integrations",
     "hf_models",
     "gh_issues",
     "gh_releases",

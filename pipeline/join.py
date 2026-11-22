@@ -35,18 +35,40 @@ def _row_key(row: Mapping[str, Any]) -> Tuple[str, str, str, str]:
     )
 
 
-def _upstream_linked_keys(rows: Iterable[Mapping[str, Any]]) -> Set[Tuple[str, str, str, str]]:
+def _upstream_linked_keys(
+    rows: Iterable[Mapping[str, Any]],
+    *,
+    families: Iterable[str] = JOIN_MODEL_FAMILIES,
+) -> Set[Tuple[str, str, str, str]]:
     """Return (hw_vendor, hw_arch, model_family, runtime) keys explicitly
-    linked by an upstream doc or issue (non-star, non-derived rows)."""
+    linked by an upstream doc or issue.
+
+    A link exists either on a non-star, non-derived row with upstream
+    evidence, or on a solved `*` row whose upstream evidence quote
+    explicitly names the model family.
+    """
     linked: Set[Tuple[str, str, str, str]] = set()
+    target_families = [str(f) for f in families]
+    upstream_kinds = {"upstream-doc", "issue", "release", "package-table"}
     for r in rows:
-        if r.get("model_family") == "*":
-            continue
         if r.get("source_kind") == "derived":
             continue
-        ev_kinds = {e.get("kind") for e in (r.get("evidence") or []) if isinstance(e, Mapping)}
-        if ev_kinds & {"upstream-doc", "issue", "release", "package-table"}:
+        ev = [e for e in (r.get("evidence") or []) if isinstance(e, Mapping)]
+        upstream_ev = [e for e in ev if e.get("kind") in upstream_kinds]
+        if not upstream_ev:
+            continue
+        if r.get("model_family") != "*":
             linked.add(_row_key(r))
+        elif r.get("status") == "solved":
+            quotes = " ".join(str(e.get("quote") or "").lower() for e in upstream_ev)
+            for fam in target_families:
+                if fam.lower() in quotes:
+                    linked.add((
+                        str(r.get("hw_vendor") or ""),
+                        str(r.get("hw_arch") or ""),
+                        fam,
+                        str(r.get("runtime") or ""),
+                    ))
     return linked
 
 
@@ -66,7 +88,7 @@ def build_join_rows(
     existing_non_derived_ids = {
         r["id"] for r in rows if r.get("source_kind") != "derived"
     }
-    linked_keys = _upstream_linked_keys(rows)
+    linked_keys = _upstream_linked_keys(rows, families=target_families)
 
     hf_models = [
         r for r in rows
@@ -96,6 +118,8 @@ def build_join_rows(
 
             key = (hw["hw_vendor"], hw["hw_arch"], m["model_family"], m["runtime"])
             is_linked = key in linked_keys
+            if not is_linked:
+                continue
 
             m_extra = m.get("hw_extra") or {}
             hw_extra = dict(hw.get("hw_extra") or {})

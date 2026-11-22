@@ -557,6 +557,27 @@ def canonicalize(
     else:
         row["missing_fixed"] = None
 
+    # Defect C guard: a scraped row whose only evidence kind is upstream-doc
+    # and whose source is a backend doc must not have missing: [] together with
+    # a specific (non-*) model_family unless an evidence quote actually names
+    # the model.
+    if (
+        row.get("source_kind") == "scraped"
+        and (row.get("model_family") or "*") != "*"
+        and row["missing"] == []
+        and "backends" in (src.get("reported_by") or "")
+    ):
+        ev_kinds = {e.get("kind") for e in row["evidence"]}
+        if ev_kinds == {"upstream-doc"}:
+            fam_lower = row["model_family"].lower()
+            if not any(fam_lower in (e.get("quote") or "").lower() for e in row["evidence"]):
+                row["missing"] = ["model"]
+                row["source_kind"] = "derived"
+                row["missing_fixed"] = (
+                    "missing [] -> ['model'] (scraped backend-doc row has no "
+                    "evidence quote naming model_family; downgraded to derived)"
+                )
+
     created = _clean_str(src.get("created_by"))
     if created:
         created = created.lower()
