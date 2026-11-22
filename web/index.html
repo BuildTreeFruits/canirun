@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>solve.run — does this hardware × model combination exist?</title>
+  <meta name="description" content="A single canonical index of hardware × model × runtime combinations for local inference. Look up a combination, see whether a working path exists, and when it doesn't, see that recorded plainly with a date.">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f7f6f3" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#111110" media="(prefers-color-scheme: dark)">
+  <meta property="og:title" content="solve.run — the combination index">
+  <meta property="og:description" content="Check the combination before you build it. Solved, wanted, rejected, or not searched — plainly, with a date.">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a4fd6'/%3E%3Ctext x='16' y='23' font-family='sans-serif' font-size='19' font-weight='700' fill='%23fff' text-anchor='middle'%3E%C3%97%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="./" data-home>
+        <span>solve<span class="brand-domain">.run</span></span>
+        <span class="brand-tag">combination index</span>
+      </a>
+      <span class="header-spacer"></span>
+      <nav class="header-nav" aria-label="Views">
+        <a href="#lookup" data-nav="lookup" data-view-link aria-current="page">
+          <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg>
+          <span class="label">Lookup</span>
+        </a>
+        <a href="#browse" data-nav="browse" data-view-link>
+          <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 4h12M2 8h12M2 12h12"/></svg>
+          <span class="label">Browse all</span>
+          <span class="count" data-nav-count hidden></span>
+        </a>
+        <button type="button" id="theme-toggle" aria-label="Toggle colour theme" title="Toggle light / dark">
+          <svg width="15" height="15" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="8" cy="8" r="3.2"/><path d="M8 1v1.6M8 13.4V15M1 8h1.6M13.4 8H15M3 3l1.1 1.1M11.9 11.9 13 13M13 3l-1.1 1.1M4.1 11.9 3 13"/></svg>
+          <span class="label">Theme</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Honest data-source notices. Never let sample data look like the real thing. -->
+  <div class="banner" id="data-banner" role="status" hidden>
+    <div class="wrap"><span id="data-banner-text"></span></div>
+  </div>
+
+  <main id="main" tabindex="-1">
+    <div class="wrap">
+
+      <!-- ============================================================ LOOKUP -->
+      <section data-view="lookup" class="active" aria-labelledby="page-title">
+        <div class="hero">
+          <h1 id="page-title">Check the combination before you build it.</h1>
+          <p class="lede">One place that says where a working solution for a hardware × model × runtime
+          combination lives — and, when there isn’t one, says that plainly with the date it was checked.</p>
+          <ul class="axiom">
+            <li><b>Solved</b> — a pointer, dated</li>
+            <li><b>Wanted</b> — people asking, counted</li>
+            <li><b>Rejected</b> — tried, does not work here</li>
+            <li><b>Not searched</b> — no claim, recorded as a gap</li>
+          </ul>
+        </div>
+
+        <form class="search" id="search-form" role="search" aria-labelledby="search-heading" autocomplete="off" novalidate>
+          <h2 id="search-heading" class="visually-hidden">Look up a combination</h2>
+          <div class="search-fields">
+            <div class="field">
+              <label for="hw-input">Hardware <span class="optional">— optional</span></label>
+              <div class="input-shell">
+                <span class="lead-icon" aria-hidden="true">
+                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="1.6" y="4" width="12.8" height="8" rx="1.5"/><path d="M4.5 4V2.4M8 4V2.4M11.5 4V2.4M4.5 13.6V12M8 13.6V12M11.5 13.6V12"/></svg>
+                </span>
+                <input id="hw-input" name="hw" type="text" role="combobox" aria-autocomplete="list"
+                       aria-expanded="false" aria-controls="hw-list" aria-describedby="hw-hint"
+                       placeholder="sm_86, gfx1100, m4, RTX 3090…" spellcheck="false" autocapitalize="off">
+                <button type="button" class="clear-btn" data-clear="hw" aria-label="Clear hardware" hidden>×</button>
+              </div>
+              <span class="hint" id="hw-hint">Arch or vendor. Arrow keys to pick, Enter to accept.</span>
+              <div class="combo-list" id="hw-list" role="listbox" aria-label="Hardware options" hidden></div>
+            </div>
+
+            <div class="field">
+              <label for="model-input">Model family <span class="optional">— optional</span></label>
+              <div class="input-shell">
+                <span class="lead-icon" aria-hidden="true">
+                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="8" cy="8" r="2.2"/><circle cx="8" cy="8" r="5.6"/><path d="M2.4 8h1.2M12.4 8h1.2M8 2.4v1.2M8 12.4v1.2"/></svg>
+                </span>
+                <input id="model-input" name="model" type="text" role="combobox" aria-autocomplete="list"
+                       aria-expanded="false" aria-controls="model-list" aria-describedby="model-hint"
+                       placeholder="qwen3, llama-4, gemma-3…" spellcheck="false" autocapitalize="off">
+                <button type="button" class="clear-btn" data-clear="model" aria-label="Clear model" hidden>×</button>
+              </div>
+              <span class="hint" id="model-hint">A model family — not a specific checkpoint.</span>
+              <div class="combo-list" id="model-list" role="listbox" aria-label="Model family options" hidden></div>
+            </div>
+
+            <div class="field field-runtime">
+              <label for="runtime-select">Runtime <span class="optional">— optional</span></label>
+              <select id="runtime-select" name="runtime" aria-describedby="runtime-hint">
+                <option value="">Any runtime</option>
+              </select>
+              <span class="hint" id="runtime-hint">llama.cpp, vLLM, MLX…</span>
+            </div>
+          </div>
+
+          <div class="search-actions">
+            <button type="submit" class="btn btn-primary" id="search-btn">
+              <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg>
+              Look it up
+            </button>
+            <button type="button" class="btn btn-ghost" id="clear-all">Clear</button>
+            <button type="button" class="btn btn-ghost" id="copy-link" title="Copy a shareable link to this lookup">Copy link to this lookup</button>
+            <p class="search-meta">
+              <span><kbd>/</kbd> to search</span>
+              <span><kbd>↑</kbd><kbd>↓</kbd> move</span>
+              <span><kbd>Esc</kbd> clear</span>
+            </p>
+          </div>
+          <p class="visually-hidden" id="search-status" role="status" aria-live="polite"></p>
+        </form>
+
+        <div id="results" class="results" aria-live="polite" aria-atomic="false"></div>
+
+        <section class="starters-section" id="starters" hidden>
+          <div class="results-head"><h2>Try one</h2><span class="count">each demonstrates one of the four states</span></div>
+          <div class="starters" id="starters-list"></div>
+        </section>
+      </section>
+
+      <!-- ============================================================ BROWSE -->
+      <section data-view="browse" aria-labelledby="browse-title">
+        <div class="hero" style="padding-bottom:14px">
+          <h1 id="browse-title">Everything on record.</h1>
+          <p class="lede">Every row is one claim about one combination. Filter, sort, and open any row as a
+          lookup. Wanted rows sort by votes, then by how long they have been waiting.</p>
+        </div>
+        <div class="browse-toolbar" id="browse-toolbar">
+          <button type="button" class="chip" data-filter-status="" aria-pressed="true">All <span class="n" data-count="all"></span></button>
+          <button type="button" class="chip" data-filter-status="solved" aria-pressed="false">Solved <span class="n" data-count="solved"></span></button>
+          <button type="button" class="chip" data-filter-status="wanted" aria-pressed="false">Wanted <span class="n" data-count="wanted"></span></button>
+          <button type="button" class="chip" data-filter-status="rejected" aria-pressed="false">Rejected <span class="n" data-count="rejected"></span></button>
+          <button type="button" class="chip" data-filter-status="context" aria-pressed="false">Hardware-level <span class="n" data-count="context"></span></button>
+          <span class="chip-sep" aria-hidden="true"></span>
+          <label class="visually-hidden" for="browse-q">Filter rows</label>
+          <div class="browse-search">
+            <input id="browse-q" type="search" placeholder="Filter by any word — vendor, arch, model, runtime, id…" autocomplete="off">
+          </div>
+          <div class="browse-sort">
+            <label for="browse-sort">Sort</label>
+            <select id="browse-sort">
+              <option value="status">State</option>
+              <option value="hw_vendor">Vendor</option>
+              <option value="hw_arch">Hardware</option>
+              <option value="model_family">Model</option>
+              <option value="runtime">Runtime</option>
+              <option value="as_of">As of (newest)</option>
+              <option value="as_of_old">As of (oldest)</option>
+              <option value="want_votes">Votes</option>
+              <option value="source_kind">Source kind</option>
+            </select>
+          </div>
+        </div>
+        <div id="browse-meta" class="legend"></div>
+        <div id="browse-results"></div>
+        <div class="legend">
+          <span>Legend:</span>
+          <span class="state-chip" style="--st:var(--st-solved);--st-bg:var(--st-solved-bg);--st-line:var(--st-solved-line)"><span aria-hidden="true">✓</span>Solved</span>
+          <span class="state-chip" style="--st:var(--st-wanted);--st-bg:var(--st-wanted-bg);--st-line:var(--st-wanted-line)"><span aria-hidden="true">↑</span>Wanted</span>
+          <span class="state-chip" style="--st:var(--st-rejected);--st-bg:var(--st-rejected-bg);--st-line:var(--st-rejected-line)"><span aria-hidden="true">✕</span>Rejected</span>
+          <span class="state-chip" style="--st:var(--st-miss);--st-bg:var(--st-miss-bg);--st-line:var(--st-miss-line)"><span aria-hidden="true">＊</span>Hardware-level</span>
+          <span>“＊” rows claim the backend supports the card — they do not answer for any model.</span>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <h4>Dataset</h4>
+          <div class="dataset-line" id="dataset-line" data-source="unknown">
+            <span class="src">loading…</span>
+          </div>
+          <ul style="margin-top:8px">
+            <li><a href="api/export.jsonl" data-href-api="export.jsonl">export.jsonl</a> — full dump, JSONL</li>
+            <li><a href="api/combos.json" data-href-api="combos.json">combos.json</a> — the merged export</li>
+            <li><a href="api/lookup" data-href-api="lookup">/api/lookup docs</a> · <a href="api/docs" data-href-api="docs">API docs</a></li>
+            <li><a href="api/health" data-href-api="health">health</a> · <a href="api/wanted" data-href-api="wanted">wanted list</a></li>
+            <li><a href="?data=sample" data-sample-link>View the sample dataset</a> — every state, including wanted &amp; rejected</li>
+          </ul>
+        </div>
+        <div>
+          <h4>For agents</h4>
+          <p class="honesty" style="margin-bottom:8px">Before building a hardware-specific kernel or runtime
+          workaround, check the combo. A miss is a contribution — report it.</p>
+          <div class="agent-snippet" id="agent-snippet">GET /api/lookup?hw=&lt;arch&gt;&amp;model=&lt;family&gt;&amp;runtime=&lt;slug&gt;
+→ { rows, context, miss }
+If miss.is_miss: report the miss, don’t rebuild what exists.<button type="button" class="btn btn-ghost btn-sm" data-copy-snippet aria-label="Copy agent snippet">Copy</button></div>
+        </div>
+        <div>
+          <h4>What this is</h4>
+          <p class="honesty">Not a marketplace, not a bounty board, not a recommendation engine. A
+          <strong>single canonical pointer</strong>: one place to look, so checking is a habit instead of a
+          decision. Pointers, not promises — every claim carries the date it was checked.</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span id="footer-version">—</span>
+        <span class="header-spacer"></span>
+        <span>No accounts. No tracking. Want votes are one click.</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <noscript>
+    <div class="wrap" style="padding-top:24px">
+      <div class="empty-state">
+        <h2>This site needs JavaScript</h2>
+        <p>The lookup runs in your browser. If you need the data without a browser, every answer is also
+        available as JSON at <code>/api/lookup?hw=…&amp;model=…&amp;runtime=…</code>.</p>
+      </div>
+    </div>
+  </noscript>
+
+  <!--
+    Plain classic scripts, loaded in dependency order, so the site works both
+    over http and from file:// (where browsers block ES modules and fetch()).
+    snapshot.js is a generated fallback of the last dataset build; the app
+    prefers /api/lookup and then data/combos.json, and only uses it on file://.
+  -->
+  <script src="snapshot.js"></script>
+  <script src="js/lookup.js"></script>
+  <script src="js/format.js"></script>
+  <script src="js/render.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

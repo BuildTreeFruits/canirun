@@ -1,0 +1,59 @@
+# systemd unit — the combo-index API + static site.
+#
+#   sudo useradd --system --home /srv/combo-index --shell /usr/sbin/nologin combo
+#   sudo cp api/systemd/solve-run.service /etc/systemd/system/
+#   sudo nano /etc/systemd/system/solve-run.service     # EDIT the WorkingDirectory + User
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now solve-run.service
+#   journalctl -u solve-run.service -f
+#
+# Runs api/server.py directly (not scripts/serve.py): the dev entrypoint also builds
+# the dataset, and a web request must never trigger a 60-second corpus rebuild.
+
+[Unit]
+Description=solve.run combo index (local-inference combination index)
+Documentation=file:///srv/combo-index/api/DEPLOY.md
+After=network-online.target
+Wants=network-online.target
+# The unit is a single stateless process over files; restart it aggressively.
+StartLimitIntervalSec=60
+StartLimitBurst=10
+
+[Service]
+Type=simple
+User=combo
+Group=combo
+WorkingDirectory=/srv/combo-index
+Environment=PYTHONUNBUFFERED=1
+Environment=PYTHONDONTWRITEBYTECODE=1
+# Bind to loopback: Caddy (see api/Caddyfile) is the only public listener.
+ExecStart=/usr/bin/python3 -u api/server.py --host 127.0.0.1 --port 8787 --data-dir /srv/combo-index/data --static-dir /srv/combo-index/web
+Restart=always
+RestartSec=2
+
+# --- hardening (cheap, and this service only needs to read two directories) ---
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictNamespaces=true
+LockPersonality=true
+# MemoryDenyWriteExecute left off: JIT-less CPython is usually fine with it, but a
+# failure mode here is a startup crash that looks like a code bug. Add it if you test it.
+SystemCallArchitectures=native
+# The only writable path: votes.json + misses.jsonl live here.
+ReadWritePaths=/srv/combo-index/data
+# Read-only corpus + code
+ReadOnlyPaths=/srv/combo-index/api /srv/combo-index/web /srv/combo-index/pipeline /srv/combo-index/data/taxonomy.json
+
+# --- resources: the API is tiny; the dataset is a few MB of JSON ---
+MemoryMax=512M
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target

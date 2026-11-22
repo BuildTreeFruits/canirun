@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+scrapers/cache/
+pipeline/.linkcache.json
+api/tests/tmp/
+data/demo.votes.json
+.preview/

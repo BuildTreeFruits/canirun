@@ -1,0 +1,64 @@
+# Caddyfile — reverse proxy with automatic TLS for the combo index.
+#
+#   sudo cp api/Caddyfile /etc/caddy/Caddyfile
+#   sudo nano /etc/caddy/Caddyfile      # set your hostname + path
+#   sudo systemctl reload caddy
+#
+# Caddy gets and renews the certificate itself; there is no certbot in this story.
+# We do NOT look up domains here — replace <YOUR_HOST> with whatever you actually own
+# and point its A/AAAA record at this box first.
+
+<YOUR_HOST> {
+	tls you@example.com          # used for ACME account notices only
+
+	encode zstd gzip
+
+	# JSON export: let mirrors and CDNs cache it. The app already sends ETag, so a
+	# conditional request gets a 304 even through the proxy.
+	@export path /api/export.jsonl /api/combos.json /combos.json /export.jsonl
+	header @export Cache-Control "public, max-age=300"
+
+	# The API: the vote/miss write endpoints must never be cached.
+	@writes path /api/want/* /api/miss /v1/want/*
+	header @writes Cache-Control "no-store"
+
+	# Cap request bodies — a 4 KB JSON body is the largest legitimate write.
+	request_body @writes {
+		max_size 16KB
+	}
+
+	# Trust Caddy's own X-Forwarded-For / -Proto only because it sets them itself;
+	# the app reads X-Forwarded-For for per-IP rate limiting.
+	reverse_proxy 127.0.0.1:8787 {
+		header_up X-Real-IP {remote_host}
+		header_up X-Forwarded-Proto {scheme}
+	}
+
+	# Security headers. The site has no inline scripts and loads no third-party JS,
+	# so this CSP is honest and cheap.
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "no-referrer"
+		X-Frame-Options "DENY"
+		Content-Security-Policy "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'"
+		-Server
+	}
+
+	log {
+		output file /var/log/caddy/combo-index.log
+		format json
+	}
+
+	# Static health probe for uptime monitors — the app's own /api/health does the
+	# real work (dataset freshness, write-path counters).
+	handle /healthz {
+		respond "ok" 200
+	}
+}
+
+# Local-only access without TLS, for poking at the box over an SSH tunnel.
+# Bind explicitly to loopback so it is not exposed even if a firewall is misconfigured.
+http://127.0.0.1:8080 {
+	reverse_proxy 127.0.0.1:8787
+}

@@ -1,0 +1,1056 @@
+{
+ "as_of": "2026-11-20",
+ "counts": {
+  "by_status": {
+   "rejected": 1,
+   "solved": 6,
+   "wanted": 1
+  }
+ },
+ "generated_at": "2026-11-20T00:00:00Z",
+ "rows": [
+  {
+   "as_of": "2026-11-20",
+   "created_by": "hand",
+   "evidence": [
+    {
+     "kind": "upstream-doc",
+     "quote": "vLLM supports AMD ROCm gfx1100.",
+     "url": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.md"
+    }
+   ],
+   "first_seen": "2026-11-01",
+   "hw_arch": "gfx1100",
+   "hw_extra": {
+    "vram_gb": 24
+   },
+   "hw_name": "RX 7900 XTX class",
+   "hw_vendor": "amd",
+   "id": "amd/gfx1100/qwen3/vllm",
+   "measurement": null,
+   "missing": [],
+   "model_family": "qwen3",
+   "model_rev": null,
+   "notes": null,
+   "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.md",
+   "pointer_alive": true,
+   "provisional": false,
+   "quant": null,
+   "reported_by": "fixture:api_tests",
+   "runtime": "vllm",
+   "runtime_rev": "v0.11.0",
+   "source_kind": "scraped",
+   "status": "solved",
+   "updated": "2026-11-20",
+   "want_first": null,
+   "want_requesters": [],
+   "want_votes": 0
+  },
+  {
+   "as_of": "2026-11-20",
+   "created_by": "hand",
+   "evidence": [
+    {
+     "kind": "upstream-doc",
+     "quote": "old path",
+     "url": "https://example.invalid/moved"
+    }
+   ],
+   "first_seen": "2026-11-01",
+   "hw_arch": "gfx90a",
+   "hw_extra": {
+    "vram_gb": 24
+   },
+   "hw_name": "MI210 / MI250 class",
+   "hw_vendor": "amd",
+   "id": "amd/gfx90a/llama-3/llama_cpp",
+   "measurement": null,
+   "missing": [],
+   "model_family": "llama-3",
+   "model_rev": null,
+   "notes": null,
+   "pointer": "https://example.invalid/moved",
+   "pointer_alive": false,
+   "provisional": false,
+   "quant": null,
+   "reported_by": "fixture:api_tests",
+   "runtime": "llama.cpp",
+   "runtime_rev": "b6400",
+   "source_kind": "scraped",
+   "status": "solved",
+   "updated": "2026-11-20",
+   "want_first": null,
+   "want_requesters": [],
+   "want_votes": 0
+  },
+  {
+   "as_of": "2026-11-20",
+   "created_by": "hand",
+   "evidence": [
+    {
+     "kind": "model-repo",
+     "quote": "safetensors 4-bit",
+     "url": "https://huggingface.co/mlx-community/Qwen3-8B-4bit"
+    }
+   ],
+   "first_seen": "2026-11-01",
+   "hw_arch": "m4_pro",
+   "hw_extra": {
+    "vram_gb": 24
+   },
+   "hw_name": "M4 Pro",
+   "hw_vendor": "apple",
+   "id": "apple/m4_pro/qwen3/mlx-lm",
+   "measurement": null,
+   "missing": [
+    "hw"
+   ],
+   "model_family": "qwen3",
+   "model_rev": null,
+   "notes": null,
+   "pointer": "https://huggingface.co/mlx-community/Qwen3-8B-4bit",
+   "pointer_alive": true,
+   "provisional": false,
+   "quant": "mlx-4bit",
+   "reported_by": "fixture:api_tests",
+   "runtime": "mlx-lm",
+   "runtime_rev": "0.28.1",
+   "source_kind": "derived",
+   "status": "solved",
+   "updated": "2026-11-20",
+   "want_first": null,
+   "want_requesters": [],
+   "want_votes": 0
+  },
+  {
+   "as_of": "2026-11-20",
+   "created_by": "hand",
+   "evidence": [
+    {
+     "kind": "upstream-doc",
+     "quote": "Intel Arc B580",
+     "url": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/SYCL.md"
+    }
+   ],
+   "first_seen": "2026-11-01",
+   "hw_arch": "arc-b580",
+   "hw_extra": {
+    "vram_gb": 24
+   },
+   "hw_name": "Arc B580",
+   "hw_vendor": "intel",
+   "id": "intel/arc-b580/*/llama_cpp",
+   "measurement": null,
+   "missing": [
+    "model"
+   ],
+   "model_family": "*",
+   "model_rev": null,
+   "notes": null,
+   "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/SYCL.md",
+   "pointer_alive": true,
+   "provisional": false,
+   "quant": null,
+   "reported_by": "fixture:api_tests",
+   "runtime": "llama.cpp",
+   "runtime_rev": "b6400",
+   "source_kind": "derived",
+   "status": "solved",
+   "updated": "2026-11-20",
+   "want_first": null,
+   "want_requesters": [],
+   "want_votes": 0
+  },
+  {
+   "as_of": "2026-11-20",
+   "created_by": "hand",
+   "evidence": [
+    {
+     "kind": "issue",
+     "quote": "anyone got sm_120 working?",
+     "url": "https://github.com/ggml-org/llama.cpp/issues/1"
+    }
+   ],
+   "first_seen": "2026-11-01",
+   "hw_arch": "sm_120",
+   "hw_extra": {
+    "vram_gb": 24
+   },
+   "hw_name": "RTX 5090",
+   "hw_vendor": "nvidia",
+   "id": "nvidia/sm_120/deepseek-v4/llama_cpp",
+   "measurement": null,
+   "missing": [
+    "hw"
+   ],
+   "model_family": "deepseek-v4",
+   "model_rev": null,
+   "notes": null,
+   "pointer": null,
+   "pointer_alive": true,
+   "provisional": false,
+   "quant": null,
+   "reported_by": "fixture:api_tests",
+   "runtime": "llama.cpp",
+   "runtime_rev": null,
+   "source_kind": "hand",
+   "status": "wanted",
+   "updated": "2026-11-20",
+   "want_first": "2026-10-01",
+   "want_requesters": [
+    "gh:alice",
+    "gh:bob",
+    "gh:carol"
+   ],
+   "want_votes": 3
+  },
+  {
+   "as_of": "2026-11-20",
+   "created_by": "hand",
+   "evidence": [
+    {
+     "kind": "issue",
+     "quote": "illegal memory access on T4",
+     "url": "https://github.com/ggml-org/llama.cpp/issues/2"
+    }
+   ],
+   "first_seen": "2026-11-01",
+   "hw_arch": "sm_75",
+   "hw_extra": {
+    "vram_gb": 24
+   },
+   "hw_name": "T4",
+   "hw_vendor": "nvidia",
+   "id": "nvidia/sm_75/gemma-4/llama_cpp",
+   "measurement": null,
+   "missing": [],
+   "model_family": "gemma-4",
+   "model_rev": null,
+   "notes": "gemma-4 needs bf16 matmul; T4 (sm_75) has no native bf16 path.",
+   "pointer": null,
+   "pointer_alive": true,
+   "provisional": false,
+   "quant": null,
+   "reported_by": "fixture:api_tests",
+   "runtime": "llama.cpp",
+   "runtime_rev": "b6400",
+   "source_kind": "hand",
+   "status": "rejected",
+   "updated": "2026-11-20",
+   "want_first": null,
+   "want_requesters": [],
+   "want_votes": 0
+  },
+  {
+   "as_of": "2026-11-20",
+   "created_by": "hand",
+   "evidence": [
+    {
+     "kind": "upstream-doc",
+     "quote": "CUDA is supported on compute capability 8.6.",
+     "url": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md"
+    }
+   ],
+   "first_seen": "2026-11-01",
+   "hw_arch": "sm_86",
+   "hw_extra": {
+    "vram_gb": 24
+   },
+   "hw_name": "RTX 3090 / A6000 class",
+   "hw_vendor": "nvidia",
+   "id": "nvidia/sm_86/*/llama_cpp",
+   "measurement": null,
+   "missing": [
+    "model"
+   ],
+   "model_family": "*",
+   "model_rev": null,
+   "notes": "CUDA backend supports sm_86; model-independent backend claim.",
+   "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md#cuda",
+   "pointer_alive": true,
+   "provisional": false,
+   "quant": null,
+   "reported_by": "fixture:api_tests",
+   "runtime": "llama.cpp",
+   "runtime_rev": "b6400",
+   "source_kind": "derived",
+   "status": "solved",
+   "updated": "2026-11-20",
+   "want_first": null,
+   "want_requesters": [],
+   "want_votes": 0
+  },
+  {
+   "as_of": "2026-11-20",
+   "created_by": "hand",
+   "evidence": [
+    {
+     "kind": "upstream-doc",
+     "quote": "Make sure to have the CUDA toolkit installed.",
+     "url": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md"
+    }
+   ],
+   "first_seen": "2026-11-01",
+   "hw_arch": "sm_86",
+   "hw_extra": {
+    "vram_gb": 24
+   },
+   "hw_name": "RTX 3090 / A6000 class",
+   "hw_vendor": "nvidia",
+   "id": "nvidia/sm_86/qwen3/llama_cpp",
+   "measurement": null,
+   "missing": [],
+   "model_family": "qwen3",
+   "model_rev": null,
+   "notes": "llama.cpp CUDA backend builds for sm_86 via -DGGML_CUDA=ON.",
+   "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md#cuda",
+   "pointer_alive": true,
+   "provisional": false,
+   "quant": "Q4_K_M",
+   "reported_by": "fixture:api_tests",
+   "runtime": "llama.cpp",
+   "runtime_rev": "b6400",
+   "source_kind": "scraped",
+   "status": "solved",
+   "updated": "2026-11-20",
+   "want_first": null,
+   "want_requesters": [],
+   "want_votes": 0
+  }
+ ],
+ "taxonomy": {
+  "hw_aliases": {
+   "a100": "sm_80",
+   "ada": "sm_89",
+   "ampere": "sm_86",
+   "arc a770": "arc-a770",
+   "arc b570": "arc-b570",
+   "arc b580": "arc-b580",
+   "b200": "sm_100",
+   "blackwell": "sm_100",
+   "cdna3": "gfx942",
+   "cdna4": "gfx950",
+   "gfx1100/1101": "gfx1100",
+   "gfx1151/1150": "gfx1151",
+   "gfx1200/1201": "gfx1200",
+   "h100": "sm_90",
+   "hopper": "sm_90",
+   "l4": "sm_89",
+   "max 1550": "data-center-max-1550",
+   "mi200": "gfx90a",
+   "mi210": "gfx90a",
+   "mi250": "gfx90a",
+   "mi250x": "gfx90a",
+   "mi300": "gfx942",
+   "mi300x": "gfx942",
+   "mi325x": "gfx942",
+   "mi350": "gfx950",
+   "mi355x": "gfx950",
+   "pvc": "data-center-max-1550",
+   "rdna3": "gfx1100",
+   "rdna3.5": "gfx1151",
+   "rdna4": "gfx1200",
+   "rtx3080": "sm_86",
+   "rtx3090": "sm_86",
+   "rtx4090": "sm_89",
+   "rtx5090": "sm_120",
+   "rubin": "sm_120",
+   "sm120": "sm_120",
+   "sm86": "sm_86",
+   "sm89": "sm_89",
+   "sm90": "sm_90",
+   "t4": "sm_75"
+  },
+  "hw_archs": {
+   "amd": [
+    "gfx900",
+    "gfx906",
+    "gfx908",
+    "gfx90a",
+    "gfx942",
+    "gfx950",
+    "gfx1030",
+    "gfx1031",
+    "gfx1032",
+    "gfx1034",
+    "gfx1100",
+    "gfx1101",
+    "gfx1102",
+    "gfx1150",
+    "gfx1151",
+    "gfx1200",
+    "gfx1201"
+   ],
+   "apple": [
+    "m1",
+    "m1-pro",
+    "m1-max",
+    "m1-ultra",
+    "m2",
+    "m2-pro",
+    "m2-max",
+    "m2-ultra",
+    "m3",
+    "m3-pro",
+    "m3-max",
+    "m3-ultra",
+    "m4",
+    "m4-pro",
+    "m4-max",
+    "m5",
+    "m5-pro",
+    "m5-max"
+   ],
+   "arm-cpu": [
+    "aarch64-neon",
+    "aarch64-dotprod",
+    "aarch64-i8mm",
+    "arm64-android",
+    "rv64-spacemit-s390x"
+   ],
+   "intel": [
+    "arc-a770",
+    "arc-a750",
+    "arc-a730m",
+    "arc-a580",
+    "arc-b580",
+    "arc-b570",
+    "arc-b770",
+    "arc-igpu-meteor-lake",
+    "arc-igpu-arrow-lake",
+    "arc-igpu-lunar-lake",
+    "data-center-max-1550",
+    "data-center-max-1100",
+    "flex-170",
+    "flex-140"
+   ],
+   "nvidia": [
+    "sm_60",
+    "sm_61",
+    "sm_70",
+    "sm_75",
+    "sm_80",
+    "sm_86",
+    "sm_87",
+    "sm_89",
+    "sm_90",
+    "sm_90a",
+    "sm_100",
+    "sm_100a",
+    "sm_103",
+    "sm_120",
+    "sm_121"
+   ],
+   "other": [
+    "generic"
+   ],
+   "qualcomm": [
+    "snapdragon-8-elite",
+    "snapdragon-8-gen3",
+    "snapdragon-x-elite",
+    "snapdragon-x-plus",
+    "snapdragon-8cx-gen3",
+    "hexagon-npu"
+   ],
+   "x86-cpu": [
+    "x86-64-avx2",
+    "x86-64-avx512",
+    "x86-64-avx512-vnni",
+    "x86-64-amx-int8",
+    "x86-64-sse42",
+    "x86-64-generic"
+   ]
+  },
+  "hw_vendors": {
+   "amd": {
+    "arch_kind": "gfx target",
+    "arch_prefix": "gfx",
+    "label": "AMD"
+   },
+   "apple": {
+    "arch_kind": "SoC family",
+    "arch_prefix": "m",
+    "label": "Apple"
+   },
+   "arm-cpu": {
+    "arch_kind": "CPU ISA",
+    "arch_prefix": "",
+    "label": "ARM CPU"
+   },
+   "intel": {
+    "arch_kind": "GPU generation",
+    "arch_prefix": "",
+    "label": "Intel"
+   },
+   "nvidia": {
+    "arch_kind": "compute capability",
+    "arch_prefix": "sm_",
+    "label": "NVIDIA"
+   },
+   "other": {
+    "arch_kind": "other",
+    "arch_prefix": "",
+    "label": "Other"
+   },
+   "qualcomm": {
+    "arch_kind": "SoC",
+    "arch_prefix": "",
+    "label": "Qualcomm"
+   },
+   "x86-cpu": {
+    "arch_kind": "CPU ISA",
+    "arch_prefix": "",
+    "label": "x86 CPU"
+   }
+  },
+  "models": [
+   {
+    "aliases": [
+     "qwen-3",
+     "qwen3-0.6b",
+     "qwen3.5",
+     "qwen3.6"
+    ],
+    "family": "qwen3",
+    "label": "Qwen3",
+    "vendor": "alibaba"
+   },
+   {
+    "aliases": [
+     "qwen3_vl",
+     "qwen-3-vl"
+    ],
+    "family": "qwen3-vl",
+    "label": "Qwen3-VL",
+    "vendor": "alibaba"
+   },
+   {
+    "aliases": [
+     "qwen-2.5",
+     "qwen2_5"
+    ],
+    "family": "qwen2.5",
+    "label": "Qwen2.5",
+    "vendor": "alibaba"
+   },
+   {
+    "aliases": [],
+    "family": "qwen3-asr",
+    "label": "Qwen3-ASR",
+    "vendor": "alibaba"
+   },
+   {
+    "aliases": [
+     "llama3",
+     "llama-3.1",
+     "llama-3.2",
+     "llama-3.3"
+    ],
+    "family": "llama-3",
+    "label": "Llama 3",
+    "vendor": "meta"
+   },
+   {
+    "aliases": [
+     "llama4",
+     "llama4-scout",
+     "llama4-maverick"
+    ],
+    "family": "llama-4",
+    "label": "Llama 4",
+    "vendor": "meta"
+   },
+   {
+    "aliases": [
+     "gemma3"
+    ],
+    "family": "gemma-3",
+    "label": "Gemma 3",
+    "vendor": "google"
+   },
+   {
+    "aliases": [
+     "gemma4"
+    ],
+    "family": "gemma-4",
+    "label": "Gemma 4",
+    "vendor": "google"
+   },
+   {
+    "aliases": [
+     "gemma-2",
+     "gemma2",
+     "codegemma"
+    ],
+    "family": "gemma",
+    "label": "Gemma",
+    "vendor": "google"
+   },
+   {
+    "aliases": [
+     "mistral-7b",
+     "mistral-nemo",
+     "ministral"
+    ],
+    "family": "mistral",
+    "label": "Mistral",
+    "vendor": "mistralai"
+   },
+   {
+    "aliases": [
+     "mixtral-8x7b",
+     "mixtral-8x22b"
+    ],
+    "family": "mixtral",
+    "label": "Mixtral",
+    "vendor": "mistralai"
+   },
+   {
+    "aliases": [
+     "deepseek-v2",
+     "deepseek-v3",
+     "deepseek-r1",
+     "deepseek-coder"
+    ],
+    "family": "deepseek",
+    "label": "DeepSeek",
+    "vendor": "deepseek"
+   },
+   {
+    "aliases": [
+     "deepseek-v4-flash"
+    ],
+    "family": "deepseek-v4",
+    "label": "DeepSeek V4",
+    "vendor": "deepseek"
+   },
+   {
+    "aliases": [
+     "phi-3",
+     "phi-4",
+     "phi3",
+     "phi4"
+    ],
+    "family": "phi",
+    "label": "Phi",
+    "vendor": "microsoft"
+   },
+   {
+    "aliases": [
+     "granite-3",
+     "granite-4"
+    ],
+    "family": "granite",
+    "label": "Granite",
+    "vendor": "ibm"
+   },
+   {
+    "aliases": [
+     "llama-3.1-nemotron"
+    ],
+    "family": "nemotron",
+    "label": "Nemotron",
+    "vendor": "nvidia"
+   },
+   {
+    "aliases": [
+     "minimax-h3",
+     "minimax-m2"
+    ],
+    "family": "minimax",
+    "label": "MiniMax",
+    "vendor": "minimax"
+   },
+   {
+    "aliases": [
+     "glm-4",
+     "chatglm"
+    ],
+    "family": "glm",
+    "label": "GLM",
+    "vendor": "zhipu"
+   },
+   {
+    "aliases": [
+     "kimi-k2"
+    ],
+    "family": "kimi",
+    "label": "Kimi",
+    "vendor": "moonshot"
+   },
+   {
+    "aliases": [
+     "gpt_oss"
+    ],
+    "family": "gpt-oss",
+    "label": "gpt-oss",
+    "vendor": "openai"
+   },
+   {
+    "aliases": [
+     "olmo-2",
+     "olmo-3"
+    ],
+    "family": "olmo",
+    "label": "OLMo",
+    "vendor": "allenai"
+   },
+   {
+    "aliases": [
+     "smollm2",
+     "smollm2.1"
+    ],
+    "family": "smollm",
+    "label": "SmolLM",
+    "vendor": "huggingface"
+   },
+   {
+    "aliases": [
+     "whisper-large-v3",
+     "distil-whisper"
+    ],
+    "family": "whisper",
+    "label": "Whisper",
+    "vendor": "openai"
+   },
+   {
+    "aliases": [
+     "parakeet-tdt"
+    ],
+    "family": "parakeet",
+    "label": "Parakeet",
+    "vendor": "nvidia"
+   },
+   {
+    "aliases": [
+     "sdxl",
+     "sd3",
+     "sd-3.5"
+    ],
+    "family": "stable-diffusion",
+    "label": "Stable Diffusion",
+    "vendor": "stability"
+   },
+   {
+    "aliases": [
+     "flux.1",
+     "flux-schnell",
+     "flux-dev"
+    ],
+    "family": "flux",
+    "label": "FLUX",
+    "vendor": "black-forest-labs"
+   },
+   {
+    "aliases": [
+     "wan2.1",
+     "wan2.2"
+    ],
+    "family": "wan",
+    "label": "Wan",
+    "vendor": "alibaba"
+   },
+   {
+    "aliases": [
+     "ornith-1.5"
+    ],
+    "family": "ornith",
+    "label": "Ornith",
+    "vendor": "ornith-ai"
+   },
+   {
+    "aliases": [
+     "ternary-bonsai"
+    ],
+    "family": "bonsai",
+    "label": "Bonsai",
+    "vendor": "prism-ml"
+   },
+   {
+    "aliases": [
+     "ling-2",
+     "bailing"
+    ],
+    "family": "ling",
+    "label": "Ling",
+    "vendor": "inclusionai"
+   },
+   {
+    "aliases": [
+     "ernie-4.5"
+    ],
+    "family": "ernie",
+    "label": "ERNIE",
+    "vendor": "baidu"
+   },
+   {
+    "aliases": [
+     "hunyuan-7b"
+    ],
+    "family": "hunyuan",
+    "label": "Hunyuan",
+    "vendor": "tencent"
+   },
+   {
+    "aliases": [
+     "internlm2",
+     "internlm3"
+    ],
+    "family": "internlm",
+    "label": "InternLM",
+    "vendor": "shanghai-ai-lab"
+   },
+   {
+    "aliases": [
+     "yi-1.5"
+    ],
+    "family": "yi",
+    "label": "Yi",
+    "vendor": "01-ai"
+   },
+   {
+    "aliases": [],
+    "family": "codestral",
+    "label": "Codestral",
+    "vendor": "mistralai"
+   },
+   {
+    "aliases": [],
+    "family": "devstral",
+    "label": "Devstral",
+    "vendor": "mistralai"
+   },
+   {
+    "aliases": [
+     "ace-step"
+    ],
+    "family": "acestep",
+    "label": "ACE-Step",
+    "vendor": "acestep"
+   },
+   {
+    "aliases": [
+     "yue2"
+    ],
+    "family": "yue",
+    "label": "YuE",
+    "vendor": "multimodal-art-projection"
+   }
+  ],
+  "quants": [
+   "F16",
+   "BF16",
+   "Q8_0",
+   "Q6_K",
+   "Q5_K_M",
+   "Q5_K_S",
+   "Q4_K_M",
+   "Q4_K_S",
+   "Q4_0",
+   "Q4_1",
+   "Q3_K_M",
+   "Q3_K_S",
+   "Q3_K_L",
+   "Q2_K",
+   "IQ4_XS",
+   "IQ4_NL",
+   "IQ3_XXS",
+   "IQ2_XXS",
+   "IQ2_M",
+   "IQ1_S",
+   "IQ1_M",
+   "TQ1_0",
+   "TQ2_0",
+   "UD-Q4_K_XL",
+   "UD-Q3_K_XL",
+   "UD-Q2_K_XL",
+   "fp16",
+   "bf16",
+   "fp8",
+   "fp8_e4m3",
+   "fp8_e5m2",
+   "awq",
+   "gptq",
+   "int4",
+   "int8",
+   "nvfp4",
+   "mxfp4",
+   "mlx-2bit",
+   "mlx-3bit",
+   "mlx-4bit",
+   "mlx-5bit",
+   "mlx-6bit",
+   "mlx-8bit",
+   "mlx-bf16",
+   "exl2-4.0bpw",
+   "exl3-4bpw",
+   "ternary",
+   "1.58bit",
+   "4bit",
+   "8bit",
+   "gguf-unknown"
+  ],
+  "runtimes": [
+   {
+    "docs": "https://github.com/ggml-org/llama.cpp/tree/master/docs",
+    "family": "gguf",
+    "label": "llama.cpp",
+    "repo": "https://github.com/ggml-org/llama.cpp",
+    "slug": "llama.cpp"
+   },
+   {
+    "docs": "https://github.com/vllm-project/vllm/tree/main/docs",
+    "family": "safetensors",
+    "label": "vLLM",
+    "repo": "https://github.com/vllm-project/vllm",
+    "slug": "vllm"
+   },
+   {
+    "docs": "https://ml-explore.github.io/mlx/build/html/index.html",
+    "family": "mlx",
+    "label": "MLX",
+    "repo": "https://github.com/ml-explore/mlx",
+    "slug": "mlx"
+   },
+   {
+    "docs": "https://github.com/ml-explore/mlx-lm",
+    "family": "mlx",
+    "label": "mlx-lm",
+    "repo": "https://github.com/ml-explore/mlx-lm",
+    "slug": "mlx-lm"
+   },
+   {
+    "docs": "https://github.com/vllm-project/vllm-metal",
+    "family": "safetensors",
+    "label": "vLLM-Metal",
+    "repo": "https://github.com/vllm-project/vllm-metal",
+    "slug": "vllm-metal"
+   },
+   {
+    "docs": "https://docs.sglang.ai",
+    "family": "safetensors",
+    "label": "SGLang",
+    "repo": "https://github.com/sgl-project/sglang",
+    "slug": "sglang"
+   },
+   {
+    "docs": "https://github.com/turboderp-org/exllamav2/tree/master/doc",
+    "family": "exl2",
+    "label": "ExLlamaV2",
+    "repo": "https://github.com/turboderp-org/exllamav2",
+    "slug": "exllamav2"
+   },
+   {
+    "docs": "https://github.com/turboderp-org/exllamav3",
+    "family": "exl3",
+    "label": "ExLlamaV3",
+    "repo": "https://github.com/turboderp-org/exllamav3",
+    "slug": "exllamav3"
+   },
+   {
+    "docs": "https://lmstudio.ai/docs",
+    "family": "gguf+mlx",
+    "label": "LM Studio",
+    "repo": "https://github.com/lmstudio-ai",
+    "slug": "lmstudio"
+   },
+   {
+    "docs": "https://github.com/ollama/ollama/tree/main/docs",
+    "family": "gguf",
+    "label": "Ollama",
+    "repo": "https://github.com/ollama/ollama",
+    "slug": "ollama"
+   },
+   {
+    "docs": "https://github.com/ggml-org/llama.cpp/tree/master/docs/android.md",
+    "family": "gguf",
+    "label": "Mllama (llama.cpp mobile)",
+    "repo": "https://github.com/ggml-org/llama.cpp/tree/master/examples/llama.android",
+    "slug": "mllama"
+   },
+   {
+    "docs": "https://llm.mlc.ai/docs/",
+    "family": "mlc",
+    "label": "MLC LLM",
+    "repo": "https://github.com/mlc-ai/mlc-llm",
+    "slug": "mlc-llm"
+   },
+   {
+    "docs": "https://github.com/microsoft/BitNet",
+    "family": "gguf",
+    "label": "bitnet.cpp",
+    "repo": "https://github.com/microsoft/BitNet",
+    "slug": "bitnet.cpp"
+   },
+   {
+    "docs": "https://github.com/vllm-project/vllm-xpu-kernels",
+    "family": "kernels",
+    "label": "vllm-xpu-kernels",
+    "repo": "https://github.com/vllm-project/vllm-xpu-kernels",
+    "slug": "vllm-xpu-kernels"
+   },
+   {
+    "docs": null,
+    "family": "any",
+    "label": "Custom kernel",
+    "repo": null,
+    "slug": "custom-kernel"
+   },
+   {
+    "docs": null,
+    "family": "any",
+    "label": "Unspecified runtime",
+    "repo": null,
+    "slug": "unknown"
+   }
+  ],
+  "updated": "2026-11-22",
+  "version": "1"
+ },
+ "version": "2026-11-20.1",
+ "wanted": [
+  {
+   "as_of": "2026-11-20",
+   "created_by": "hand",
+   "evidence": [
+    {
+     "kind": "issue",
+     "quote": "anyone got sm_120 working?",
+     "url": "https://github.com/ggml-org/llama.cpp/issues/1"
+    }
+   ],
+   "first_seen": "2026-11-01",
+   "hw_arch": "sm_120",
+   "hw_extra": {
+    "vram_gb": 24
+   },
+   "hw_name": "RTX 5090",
+   "hw_vendor": "nvidia",
+   "id": "nvidia/sm_120/deepseek-v4/llama_cpp",
+   "measurement": null,
+   "missing": [
+    "hw"
+   ],
+   "model_family": "deepseek-v4",
+   "model_rev": null,
+   "notes": null,
+   "pointer": null,
+   "pointer_alive": true,
+   "provisional": false,
+   "quant": null,
+   "reported_by": "fixture:api_tests",
+   "runtime": "llama.cpp",
+   "runtime_rev": null,
+   "source_kind": "hand",
+   "status": "wanted",
+   "updated": "2026-11-20",
+   "want_first": "2026-10-01",
+   "want_requesters": [
+    "gh:alice",
+    "gh:bob",
+    "gh:carol"
+   ],
+   "want_votes": 3
+  }
+ ]
+}

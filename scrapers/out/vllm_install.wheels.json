@@ -1,0 +1,42 @@
+[
+ {
+  "runtime": "vllm",
+  "runtime_rev": "v0.34.0",
+  "wheel_variant": "rocm700",
+  "python": "3.12",
+  "rocm": "7.0",
+  "glibc_min": "2.35",
+  "supported_versions": "`0.14.0` to `0.18.0`",
+  "url": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.rocm.inc.md#prebuilt-wheels"
+ },
+ {
+  "runtime": "vllm",
+  "runtime_rev": "v0.34.0",
+  "wheel_variant": "rocm721",
+  "python": "3.12",
+  "rocm": "7.2.1",
+  "glibc_min": "2.35",
+  "supported_versions": "Nightly releases after commit `171775f306a333a9cf105bfd533bf3e113d401d9`",
+  "url": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.rocm.inc.md#prebuilt-wheels"
+ },
+ {
+  "runtime": "vllm",
+  "runtime_rev": "v0.34.0",
+  "wheel_variant": "rocm72",
+  "python": "3.12",
+  "rocm": "7.2",
+  "glibc_min": "2.39",
+  "supported_versions": "Earlier nightly releases on the legacy ROCm 7.2 stack (no longer built)",
+  "url": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.rocm.inc.md#prebuilt-wheels"
+ },
+ {
+  "runtime": "vllm",
+  "runtime_rev": "v0.34.0",
+  "wheel_variant": "rocm100",
+  "python": "3.14",
+  "rocm": "10.0",
+  "glibc_min": "2.35",
+  "supported_versions": "Nightly releases (default)",
+  "url": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.rocm.inc.md#prebuilt-wheels"
+ }
+]
