@@ -1,0 +1,257 @@
+{
+  "models": [
+    {
+      "family": "acestep",
+      "label": "acestep",
+      "aliases": [],
+      "vendor": "acestep",
+      "source": "hf_models",
+      "hf_uploader": "audio-cpp",
+      "confirmed": true
+    },
+    {
+      "family": "bonsai",
+      "label": "bonsai",
+      "aliases": [],
+      "vendor": "prism-ml",
+      "source": "hf_models",
+      "hf_uploader": "lmstudio-community",
+      "confirmed": true
+    },
+    {
+      "family": "deepseek",
+      "label": "deepseek",
+      "aliases": [],
+      "vendor": "deepseek",
+      "source": "hf_models",
+      "hf_uploader": "unsloth",
+      "confirmed": true
+    },
+    {
+      "family": "deepseek-v4",
+      "label": "deepseek-v4",
+      "aliases": [],
+      "vendor": "deepseek",
+      "source": "hf_models",
+      "hf_uploader": "ISTA-DASLab",
+      "confirmed": true
+    },
+    {
+      "family": "devstral",
+      "label": "devstral",
+      "aliases": [],
+      "vendor": "mistralai",
+      "source": "hf_models",
+      "hf_uploader": "unsloth",
+      "confirmed": true
+    },
+    {
+      "family": "flux",
+      "label": "flux",
+      "aliases": [],
+      "vendor": "black-forest-labs",
+      "source": "hf_models",
+      "hf_uploader": "unsloth",
+      "confirmed": true
+    },
+    {
+      "family": "gemma",
+      "label": "gemma",
+      "aliases": [],
+      "vendor": "google",
+      "source": "hf_models",
+      "hf_uploader": "turintech",
+      "confirmed": true
+    },
+    {
+      "family": "gemma-3",
+      "label": "gemma-3",
+      "aliases": [],
+      "vendor": "google",
+      "source": "hf_models",
+      "hf_uploader": "ggml-org",
+      "confirmed": true
+    },
+    {
+      "family": "gemma-4",
+      "label": "gemma-4",
+      "aliases": [],
+      "vendor": "google",
+      "source": "hf_models",
+      "hf_uploader": "farbodtavakkoli",
+      "confirmed": true
+    },
+    {
+      "family": "glm",
+      "label": "glm",
+      "aliases": [],
+      "vendor": "zhipu",
+      "source": "hf_models",
+      "hf_uploader": "autotrust",
+      "confirmed": true
+    },
+    {
+      "family": "gpt-oss",
+      "label": "gpt-oss",
+      "aliases": [],
+      "vendor": "openai",
+      "source": "hf_models",
+      "hf_uploader": "unsloth",
+      "confirmed": true
+    },
+    {
+      "family": "granite",
+      "label": "granite",
+      "aliases": [],
+      "vendor": "ibm",
+      "source": "hf_models",
+      "hf_uploader": "ibm-granite",
+      "confirmed": true
+    },
+    {
+      "family": "ling",
+      "label": "ling",
+      "aliases": [],
+      "vendor": "inclusionai",
+      "source": "hf_models",
+      "hf_uploader": "bloomer010",
+      "confirmed": true
+    },
+    {
+      "family": "llama-3",
+      "label": "llama-3",
+      "aliases": [],
+      "vendor": "meta",
+      "source": "hf_models",
+      "hf_uploader": "bartowski",
+      "confirmed": true
+    },
+    {
+      "family": "minimax",
+      "label": "minimax",
+      "aliases": [],
+      "vendor": "minimax",
+      "source": "hf_models",
+      "hf_uploader": "unsloth",
+      "confirmed": true
+    },
+    {
+      "family": "mistral",
+      "label": "mistral",
+      "aliases": [],
+      "vendor": "mistralai",
+      "source": "hf_models",
+      "hf_uploader": "mistralai",
+      "confirmed": true
+    },
+    {
+      "family": "mixtral",
+      "label": "mixtral",
+      "aliases": [],
+      "vendor": "mistralai",
+      "source": "hf_models",
+      "hf_uploader": "mradermacher",
+      "confirmed": true
+    },
+    {
+      "family": "nemotron",
+      "label": "nemotron",
+      "aliases": [],
+      "vendor": "nvidia",
+      "source": "hf_models",
+      "hf_uploader": "handy-computer",
+      "confirmed": true
+    },
+    {
+      "family": "ornith",
+      "label": "ornith",
+      "aliases": [],
+      "vendor": "ornith-ai",
+      "source": "hf_models",
+      "hf_uploader": "ornith-ai",
+      "confirmed": true
+    },
+    {
+      "family": "parakeet",
+      "label": "parakeet",
+      "aliases": [],
+      "vendor": "nvidia",
+      "source": "hf_models",
+      "hf_uploader": "handy-computer",
+      "confirmed": true
+    },
+    {
+      "family": "phi",
+      "label": "phi",
+      "aliases": [],
+      "vendor": "microsoft",
+      "source": "hf_models",
+      "hf_uploader": "unsloth",
+      "confirmed": true
+    },
+    {
+      "family": "qwen3",
+      "label": "qwen3",
+      "aliases": [],
+      "vendor": "alibaba",
+      "source": "hf_models",
+      "hf_uploader": "unsloth",
+      "confirmed": true
+    },
+    {
+      "family": "qwen3-asr",
+      "label": "qwen3-asr",
+      "aliases": [],
+      "vendor": "alibaba",
+      "source": "hf_models",
+      "hf_uploader": "handy-computer",
+      "confirmed": true
+    },
+    {
+      "family": "qwen3-vl",
+      "label": "qwen3-vl",
+      "aliases": [],
+      "vendor": "alibaba",
+      "source": "hf_models",
+      "hf_uploader": "Qwen",
+      "confirmed": true
+    },
+    {
+      "family": "smollm",
+      "label": "smollm",
+      "aliases": [],
+      "vendor": "huggingface",
+      "source": "hf_models",
+      "hf_uploader": "webAI-Official",
+      "confirmed": true
+    },
+    {
+      "family": "wan",
+      "label": "wan",
+      "aliases": [],
+      "vendor": "alibaba",
+      "source": "hf_models",
+      "hf_uploader": "DeepBeepMeep",
+      "confirmed": true
+    },
+    {
+      "family": "whisper",
+      "label": "whisper",
+      "aliases": [],
+      "vendor": "openai",
+      "source": "hf_models",
+      "hf_uploader": "handy-computer",
+      "confirmed": true
+    },
+    {
+      "family": "yue",
+      "label": "yue",
+      "aliases": [],
+      "vendor": "multimodal-art-projection",
+      "source": "hf_models",
+      "hf_uploader": "Serveurperso",
+      "confirmed": true
+    }
+  ],
+  "hw_archs": {}
+}

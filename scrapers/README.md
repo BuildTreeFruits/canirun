@@ -44,6 +44,17 @@ python3 scrapers/validate_raw.py         # re-validate whatever is in out/
 
 ## Known gaps (honest list)
 
+**Current yield (2026-11-22 run, 122 rows total, 0 rejects; re-running `--offline` from the
+cache reproduces the same 122 rows exactly):**
+
+| source | rows | scraped | derived | rejected |
+|---|---|---|---|---|
+| llama_cpp_backends | 52 | 42 | 10 (8 solved + 2 rejected) | 2 |
+| vllm_install | 24 | 24 | 0 | 0 |
+| hf_models | 32 | 0 | 32 (missing `hw`) | 0 |
+| gh_issues | 13 | 13 (12 rejected, 1 solved) | 0 | 12 |
+| gh_releases | 1 | 1 | 0 | 1 |
+
 * **Thin by design / abandoned:**
   * `gh_releases` — release notes rarely carry hardware claims; llama.cpp ships rolling
     `b####` builds via nightly-tag.txt so `releases/latest` is `v1.0.0`, and everything

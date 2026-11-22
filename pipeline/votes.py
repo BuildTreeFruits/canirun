@@ -243,6 +243,40 @@ def _vendor_for(hw_arch: str, taxonomy: Optional[Mapping[str, Any]] = None) -> s
 # apply
 # ---------------------------------------------------------------------------
 
+def _canonical_runtime_slug(segment: str, taxonomy: Optional[Mapping[str, Any]]) -> str:
+    """Map a dot-free id segment back to the taxonomy runtime slug.
+
+    `llama_cpp` -> `llama.cpp`, `mlx-lm` -> `mlx-lm` (unchanged), `vllm` -> `vllm`.
+    Exact slug match wins; otherwise compare on the flattened form so a dot in the
+    slug is the only thing that can change. Unknown segments pass through verbatim.
+    """
+    runtimes = []
+    if taxonomy:
+        runtimes = taxonomy.get("runtimes") or taxonomy.get("runtime") or []
+    want = str(segment or "").lower()
+    for rt in runtimes:
+        if isinstance(rt, Mapping):
+            slug = rt.get("slug")
+        else:
+            slug = rt
+        if not slug:
+            continue
+        slug = str(slug).lower()
+        if slug == want:
+            return slug
+    for rt in runtimes:
+        if isinstance(rt, Mapping):
+            slug = rt.get("slug")
+        else:
+            slug = rt
+        if not slug:
+            continue
+        slug = str(slug).lower()
+        if slug.replace(".", "_") == want:
+            return slug
+    return want
+
+
 def materialise_vote_row(
     row_id: str,
     entry: Mapping[str, Any],
@@ -264,6 +298,10 @@ def materialise_vote_row(
         return None
     vendor, arch, model, runtime = (parts["hw_vendor"], parts["hw_arch"],
                                     parts["model_family"], parts["runtime"])
+    # The id segment is dot-free (`llama_cpp`) but the row FIELD wants the taxonomy
+    # slug (`llama.cpp`). Map back through the taxonomy when we can; if the segment
+    # is not a known runtime, leave it alone rather than guessing which '_' was a '.'.
+    runtime = _canonical_runtime_slug(runtime, taxonomy)
     count = max(1, int(entry.get("count") or 1))
     first = entry.get("first") or run_date
     if not schema.parse_date(first):

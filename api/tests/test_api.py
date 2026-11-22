@@ -180,6 +180,31 @@ class TestLookupShape(APITestCase):
         for row in body["context"]:
             self.assertEqual(row["model_family"], "*")
 
+    def test_free_text_that_matches_nothing_is_no_match(self):
+        """Regression: a q matching nothing must be no-match/0 votes, never wanted-only.
+        (A vote-only row once leaked into every text query, making the index claim
+        demand for text that matched no row at all.)"""
+        miss = self.getjson("/api/lookup?q=nonexistentword")["miss"]
+        self.assertTrue(miss["is_miss"])
+        self.assertEqual(miss["reason"], "no-match")
+        self.assertEqual(miss["wanted_votes"], 0)
+        self.assertFalse(miss["known_wanted"])
+        self.assertEqual(miss["counts"], {"exact": 0, "context": 0})
+
+    def test_free_text_hit_still_works(self):
+        body = self.getjson("/api/lookup?q=gfx1100")
+        self.assertFalse(body["miss"]["is_miss"])
+        self.assertGreaterEqual(len(body["rows"]), 1)
+
+    def test_vote_only_row_does_not_leak_into_unrelated_text_queries(self):
+        self.postjson("/api/want/nvidia/sm_120/qwen3/llama_cpp", {"voter": "t:leak"})
+        miss = self.getjson("/api/lookup?q=nonexistentword")["miss"]
+        self.assertEqual(miss["reason"], "no-match", miss)
+        self.assertEqual(miss["wanted_votes"], 0, miss)
+        # the vote is not lost -- it is discoverable where it belongs
+        self.assertIn("nvidia/sm_120/qwen3/llama_cpp",
+                      [r["id"] for r in self.getjson("/api/wanted")["rows"]])
+
     def test_no_match_when_nothing_at_all(self):
         miss = self.getjson("/api/lookup?hw=sm_126&model=qwen3")["miss"]
         self.assertEqual(miss["reason"], "no-match")
@@ -311,14 +336,23 @@ class TestVotes(APITestCase):
         self.assertIn("runtime_id_aliases", doc)
         self.assertEqual(doc["runtime_id_aliases"].get("llama_cpp"), "llama.cpp")
 
-    def test_non_canonical_id_is_rejected_with_a_suggestion(self):
-        st, r = self.postjson(f"/api/want/nvidia/sm_86/qwen3/llama.cpp", {"voter": "gh:x"})
+    def test_dotted_runtime_is_mapped_not_rejected(self):
+        """A dotted runtime segment is a spelling difference, not an error: it maps to
+        the taxonomy slug and stores the canonical dot-free id."""
+        st, r = self.postjson("/api/want/nvidia/sm_86/qwen3/llama.cpp", {"voter": "gh:x"})
+        self.assertEqual(st, 201)
+        self.assertEqual(r["id"], "nvidia/sm_86/qwen3/llama_cpp")
+        self.assertEqual(r["runtime"], "llama.cpp")
+        self.assertEqual(r["id_requested"], "nvidia/sm_86/qwen3/llama.cpp")
+
+    def test_non_canonical_case_is_rejected_with_a_suggestion(self):
+        st, r = self.postjson("/api/want/NVIDIA/sm_86/qwen3/vllm", {"voter": "gh:x"})
         self.assertEqual(st, 400)
         self.assertEqual(r["error"]["code"], "bad-id")
-        self.assertEqual(r["error"]["did_you_mean"], "nvidia/sm_86/qwen3/llama_cpp")
+        self.assertEqual(r["error"]["did_you_mean"], "nvidia/sm_86/qwen3/vllm")
 
     def test_uppercase_and_short_ids_rejected(self):
-        for bad in ("NVIDIA/sm_86/qwen3/llama_cpp", "not-an-id", "nvidia/sm_86/qwen3/",
+        for bad in ("not-an-id", "nvidia/sm_86/qwen3/",
                     "nvidia/sm_86/qwen3/llama_cpp/extra"):
             st, r = self.postjson(f"/api/want/{bad}", {"voter": "gh:x"})
             self.assertEqual(st, 400, bad)

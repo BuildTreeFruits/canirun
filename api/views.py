@@ -82,6 +82,16 @@ def _override_matches(row_id: str, query: dict, ds: Dataset) -> bool:
         return False
     if query.get("kind") and query["kind"] != "vote":
         return False
+    if query.get("q"):
+        # A free-text filter must apply to vote-only rows too. Without this, one vote
+        # made every text query "known_wanted" -- a q that matched nothing reported
+        # wanted-only with votes>0, which is a lie about what matched.
+        needle = str(query["q"]).lower()
+        hay = " ".join(str(pseudo.get(k) or "") for k in
+                       ("hw_vendor", "hw_arch", "model_family", "runtime", "status",
+                        "source_kind")).lower() + " " + row_id.lower()
+        if needle not in hay:
+            return False
     return True
 
 

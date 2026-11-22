@@ -496,9 +496,18 @@ class Handler(BaseHTTPRequestHandler):
         # pipeline materialises a vote into a stored row from the id's segments, so a
         # garbage id would become a vote-orphan (demand that produces no row).
         #
-        # The runtime segment is resolved against the taxonomy first (either spelling
-        # accepted) and the id re-written to the single canonical spelling, so the
-        # materialised row's `runtime` field is the one the pipeline would derive.
+        # 1. Structural shape first: exactly 4 non-empty segments. Everything below
+        #    indexes segment 3, so this must not be skipped or reordered.
+        if row_id.count("/") != 3 or not all(row_id.split("/")):
+            return self._json(400, {"error": {
+                "code": "bad-id", "status": 400, "id": row_id,
+                "message": f"id: {row_id!r} is not of the form vendor/arch/model/runtime",
+                "hint": "see CONTRACT.md §2",
+            }}, {"Cache-Control": "no-store"})
+
+        # 2. The runtime segment is resolved against the taxonomy (either spelling
+        #    accepted) and the id re-written to the single canonical spelling, so the
+        #    materialised row's `runtime` field is the one the pipeline would derive.
         stored_id, runtime_slug, known_runtimes, _segment = store_mod.canonical_vote_id(
             row_id, self.store.taxonomy())
         if runtime_slug is None:
@@ -512,8 +521,8 @@ class Handler(BaseHTTPRequestHandler):
                 "hint": "use a runtime slug from /api/taxonomy, with dots flattened to '_' in ids",
             }}, {"Cache-Control": "no-store"})
 
-        existing = self.store.row_by_id(stored_id)
-        ok, why, segments = store_mod.validate_row_id(stored_id)
+        # 3. Canonicality of the resolved id: lowercase, dot-free segments.
+        ok, why, _segments = store_mod.validate_row_id(stored_id)
         if not ok:
             body = {"message": why, "id": row_id}
             canonical = self._canonical_id_hint(row_id)
@@ -521,6 +530,8 @@ class Handler(BaseHTTPRequestHandler):
                 body["did_you_mean"] = canonical
             return self._json(400, {"error": dict(code="bad-id", status=400, **body)},
                               {"Cache-Control": "no-store"})
+
+        existing = self.store.row_by_id(stored_id)
 
         result = self.store.vote(stored_id, voter, add=add)
         result["status"] = (existing or {}).get("status") or ("wanted" if result["want_votes"] else None)

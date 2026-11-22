@@ -21,7 +21,7 @@ just open the URL. If not, run the command above.
 
 | part | where | state |
 |---|---|---|
-| Corpus | `data/rows/*.jsonl`, `data/combos.json`, `data/export.jsonl` | 116 rows, 8 vendors, 30 model families, 4 runtimes |
+| Corpus | `data/rows/*.jsonl`, `data/combos.json`, `data/export.jsonl` | **116 rows** (104 solved, 12 rejected, 0 wanted), 8 vendors, 30 model families, 4 runtimes |
 | Contract | `CONTRACT.md` | frozen, has been amended twice, **read it before changing shape** |
 | Scrapers | `scrapers/sources/` (5 sources), `scrapers/run_all.py` | live, re-runnable, cached |
 | Pipeline | `pipeline/` (`build.py`, `schema.py`, `normalize.py`, `votes.py`, `export.py`, `check_links.py`) | 32/32 tests pass, idempotent |
@@ -40,6 +40,9 @@ just open the URL. If not, run the command above.
   flips from miss to hit.
 - `data/export.jsonl` → `ETag` + `304` on `If-None-Match`.
 - `python3 pipeline/build.py --check` → second run byte-identical except `generated_at`.
+- `POST /api/want/.../llama.cpp` and `.../llama_cpp` → same id, `want_votes` stays 1 (no double count);
+  unknown runtime → `400 unknown-runtime`; `?runtime=llama.cpp` reads a `llama_cpp` row.
+- `GET /api/lookup?q=nonexistentword` → `no-match`, 0 votes.
 - Miss panel rendered in headless Chrome and read back: says "No claim on record for …",
   shows the dataset date, "this is a recorded gap, not a broken page", counters, Want button,
   copyable JSON. It passes the blueprint's deciding test.
@@ -49,8 +52,8 @@ just open the URL. If not, run the command above.
 **No upstream publishes a hardware × model × runtime capability matrix.** They publish backend
 build docs and package compatibility tables. So the corpus is two honest kinds of row:
 
-- `scraped` (21) — the upstream doc explicitly names the hardware for that backend. Real claim.
-- `derived` (95) — a synthesised join. Every one carries `missing: ["model"]` (or `["model","hw"]`),
+- `scraped` (80) — the upstream doc explicitly names the hardware for that backend. Real claim.
+- `derived` (36) — a synthesised join. Every one carries `missing: ["model"]` (or `["model","hw"]`),
   saying exactly which dimension is not quoted. Shown in the UI as "synthesised join — may be wrong".
 
 74–76 rows are `model_family: "*"` = hardware-level claims ("this backend supports this card"),
@@ -89,37 +92,56 @@ work, and it is also the one most likely to produce wrong rows. If you build it,
 
 Ordered by how much it matters.
 
-1. **The website's `*`-context counters are wrong (frontend, was being fixed at stop).**
-   `#lookup?hw=sm_86` in the browser showed "HARDWARE-LEVEL CLAIMS 0" and "Nobody has recorded
-   this combination" while listing a solved sm_86 row directly below in "Related rows". The API is
-   correct (`counts.context: 1`); the browser-side matcher in `web/js/lookup.js` drops `*` rows from
-   the counters. **The API is the source of truth — if the page and `curl` disagree, believe curl.**
-   Reproduce with:
-   ```
-   curl -s 'http://127.0.0.1:8787/api/lookup?hw=sm_86' | jq .miss
-   ```
-2. **Wanted state is empty right now.** The lead removed its own test votes and the 3
-   miss-created test rows before stopping (they were synthetic, and the site should not open
-   showing fake demand). So `by_status` is `solved: 101, rejected: 15, wanted: 0`. Vote once in the
-   UI and the wanted state appears. The seed helper is `python3 pipeline/build.py --demo`
+1. ~~Website `*`-context counters wrong~~ — **FIXED and verified by lead before stop.**
+   `web/js/lookup.js` was applying the status filter to `*` rows and deriving counters from a
+   filtered pool. Now matches `api/store.py`. Verified live:
+   `#lookup?hw=sm_86&model=qwen3` → "HARDWARE-LEVEL CLAIMS 1", reason `partial-context`, honest
+   hint ("Hardware-level support exists for llama.cpp; no model-specific claim"). `#lookup?hw=sm_86`
+   is a real hit, not a miss. A 32-query differential test between JS and Python now agrees.
+   **If page and API ever disagree, run `curl 'http://127.0.0.1:8787/api/lookup?...' | jq .miss`.**
+   Frontend's own caveat: context counts use `max(API count, attached rows)` so the page can never
+   contradict its own sentence — the API is still authoritative.
+2. **Wanted state is empty by design right now.** The lead removed every synthetic vote and
+   miss-created test row before stopping (the site should not open showing fake demand). So
+   `by_status` is `solved: 104, rejected: 12, wanted: 0`. Vote once in the UI and the wanted state
+   appears. Note: `web/js/lookup.js` converts ES modules to classic scripts so the page works when
+   double-clicked (`file://`) — a deliberate tradeoff, one copy of code, zero build step. The seed helper is `python3 pipeline/build.py --demo`
    (writes synthetic votes to a separate `data/demo.votes.json`, never to real `data/votes.json`).
 3. **gh_issues and gh_releases are thin** (13 and 1 rows). The brief wanted ~60 issue-derived
    rows; GitHub's unauthenticated search API rate-limited the run. Not a lie in the data, just a
    missing source. Retrying with a token would help.
 4. **No model-specific rows** (see §2). The corpus answers "does this card have a backend?"
    much better than "does this card run model X?".
-5. `data/votes.json` and `data/misses.jsonl` are the only irreplaceable files. The API writes them
+5. **Learned the hard way at stop: restart the server after backing-end edits.** A stale
+   `scripts/serve.py` process (started before the fixed `api/views.py` was written) made two
+   already-fixed bugs look live. If something seems broken, check
+   `ps -o lstart -p $(lsof -ti:8787 -sTCP:LISTEN)` against `stat -f %Sm api/*.py` before debugging code.
+6. **`web/snapshot.js` is a stale-able offline snapshot**, regenerated by
+   `node web/tools/inline-snapshot.mjs`. It is what shows when you double-click `web/index.html`
+   with no server. It goes stale whenever the corpus changes — rerun that command after any
+   rebuild, or just use `scripts/serve.py`.
+7. **The real corpus has no model-specific `rejected` row**, so the "rejected" starter only shows
+   on the sample dataset (footer → "View the sample dataset"). Not a bug, a corpus gap.
+8. **`data/taxonomy.extensions.json` was mislabeling model "vendor".** The scraper wrote the HF
+   *uploader* (unsloth, bartowski, handy-computer) into `vendor`, which means "who uploaded the
+   quant", not who made the model. Lead fixed it: `vendor` = model author (from `data/taxonomy.json`),
+   `hf_uploader` = uploader. It never reached a row (rows carry no model vendor), so the export was
+   unaffected — but do not reintroduce it if you add a model/author column.
+9. **`pipeline/votes.py` materialised vote rows with a dot-free `runtime` field** (`llama_cpp`
+   instead of `llama.cpp`). Lead fixed it with `_canonical_runtime_slug()` mapping the id segment
+   back through the taxonomy; unknown segments pass through verbatim rather than guessing.
+10. `data/votes.json` and `data/misses.jsonl` are the only irreplaceable files. The API writes them
    by atomic rename under a lock. Back them up if you care.
 
 ## 6. Exactly where to start next session
 
 In order:
 
-1. `python3 scripts/serve.py`, open `#lookup?hw=sm_86`, and finish the `*`-context counter fix if
-   the frontend agent did not land it. Check it against `curl .../api/lookup?hw=sm_86 | jq .miss`.
-   Same for `hw=sm_86&model=qwen3` → must be `partial-context`, context 1.
-2. `git add -A && git commit` — **nothing is committed yet.** This repo is currently one bad
-   `rm` away from gone, and the blueprint's durability answer is git. Do this before anything else.
+1. `python3 scripts/serve.py`, open `#lookup?hw=sm_86&model=qwen3` — should show
+   "HARDWARE-LEVEL CLAIMS 1" and `partial-context`. Spot-check against
+   `curl 'http://127.0.0.1:8787/api/lookup?hw=sm_86&model=qwen3' | jq .miss`.
+2. ~~git commit~~ — **DONE.** `f592320` contains the whole v1 (89 files). `git log` to see it.
+   Commit after every rebuild that changes `data/`; that is the durability story.
 3. Build the real **model × hardware join** (the actual product value) — start with one narrow,
    verifiable slice: for 5 popular model families, resolve which quant artifacts exist (HF rows
    already have `model_rev` + quant filenames+bytes), and emit `derived` rows that say
@@ -140,7 +162,8 @@ python3 pipeline/build.py            # validate + merge + export  → data/combo
 python3 pipeline/build.py --check    # prove idempotency
 python3 pipeline/check_links.py      # pointer_alive health (HEAD/GET, 7-day cache)
 python3 pipeline/tests/test_pipeline.py
-python3 api/tests/test_api.py
+python3 api/tests/test_api.py            # 63 tests
+node web/tools/inline-snapshot.mjs   # regenerate the file:// offline snapshot
 ```
 
 Pipeline order matters: scrapers write `scrapers/out/*.jsonl`, never `data/rows/`.
