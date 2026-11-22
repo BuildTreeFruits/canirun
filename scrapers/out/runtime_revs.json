@@ -1,12 +1,23 @@
 {
  "ggml-org/llama.cpp": {
   "assets": [
-   "nightly-tag.txt"
+   "cudart-llama-b12633-bin-ubuntu-cuda-12.8-x64.tar.gz",
+   "cudart-llama-b12633-bin-ubuntu-cuda-13.5-arm64.tar.gz",
+   "cudart-llama-b12633-bin-ubuntu-cuda-13.5-x64.tar.gz",
+   "cudart-llama-bin-win-cuda-12.4-x64.zip",
+   "cudart-llama-bin-win-cuda-13.5-arm64.zip",
+   "cudart-llama-bin-win-cuda-13.5-x64.zip",
+   "llama-b12633-bin-android-arm64-snapdragon.tar.gz",
+   "llama-b12633-bin-android-arm64.tar.gz",
+   "llama-b12633-bin-linux-arm64-snapdragon.tar.gz",
+   "llama-b12633-bin-macos-arm64.tar.gz",
+   "llama-b12633-bin-macos-x64.tar.gz",
+   "llama-b12633-bin-ubuntu-26.04-s390x.tar.gz"
   ],
-  "published_at": "2026-11-13T10:20:19Z",
+  "published_at": "2026-11-22T14:53:42Z",
   "runtime": "llama.cpp",
-  "tag": "v1.0.0",
-  "url": "https://github.com/ggml-org/llama.cpp/releases/tag/v1.0.0"
+  "tag": "b12633",
+  "url": "https://github.com/ggml-org/llama.cpp/releases/tag/b12633"
  },
  "ml-explore/mlx-lm": {
   "assets": [],

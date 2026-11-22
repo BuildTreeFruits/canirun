@@ -1,8 +1,7 @@
 # Deploy notes — combo index
 
 Honest scope: **there is no live host.** Nothing in this repo has been deployed; no domain
-has been bought (that is an explicit open question for the project owner, and O's standing
-rule is no bulk domain lookups). These are the notes for whoever does it.
+has been bought. These are the notes for whoever does it.
 
 The API is one Python process, stdlib only, reading a few JSON files. It runs on the
 cheapest box that has a public IP. A $5–9/month VPS is generous; a free tier with
@@ -17,7 +16,7 @@ persistent disk works too.
 | `data/votes.json` | the only irreplaceable write. Votes cannot be reconstructed. | the API | **yes, every hour** |
 | `data/misses.jsonl` | append-only miss log. Losing it loses nothing critical but it is demand signal. | the API | daily |
 | `data/rows/*.jsonl`, `data/combos.json`, `data/export.jsonl` | the corpus, rebuildable from `scrapers/out` + `pipeline/build.py` | the pipeline | git (it is committed) |
-| `data/taxonomy.json` | vocabulary | a human (lead) | git |
+| `data/taxonomy.json` | vocabulary | a human maintainer | git |
 
 That asymmetry is the whole deployment risk: **the API is disposable, `votes.json` is not.**
 The corpus lives in git and can be rebuilt; a vote tally cannot.

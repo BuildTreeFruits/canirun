@@ -376,8 +376,10 @@ class TestVotes(APITestCase):
         self.assertEqual(st, 400)
         self.assertEqual(r["error"]["code"], "unknown-runtime")
         self.assertIn("llama.cpp", r["error"]["known_runtimes"])
-        self.assertFalse(os.path.exists(os.path.join(self.data, "votes.json")) and
-                         json.load(open(os.path.join(self.data, "votes.json"))))
+        votes_path = os.path.join(self.data, "votes.json")
+        if os.path.exists(votes_path):
+            with open(votes_path, encoding="utf-8") as fh:
+                self.assertFalse(json.load(fh))
 
     def test_wanted_sorted_votes_desc_then_want_first_asc(self):
         rows = self.getjson("/api/wanted")["rows"]
@@ -450,20 +452,24 @@ class TestMiss(APITestCase):
 
     def test_three_distinct_searchers_create_a_wanted_row(self):
         """The loop the whole write path exists for (blueprint §Write path)."""
-        # gfx1200 has no '*' row in the fixture, so this is a true miss, not partial-context
-        query = {"hw": "gfx1200", "model": "brand-new-model"}
-        for i in range(1, 4):
-            st, r = self.postjson("/api/miss",
-                                  {"query": query, "searcher_key": f"agent:tool-{i}"})
-            self.assertEqual(st, 200)
-        self.assertEqual(r["distinct_searchers"], 3)
-        self.assertTrue(r["would_create_wanted"])
-        wanted = [x["id"] for x in self.getjson("/api/wanted")["rows"]]
-        self.assertIn("amd/gfx1200/brand-new-model/unknown", wanted)
-        # and the lookup that used to miss now answers
-        body = self.getjson("/api/lookup?hw=gfx1200&model=brand-new-model")
-        self.assertFalse(body["miss"]["is_miss"])
-        self.assertEqual(body["rows"][0]["status"], "wanted")
+        self.srv.store.sync_rebuild = True
+        try:
+            # gfx1200 has no '*' row in the fixture, so this is a true miss, not partial-context
+            query = {"hw": "gfx1200", "model": "brand-new-model"}
+            for i in range(1, 4):
+                st, r = self.postjson("/api/miss",
+                                      {"query": query, "searcher_key": f"agent:tool-{i}"})
+                self.assertEqual(st, 200)
+            self.assertEqual(r["distinct_searchers"], 3)
+            self.assertTrue(r["would_create_wanted"])
+            wanted = [x["id"] for x in self.getjson("/api/wanted")["rows"]]
+            self.assertIn("amd/gfx1200/brand-new-model/unknown", wanted)
+            # and the lookup that used to miss now answers
+            body = self.getjson("/api/lookup?hw=gfx1200&model=brand-new-model")
+            self.assertFalse(body["miss"]["is_miss"])
+            self.assertEqual(body["rows"][0]["status"], "wanted")
+        finally:
+            self.srv.store.sync_rebuild = False
 
 
 # ==========================================================================
@@ -687,6 +693,66 @@ class TestRateLimit(APITestCase):
         self.assertIn(429, codes, "the 20/min limit never fired")
         self.assertEqual(codes[:20], [201] * 20)
         self.assertEqual(self.get("/api/health")[0], 200, "rate limiting took the server down")
+
+
+class TestRebuildCoalescing(unittest.TestCase):
+    def test_schedule_rebuild_coalesces_and_never_overlaps(self):
+        import threading
+        from unittest import mock
+        import store as store_mod
+
+        store = store_mod.Store(os.path.join(os.path.dirname(__file__), "nonexistent"))
+        entered = threading.Event()
+        release = threading.Event()
+        done_all = threading.Event()
+        active = 0
+        max_active = 0
+        calls = 0
+        mu = threading.Lock()
+
+        def fake_rebuild(_data_dir, timeout=30.0):
+            nonlocal active, max_active, calls
+            with mu:
+                active += 1
+                max_active = max(max_active, active)
+                calls += 1
+                n = calls
+            if n == 1:
+                entered.set()
+                release.wait(timeout=5.0)
+            with mu:
+                active -= 1
+                if n >= 2:
+                    done_all.set()
+            return True, "ok"
+
+        with mock.patch.object(store_mod, "try_pipeline_rebuild", side_effect=fake_rebuild):
+            r1 = store.schedule_rebuild()
+            self.assertTrue(r1["scheduled"])
+            self.assertTrue(entered.wait(timeout=2.0), "worker did not start")
+
+            # Burst of 4 triggers while #1 is in flight -> must coalesce into 1 follow-up
+            for _ in range(4):
+                r = store.schedule_rebuild()
+                self.assertTrue(r["scheduled"])
+                self.assertTrue(r.get("coalesced"))
+
+            release.set()
+            self.assertTrue(done_all.wait(timeout=2.0), "coalesced follow-up did not run")
+            # Give worker a moment to exit its loop cleanly
+            for _ in range(50):
+                with store._rebuild_lock:
+                    if not store._rebuild_running:
+                        break
+                time.sleep(0.01)
+
+            self.assertEqual(max_active, 1)
+            self.assertEqual(calls, 2)
+
+            r_sync = store.schedule_rebuild(sync=True)
+            self.assertFalse(r_sync["scheduled"])
+            self.assertTrue(r_sync["ok"])
+            self.assertEqual(calls, 3)
 
 
 if __name__ == "__main__":

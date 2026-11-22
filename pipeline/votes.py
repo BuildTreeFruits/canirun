@@ -413,6 +413,20 @@ def apply_votes(
     return rows, events
 
 
+def strip_demo_votes(rows: Iterable[Mapping[str, Any]]) -> List[Dict[str, Any]]:
+    """Strip demo:* requesters and reset want_votes so non-demo builds recompute
+    counts strictly from real data/votes.json and data/misses.jsonl."""
+    out: List[Dict[str, Any]] = []
+    for r in rows:
+        row = dict(r)
+        reqs = [str(req) for req in (row.get("want_requesters") or [])
+                if not str(req).startswith("demo:")]
+        row["want_requesters"] = reqs[:REQUESTERS_CAP]
+        row["want_votes"] = 0
+        out.append(row)
+    return out
+
+
 def _make_wanted_valid(row: Dict[str, Any], run_date: str) -> None:
     """Make a promoted row satisfy CONTRACT §1 invariants 2/3 and the 'no solved
     pointer' vote rule."""

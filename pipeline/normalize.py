@@ -95,14 +95,32 @@ def _metric(row: Mapping[str, Any]) -> int:
     return schema.base_score(row)
 
 
-def merge_sort_key(row: Mapping[str, Any]) -> Tuple[int, int, int, str]:
+_EVIDENCE_KIND_RANK = {
+    "upstream-doc": 3,
+    "package-table": 3,
+    "release": 3,
+    "model-repo": 2,
+    "issue": 1,
+    "community": 0,
+}
+
+
+def _evidence_rank(row: Mapping[str, Any]) -> int:
+    return max(
+        (_EVIDENCE_KIND_RANK.get(ev.get("kind"), -1)
+         for ev in (row.get("evidence") or []) if isinstance(ev, Mapping)),
+        default=-1,
+    )
+
+
+def merge_sort_key(row: Mapping[str, Any]) -> Tuple[int, int, int, str, str]:
     """Sort candidates so candidates[0] is the merge base.
 
-    Higher is better: source rank, filled fields, as_of (ISO dates sort
-    lexicographically), then reported_by for byte-deterministic ties.
+    Higher is better: source rank, evidence authority, filled fields, as_of
+    (ISO dates sort lexicographically), then reported_by for byte-deterministic ties.
     """
     rank = schema.SOURCE_KIND_RANK.get(row.get("source_kind"), -1)
-    return (rank, _metric(row), (row.get("as_of") or "")[:10], str(row.get("reported_by") or ""))
+    return (rank, _evidence_rank(row), _metric(row), (row.get("as_of") or "")[:10], str(row.get("reported_by") or ""))
 
 
 def merge_evidence(rows: Iterable[Mapping[str, Any]]) -> List[Dict[str, str]]:

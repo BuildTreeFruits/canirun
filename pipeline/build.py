@@ -196,8 +196,14 @@ def build(
         if os.path.exists(demo_misses):
             misses = misses + util.read_jsonl(demo_misses)
     votes = votes_mod.merge_vote_sources(*vote_maps)
+    if not demo:
+        rows = votes_mod.strip_demo_votes(rows)
     rows, events = votes_mod.apply_votes(rows, votes, run_date=tday, taxonomy=taxonomy)
     rows, created, skipped = votes_mod.fold_misses(rows, misses, run_date=tday)
+    if not demo:
+        for r in rows:
+            if int(r.get("want_votes") or 0) == 0 and r.get("status") != "wanted":
+                r["want_first"] = None
     # the fold must never produce an invalid row; report, don't crash the build
     invalid_after = [
         {"id": r["id"], "errors": schema.validate(r, taxonomy=taxonomy, today=tday)}

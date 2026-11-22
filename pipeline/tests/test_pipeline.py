@@ -920,6 +920,85 @@ def test_schema_defect_c_scraped_backend_doc_cannot_claim_unquoted_model():
     assert schema.validate_errors(canon, today=TODAY) == {}
 
 
+def test_demo_votes_do_not_leak_onto_existing_rows_after_real_build():
+    root = tmp_root()
+    try:
+        p = util.paths(root)
+        existing = base_row(
+            id="nvidia/sm_86/qwen3/llama_cpp",
+            hw_vendor="nvidia",
+            hw_arch="sm_86",
+            model_family="qwen3",
+            runtime="llama.cpp",
+        )
+        util.write_jsonl(os.path.join(p["root"], "data", "rows", "nvidia.jsonl"), [existing])
+        util.write_json(os.path.join(p["root"], "data", "demo.votes.json"), {
+            "nvidia/sm_86/qwen3/llama_cpp": {
+                "count": 4,
+                "requesters": ["demo:user1", "demo:user2"],
+                "first": TODAY,
+            }
+        })
+        # Demo build applies demo votes onto the existing row
+        quiet(build.build, p, today_override=TODAY, demo=True)
+        demo_rows = normalize.load_rows(p)
+        assert len(demo_rows) == 1
+        assert demo_rows[0]["want_votes"] == 4
+        assert any(r.startswith("demo:") for r in demo_rows[0]["want_requesters"])
+
+        # Real (non-demo) build must strip demo:* requesters and reset want_votes
+        quiet(build.build, p, today_override=TODAY, demo=False)
+        real_rows = normalize.load_rows(p)
+        assert len(real_rows) == 1
+        assert real_rows[0]["want_votes"] == 0, real_rows[0]
+        assert real_rows[0]["want_requesters"] == [], real_rows[0]
+        assert real_rows[0]["want_first"] is None, real_rows[0]
+    finally:
+        shutil.rmtree(root, ignore_errors=True)
+
+
+def test_upstream_doc_solved_beats_community_issue_rejected_on_merge():
+    upstream_solved = base_row(
+        id="nvidia/sm_86/*/llama_cpp",
+        status="solved",
+        source_kind="scraped",
+        hw_vendor="nvidia",
+        hw_arch="sm_86",
+        model_family="*",
+        runtime="llama.cpp",
+        missing=["model"],
+        reported_by="scraper:llama_cpp_backends",
+        evidence=[{
+            "url": "https://example.com/docs/cuda",
+            "quote": "CUDA backend supports sm_86",
+            "kind": "upstream-doc",
+        }],
+    )
+    issue_rejected = base_row(
+        id="nvidia/sm_86/*/llama_cpp",
+        status="rejected",
+        source_kind="scraped",
+        hw_vendor="nvidia",
+        hw_arch="sm_86",
+        model_family="*",
+        runtime="llama.cpp",
+        missing=["model"],
+        pointer="https://github.com/org/repo/issues/123",
+        notes="User reported build failure on sm_86",
+        reported_by="scraper:gh_issues",
+        evidence=[{
+            "url": "https://github.com/org/repo/issues/123",
+            "quote": "Build failed on sm_86 with old CUDA",
+            "kind": "issue",
+        }],
+    )
+    merged = normalize.merge_group([issue_rejected, upstream_solved], run_date=TODAY)
+    assert merged["status"] == "solved", merged
+    ev_urls = [e["url"] for e in merged["evidence"]]
+    assert "https://example.com/docs/cuda" in ev_urls
+    assert "https://github.com/org/repo/issues/123" in ev_urls
+
+
 # ---------------------------------------------------------------------------
 # runner
 # ---------------------------------------------------------------------------

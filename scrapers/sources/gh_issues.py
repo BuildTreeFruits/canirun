@@ -16,7 +16,7 @@ from __future__ import annotations
 
 import re
 
-from scrapers.common import AS_OF, make_row
+from scrapers.common import AS_OF, TAXONOMY, make_row
 
 SOURCE_KEY = "gh_issues"
 API = "https://api.github.com/search/issues"
@@ -84,8 +84,20 @@ BODY_TOKENS = {"RX 6800 XT", "RX 7900 XTX", "Strix Halo", "MI300X", "MI325X", "M
 POS = re.compile(r"\b(works?|works? (?:great|well|fine|correctly)|working|supported|support for|add support|adds support|"
                  r"success(?:ful(?:ly)?)?|now (?:works|runs|supported)|"
                  r"enable[sd]? support|runs? (?:fine|correctly|successfully)|passing)\b", re.I)
-NEG = re.compile(r"\b(bug|bugs|error|errors|fail|fails|failed|failing|crash|crashes|crashing|broken|"
-                 r"regression|not supported|unsupported|not working|hang|hangs|missing|disable[sd]?)\b", re.I)
+NEG = re.compile(r"\b(not supported|unsupported|drop(?:ped|s)? support|remove[ds]? support|"
+                 r"incompatible|does not support|no support for)\b", re.I)
+
+
+def _match_model_family(title: str) -> str:
+    """Return a taxonomy model family if explicitly named in title, else '*'."""
+    tl = title.lower()
+    for m in TAXONOMY.get("models", []):
+        fam = m["family"]
+        candidates = [fam, m.get("label", "")] + list(m.get("aliases", []))
+        for c in candidates:
+            if c and re.search(r"(?<![a-z0-9])" + re.escape(c.lower()) + r"(?![a-z0-9])", tl):
+                return fam
+    return "*"
 
 
 def _verdict(title: str) -> str | None:
@@ -150,21 +162,26 @@ def fetch(http):
             quotes = [title] + (_sentences_with(body, tok) if body_ok else [])
             for qs in quotes[1:]:
                 ev.append({"url": issue_url, "kind": "issue", "quote": qs})
-            key = f"{vendor}/{arch}/{'*'}/{runtime}"
+            model_family = _match_model_family(title) if verdict == "rejected" else "*"
+            key = f"{vendor}/{arch}/{model_family}/{runtime}"
             if key in seen:
                 continue
             seen.add(key)
             number = it.get("number")
+            scope_note = (
+                "Applies to all models (model_family '*'): this is an engine x hardware siting, not a per-model claim."
+                if model_family == "*"
+                else f"Scoped to model_family '{model_family}' as named in the issue title."
+            )
             rows.append(make_row(
-                hw_vendor=vendor, hw_arch=arch, model_family="*", runtime=runtime,
+                hw_vendor=vendor, hw_arch=arch, model_family=model_family, runtime=runtime,
                 status=verdict, source_kind="scraped", evidence=ev, reported_by=REPORTED,
                 pointer=issue_url,
-                notes=(f"Applies to all models (model_family '*'): this is an engine x hardware siting, "
-                       f"not a per-model claim. GitHub {'PR' if it.get('pull_request') else 'issue'} {repo}#{number} "
+                notes=(f"{scope_note} GitHub {'PR' if it.get('pull_request') else 'issue'} {repo}#{number} "
                        f"({it.get('state')}, created {(it.get('created_at') or '')[:10]}) names {label} "
                        f"with a {'working' if verdict == 'solved' else 'failing'} report for {runtime}. "
                        "Community report, not an upstream support statement."),
-                runtime_rev=None, missing=["model"],
+                runtime_rev=None, missing=["model"] if model_family == "*" else [],
                 created_by="scraper",
                 # as_of = when we observed this evidence, not when the issue was opened
                 as_of=AS_OF,

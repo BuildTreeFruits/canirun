@@ -48,8 +48,14 @@ def fetch(http):
     revs = {}
     budget = 2
     for repo, runtime in REPOS:
-        latest = http.get_json(f"https://api.github.com/repos/{repo}/releases/latest", ttl_s=6 * 3600)
-        rels = http.get_json(f"https://api.github.com/repos/{repo}/releases?per_page=5", ttl_s=6 * 3600)
+        per_page = 10 if repo == "ggml-org/llama.cpp" else 5
+        rels = http.get_json(f"https://api.github.com/repos/{repo}/releases?per_page={per_page}", ttl_s=6 * 3600)
+        if repo == "ggml-org/llama.cpp":
+            latest = next((r for r in (rels or []) if re.match(r"^b\d+$", r.get("tag_name") or "")), None)
+            if not latest:
+                latest = http.get_json(f"https://api.github.com/repos/{repo}/releases/latest", ttl_s=6 * 3600)
+        else:
+            latest = http.get_json(f"https://api.github.com/repos/{repo}/releases/latest", ttl_s=6 * 3600)
         if latest:
             revs[repo] = {"runtime": runtime, "tag": latest.get("tag_name"),
                           "published_at": latest.get("published_at"),

@@ -91,6 +91,9 @@ class Http:
         for attempt in range(retries + 1):
             self._throttle(host)
             hdrs = {"User-Agent": UA}
+            gh_token = os.environ.get("GITHUB_TOKEN")
+            if gh_token and "api.github.com" in url:
+                hdrs["Authorization"] = f"Bearer {gh_token}"
             if cached_meta and cached_meta.get("etag"):
                 hdrs["If-None-Match"] = cached_meta["etag"]
             if headers:

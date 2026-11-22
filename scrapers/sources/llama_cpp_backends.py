@@ -58,7 +58,9 @@ CANN_MODEL_FAMILIES = {
 
 
 def latest_rev(http) -> str | None:
-    d = http.get_json("https://api.github.com/repos/ggml-org/llama.cpp/releases/latest")
+    rels = http.get_json("https://api.github.com/repos/ggml-org/llama.cpp/releases?per_page=10")
+    latest = next((r for r in (rels or []) if re.match(r"^b\d+$", r.get("tag_name") or "")), None)
+    d = latest or http.get_json("https://api.github.com/repos/ggml-org/llama.cpp/releases/latest")
     if not d:
         return None
     tag = d.get("tag_name")
@@ -274,16 +276,8 @@ def fetch(http):
                       f"that device, which is stronger evidence than a support-matrix row.",
                 )
 
-        # news: removed Nvidia/AMD SYCL support 2026.02
-        rows.append(make_row(
-            hw_vendor="nvidia", hw_arch="sm_90", model_family="*", runtime=RUNTIME,
-            status="rejected", source_kind="derived",
-            evidence=[{"url": f"{BLOB}/{s}", "kind": "upstream-doc",
-                       "quote": verbatim(sy, "Remove support for Nvidia & AMD GPU, because the oneAPI plugin for Nvidia & AMD GPU is unavailable: download/installation channels are out of work.")}],
-            reported_by=REPORTED, runtime_rev=rev, missing=["model"],
-            notes="SYCL backend dropped Nvidia/AMD GPU support in 2026.02: the oneAPI plugin for non-Intel GPUs is "
-                  "no longer downloadable, so a SYCL build cannot target this card. Use the CUDA/HIP backends instead.",
-            pointer=f"{BLOB}/{s}#news", created_by="derived"))
+        # news: removed Nvidia/AMD SYCL support 2026.02 — do not mark sm_90 rejected here
+        # because CUDA supports sm_90; SYCL is only one optional backend.
 
     # ---------------------------------------------------------------- CANN
     c = "docs/backend/CANN.md"

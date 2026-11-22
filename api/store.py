@@ -577,11 +577,15 @@ def _neg_date(d) -> str:
 # --------------------------------------------------------------------------
 
 class Store:
-    def __init__(self, data_dir: str):
+    def __init__(self, data_dir: str, *, sync_rebuild: bool = False):
         self.data_dir = os.path.abspath(data_dir)
         self._lock = threading.RLock()
         self._cache: Dataset | None = None
         self._cache_sig = None
+        self._rebuild_lock = threading.Lock()
+        self._rebuild_running = False
+        self._rebuild_pending = False
+        self.sync_rebuild = sync_rebuild
         self.errors: list[str] = []  # recent write-path failures, surfaced on /api/health
 
         self.rows_dir = os.path.join(self.data_dir, "rows")
@@ -632,6 +636,51 @@ class Store:
         with self._lock:
             self._cache = None
             self._cache_sig = None
+
+    def schedule_rebuild(self, *, sync: bool | None = None) -> dict:
+        """Schedule a non-blocking, coalescing pipeline rebuild on a background thread.
+
+        At most one rebuild runs at a time; triggers arriving mid-rebuild coalesce into
+        a single follow-up run. Pass sync=True in tests that need immediate completion.
+        """
+        if sync is None:
+            sync = self.sync_rebuild
+        if sync:
+            ok, detail = try_pipeline_rebuild(self.data_dir)
+            if not ok:
+                self.errors.append({"ts": _utcnow(), "what": "pipeline_rebuild",
+                                    "detail": detail})
+            self.invalidate()
+            return {"scheduled": False, "ok": ok, "detail": detail}
+
+        with self._rebuild_lock:
+            if self._rebuild_running:
+                self._rebuild_pending = True
+                self.invalidate()
+                return {"scheduled": True, "coalesced": True}
+            self._rebuild_running = True
+            self._rebuild_pending = False
+
+        self.invalidate()
+
+        def _worker() -> None:
+            while True:
+                try:
+                    ok, detail = try_pipeline_rebuild(self.data_dir)
+                    if not ok:
+                        self.errors.append({"ts": _utcnow(), "what": "pipeline_rebuild",
+                                            "detail": detail})
+                    self.invalidate()
+                finally:
+                    with self._rebuild_lock:
+                        if self._rebuild_pending:
+                            self._rebuild_pending = False
+                            continue
+                        self._rebuild_running = False
+                        break
+
+        threading.Thread(target=_worker, name="store-rebuild", daemon=True).start()
+        return {"scheduled": True}
 
     def _load(self) -> Dataset:
         taxonomy = self.taxonomy()
@@ -851,7 +900,7 @@ def pipeline_root() -> str:
     return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-_REBUILD_LOCK = None  # set up lazily below (threading import is at module top)
+_REBUILD_LOCK = threading.Lock()
 
 def try_pipeline_rebuild(data_dir: str, timeout: float = 30.0) -> tuple[bool, str]:
     """Fold votes/misses into the export by calling the pipeline.

@@ -455,12 +455,7 @@ class Handler(BaseHTTPRequestHandler):
                                      user_agent=self.headers.get("User-Agent") or "",
                                      query_id=query_id)
         if result["distinct_searchers"] >= store_mod.CREATES_WANTED_AT:
-            ok, detail = store_mod.try_pipeline_rebuild(self.store.data_dir)
-            result["pipeline_rebuild"] = {"ok": ok, "detail": detail}
-            if not ok:
-                self.store.errors.append({"ts": store_mod._utcnow(), "what": "pipeline_rebuild",
-                                          "detail": detail})
-            self.store.invalidate()
+            result["pipeline_rebuild"] = self.store.schedule_rebuild()
         return result
 
     # -- API: write --------------------------------------------------------
@@ -541,12 +536,7 @@ class Handler(BaseHTTPRequestHandler):
             result["id_requested"] = row_id
 
         if result["want_votes"] >= store_mod.CREATES_WANTED_AT:
-            ok, detail = store_mod.try_pipeline_rebuild(self.store.data_dir)
-            result["pipeline_rebuild"] = {"ok": ok, "detail": detail}
-            if not ok:
-                self.store.errors.append({"ts": store_mod._utcnow(), "what": "pipeline_rebuild",
-                                          "detail": detail})
-            self.store.invalidate()
+            result["pipeline_rebuild"] = self.store.schedule_rebuild()
 
         status = 201 if result["voted"] and add else 200
         self._json(status, result, {"Cache-Control": "no-store", "X-Row-Id": row_id})

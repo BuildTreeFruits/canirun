@@ -30,6 +30,7 @@ SOURCES = [
     "hf_models",
     "gh_issues",
     "gh_releases",
+    "curated_combos",
 ]
 
 
