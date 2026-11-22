@@ -2,6 +2,8 @@ __pycache__/
 *.pyc
 scrapers/cache/
 pipeline/.linkcache.json
+pipeline/.build-report.json
+pipeline/.build-state.json
 api/tests/tmp/
 data/demo.votes.json
 .preview/

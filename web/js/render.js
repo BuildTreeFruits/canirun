@@ -230,6 +230,24 @@ function factsBlock(row, { emphasis = 'as_of' } = {}) {
   return `<dl class="claim-facts">${parts.join('')}</dl>`;
 }
 
+function issueUrlFor(row) {
+  const state = row.model_family === '*' ? 'context' : (row.status || 'unknown');
+  const hw = row.hw_name ? `${row.hw_arch || ''} (${row.hw_name})` : (row.hw_arch || '');
+  const title = `Evidence / issue: ${row.id || `${row.hw_arch || ''}/${row.model_family || ''}/${row.runtime || ''}`}`;
+  const body = [
+    `- **combo_id:** ${row.id || ''}`,
+    `- **hardware:** ${hw}`,
+    `- **model:** ${row.model_family || ''}`,
+    `- **runtime:** ${row.runtime || ''}`,
+    `- **state:** ${state}`,
+    '',
+    '### Evidence or issue details',
+    ''
+  ].join('\n');
+  const params = new URLSearchParams({ title, body });
+  return `https://github.com/BuildTreeFruits/solve-run/issues/new?${params.toString()}`;
+}
+
 function footBlock(row, { showId = true } = {}) {
   const bits = [];
   if (row.reported_by) bits.push(`reported by <span>${esc(row.reported_by)}</span>`);
@@ -244,6 +262,9 @@ function footBlock(row, { showId = true } = {}) {
       `<button type="button" class="btn btn-ghost btn-sm" data-link-row="${attr(row.id)}">Link to this</button>`
     );
   }
+  actions.push(
+    `<a class="btn btn-ghost btn-sm" href="${attr(issueUrlFor(row))}" target="_blank" rel="noopener noreferrer">Submit evidence / report issue</a>`
+  );
   if (!actions.length && !bits.length) return '';
   return `<div class="card-foot">
     <span>${bits.join(' <span aria-hidden="true">·</span> ')}</span>

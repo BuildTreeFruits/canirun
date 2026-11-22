@@ -676,10 +676,44 @@ function syncFormFromHash() {
   syncClearButtons();
 }
 
+function writeBrowseHash({ replace = false } = {}) {
+  const b = state.browse;
+  const params = new URLSearchParams();
+  if (b.status) params.set('status', b.status);
+  if (b.q) params.set('q', b.q);
+  if (b.sort && b.sort !== 'status') params.set('sort', b.sort);
+  if (b.dir && b.dir !== 'desc') params.set('dir', b.dir);
+  const hash = params.toString() ? `browse?${params}` : 'browse';
+  if (location.hash.replace(/^#/, '') !== hash) {
+    if (replace) history.replaceState(null, '', `#${hash}`);
+    else history.pushState(null, '', `#${hash}`);
+  }
+}
+
+function syncBrowseFromHash() {
+  const params = readHashQuery();
+  state.browse.status = params.get('status') || '';
+  state.browse.q = params.get('q') || '';
+  state.browse.sort = params.get('sort') || 'status';
+  state.browse.dir = params.get('dir') || 'desc';
+  if (el.browseQ) el.browseQ.value = state.browse.q;
+  const toolbar = $('#browse-toolbar');
+  if (toolbar) {
+    $$('[data-filter-status]', toolbar).forEach((c) =>
+      c.setAttribute('aria-pressed', String((c.dataset.filterStatus || '') === state.browse.status))
+    );
+  }
+  const sortSel = $('#browse-sort');
+  if (sortSel) {
+    sortSel.value = state.browse.sort === 'as_of' && state.browse.dir === 'asc' ? 'as_of_old' : state.browse.sort;
+  }
+}
+
 async function route() {
   const view = routeView();
   setView(view, { silent: true });
   if (view === 'browse') {
+    syncBrowseFromHash();
     await renderBrowse();
     return;
   }
@@ -1007,6 +1041,7 @@ function bindEvents() {
       $$('[data-filter-status]', $('#browse-toolbar')).forEach((c) =>
         c.setAttribute('aria-pressed', String((c.dataset.filterStatus || '') === state.browse.status))
       );
+      writeBrowseHash();
       renderBrowse();
       return;
     }
@@ -1014,6 +1049,7 @@ function bindEvents() {
     if (sortBtn) {
       state.browse.sort = sortBtn.dataset.sort;
       state.browse.dir = sortBtn.dataset.dir;
+      writeBrowseHash();
       renderBrowse();
       return;
     }
@@ -1100,6 +1136,7 @@ function bindEvents() {
     'input',
     debounce(() => {
       state.browse.q = el.browseQ.value.trim();
+      writeBrowseHash({ replace: true });
       renderBrowse();
     }, 160)
   );
@@ -1113,6 +1150,7 @@ function bindEvents() {
       state.browse.sort = v;
       state.browse.dir = 'desc';
     }
+    writeBrowseHash();
     renderBrowse();
   });
 
