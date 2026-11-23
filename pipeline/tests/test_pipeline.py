@@ -26,7 +26,7 @@ SEED_DIR = os.path.join(HERE, "fixtures", "scrapers_out")
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
-from pipeline import build, check_links, export, normalize, schema, seed_votes, util, votes  # noqa: E402
+from pipeline import build, check_links, export, normalize, schema, util, votes  # noqa: E402
 
 TODAY = "2026-11-22"
 TAX = {
@@ -736,28 +736,6 @@ def test_build_counts_and_wanted_order():
     assert [r["id"] for r in export.wanted_rows(w)] == ["d", "c", "b", "a"]
 
 
-def test_build_demo_votes_file_is_separate():
-    root = tmp_root()
-    try:
-        p = util.paths(root)
-        _seed_corpus(root)
-        quiet(build.build, p, today_override=TODAY)
-        before = [r for r in util.read_json(p["combos"])["rows"] if r["status"] == "wanted"]
-        assert before == []
-        # seed_votes writes its own files and never touches votes.json
-        rep = quiet(seed_votes.write_demo, p, run_date=TODAY)
-        assert os.path.exists(rep["votes_path"])
-        assert not os.path.exists(p["votes"]) or util.read_json(p["votes"], default={}) == {}
-        quiet(build.build, p, demo=True, today_override=TODAY)
-        after = util.read_json(p["combos"])
-        assert after.get("demo") is True
-        assert len(after["wanted"]) >= 1
-        meta = util.read_json(rep["votes_path"])["_meta"]
-        assert meta["synthetic"] is True
-    finally:
-        shutil.rmtree(root, ignore_errors=True)
-
-
 # ---------------------------------------------------------------------------
 # 8. link checker (offline semantics)
 # ---------------------------------------------------------------------------
@@ -929,24 +907,14 @@ def test_demo_votes_do_not_leak_onto_existing_rows_after_real_build():
             hw_arch="sm_86",
             model_family="qwen3",
             runtime="llama.cpp",
+            want_votes=4,
+            want_requesters=["demo:user1", "demo:user2"],
+            want_first=TODAY,
         )
         util.write_jsonl(os.path.join(p["root"], "data", "rows", "nvidia.jsonl"), [existing])
-        util.write_json(os.path.join(p["root"], "data", "demo.votes.json"), {
-            "nvidia/sm_86/qwen3/llama_cpp": {
-                "count": 4,
-                "requesters": ["demo:user1", "demo:user2"],
-                "first": TODAY,
-            }
-        })
-        # Demo build applies demo votes onto the existing row
-        quiet(build.build, p, today_override=TODAY, demo=True)
-        demo_rows = normalize.load_rows(p)
-        assert len(demo_rows) == 1
-        assert demo_rows[0]["want_votes"] == 4
-        assert any(r.startswith("demo:") for r in demo_rows[0]["want_requesters"])
 
-        # Real (non-demo) build must strip demo:* requesters and reset want_votes
-        quiet(build.build, p, today_override=TODAY, demo=False)
+        # Real build must strip demo:* requesters and reset want_votes
+        quiet(build.build, p, today_override=TODAY)
         real_rows = normalize.load_rows(p)
         assert len(real_rows) == 1
         assert real_rows[0]["want_votes"] == 0, real_rows[0]

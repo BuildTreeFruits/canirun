@@ -31,7 +31,7 @@ DEFAULT_PATHS = {
 
 # Directory names inside data/ that are NOT row files (kept for clarity).
 NON_ROW_FILES = {"combos.json", "export.jsonl", "votes.json", "misses.jsonl",
-                 "demo.votes.json", "taxonomy.json", "taxonomy.extensions.json"}
+                 "taxonomy.json", "taxonomy.extensions.json"}
 
 
 def paths(root: Optional[str] = None, **overrides: str) -> Dict[str, str]:

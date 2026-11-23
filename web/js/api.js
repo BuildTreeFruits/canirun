@@ -12,18 +12,17 @@
  * Order of preference (mirrors the blueprint's "static fallback" rule):
  *   1. GET /api/lookup?...        → the real service (soil: api/lookup.py)
  *   2. data/combos.json           → static export, matched in-browser by lookup.js
- *   3. web/fixtures/sample-combos.json → demo data, clearly labelled as such
+ *   3. web/snapshot.js            → offline file:// fallback
  *
  * Every path returns the same CONTRACT §4 response shape, plus a `source` field
  * in `dataset` describing which one answered, so the UI can be honest in the
- * footer ("served by the live API" vs "sample data").
+ * footer ("served by the live API" vs "static export").
  *
  * Nothing here throws in a way the UI can't render: failures degrade to the next
  * source and, if all fail, the caller gets a structured error it can show.
  */
 
 
-const FIXTURE_URL = 'fixtures/sample-combos.json';
 const STATIC_URL_CANDIDATES = ['../data/combos.json', 'data/combos.json'];
 
 /** /api/lookup with query params. */
@@ -89,34 +88,15 @@ function safeJson(text) {
   }
 }
 
-/** Demo data. Kept loadable even when the server answers, so it can be forced. */
-async function loadFixture({ signal } = {}) {
-  const res = await fetch(FIXTURE_URL, { cache: 'no-store', signal });
-  if (!res.ok) throw new Error(`fixture → HTTP ${res.status}`);
-  const { rows, dataset } = normalizeData(await res.json());
-  return {
-    rows,
-    dataset: {
-      ...datasetFromRows(rows),
-      ...dataset,
-      source: 'fixture',
-      source_url: FIXTURE_URL
-    },
-    source: 'fixture'
-  };
-}
-
 /**
  * One call, all sources. Returns the CONTRACT response and records which source
  * answered in `dataset.source`.
  *
  * Fallback chain (each step is only skipped when it is known not to exist):
- *   /api/lookup → data/combos.json → web/fixtures/sample-combos.json
- * The fixture step is what keeps the site demoable before the pipeline has
- * produced an export; `dataset.source === 'fixture'` is what makes the UI say so.
+ *   /api/lookup → data/combos.json → web/snapshot.js
  *
  * @param {object} query  {hw, model, runtime, status, kind, q, limit}
- * @param {{signal, prefer?: 'fixture'|'static'|'auto'}} opts
+ * @param {{signal, prefer?: 'static'|'auto'}} opts
  */
 async function getLookup(query, opts = {}) {
   const q = buildQuery(query);
@@ -133,7 +113,7 @@ async function getLookup(query, opts = {}) {
     }
   }
 
-  const data = await loadRowsWithFixtureFallback(prefer, opts);
+  const data = await loadRowsWithSnapshotFallback(prefer, opts);
   const res = lookup(data.rows, q, data.dataset, { datasetSource: data.source });
   res.dataset = { ...res.dataset, source: data.source, source_url: data.dataset.source_url };
   res.all_rows = data.rows;
@@ -158,15 +138,9 @@ async function getAllRows(opts = {}) {
       }
     }
   }
-  return loadRowsWithFixtureFallback(prefer, opts);
+  return loadRowsWithSnapshotFallback(prefer, opts);
 }
 
-/**
- * static (or fixture when asked) with a fixture fallback, so a missing
- * combos.json never leaves the page blank. If BOTH fail, the static error is
- * rethrown — it is the more informative one ("combos.json missing" beats
- * "fixture missing" when the fixture is the thing that should always exist).
- */
 /** On file:// there is no server to ask: go straight to the snapshot. */
 function isFileProtocol() {
   try {
@@ -176,32 +150,17 @@ function isFileProtocol() {
   }
 }
 
-async function loadRowsWithFixtureFallback(prefer, opts) {
+async function loadRowsWithSnapshotFallback(prefer, opts) {
   if (isFileProtocol() && prefer !== 'static') {
     const snap = loadSnapshot();
     if (snap) return snap;
   }
   try {
-    if (prefer === 'fixture') return await loadFixture(opts);
     return await loadStatic(opts);
   } catch (staticErr) {
-    if (prefer === 'fixture') {
-      const snap = loadSnapshot();
-      if (snap) return snap;
-    }
-    // file:// : fetch() cannot read local files at all. Fall back to the
-    // generated snapshot (a classic script that was already executed), then the
-    // hand-written fixture — which on file:// is also fetch-blocked, so the
-    // snapshot is the one that actually works there.
     const snap = loadSnapshot();
     if (snap) return snap;
-    try {
-      const fx = await loadFixture(opts);
-      fx.dataset = { ...fx.dataset, fallback_reason: staticErr.message };
-      return fx;
-    } catch {
-      throw staticErr;
-    }
+    throw staticErr;
   }
 }
 
@@ -314,5 +273,5 @@ async function loadTaxonomy({ signal } = {}) {
   return null;
 }
 
-  Object.assign(SR, { FIXTURE_URL, STATIC_URL_CANDIDATES, fetchApiLookup, loadStatic, loadFixture, getLookup, getAllRows, clearStaticCache, voteFor, reportMiss, TAXONOMY_URLS, loadTaxonomy });
+  Object.assign(SR, { STATIC_URL_CANDIDATES, fetchApiLookup, loadStatic, getLookup, getAllRows, clearStaticCache, voteFor, reportMiss, TAXONOMY_URLS, loadTaxonomy });
 })(window.__SR = window.__SR || {});

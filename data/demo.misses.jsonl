@@ -1,3 +1,0 @@
-{"query": {"hw": "sm_120", "kind": null, "limit": 50, "model": "qwen3", "q": null, "runtime": "vllm", "status": null}, "query_id": "demo0000", "searcher_key": "demo:searcher-0", "ts": "2026-11-22T01:00:00Z", "user_agent": "demo/seed_votes"}
-{"query": {"hw": "sm_120", "kind": null, "limit": 50, "model": "qwen3", "q": null, "runtime": "vllm", "status": null}, "query_id": "demo0001", "searcher_key": "demo:searcher-1", "ts": "2026-11-22T02:00:00Z", "user_agent": "demo/seed_votes"}
-{"query": {"hw": "sm_120", "kind": null, "limit": 50, "model": "qwen3", "q": null, "runtime": "vllm", "status": null}, "query_id": "demo0002", "searcher_key": "demo:searcher-2", "ts": "2026-11-22T03:00:00Z", "user_agent": "demo/seed_votes"}

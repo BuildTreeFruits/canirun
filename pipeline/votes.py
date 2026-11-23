@@ -4,8 +4,7 @@ Two inputs, both owned by the pipeline (CONTRACT §7):
 
   data/votes.json    {"<row_id>": {"count": n, "requesters": ["<stable key>", ...],
                                     "first": "YYYY-MM-DD"}}
-                     written by the vote service (api/server.py) and, for demo
-                     purposes only, by pipeline/seed_votes.py -> data/demo.votes.json
+                     written by the vote service (api/server.py)
   data/misses.jsonl  one JSON object per line:
                      {"ts", "query": {"hw","model","runtime",...}, "query_id",
                       "searcher_key", "user_agent"}
@@ -512,15 +511,11 @@ def fold_votes_file(
 def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(description="fold votes.json + misses.jsonl into data/rows")
     ap.add_argument("--root", default=None)
-    ap.add_argument("--demo", action="store_true", help="also fold data/demo.votes.json")
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args(argv)
     p = util.paths(args.root)
     from pipeline import normalize  # local import keeps module deps acyclic
     files = [p["votes"]]
-    if args.demo:
-        demo = os.path.join(p["root"], "data", "demo.votes.json")
-        files.append(demo)
     rows = normalize.load_rows(p)
     rep = fold_votes_file(p, rows, votes_files=files)
     if rep["invalid_after_votes"]:

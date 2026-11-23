@@ -165,17 +165,59 @@ test('cardFor() and cardGroup() render hw_extra, untested basis vs want_votes, a
   assert.ok(untestedHtml.includes('5'), 'untested card should render want_votes');
   assert.ok(untestedHtml.includes('q4_k_m'), 'untested cardGroup should render nested variant');
   assert.ok(untestedHtml.includes('double-wish'), 'untested cardGroup should render double-wish warning');
+  assert.ok(!untestedHtml.includes('data-vote='), 'static mode untested card should hide [data-vote] button');
+
+  const apiHtml = SR.cardFor(untestedParent, { apiMode: true });
+  assert.ok(apiHtml.includes('data-vote='), 'apiMode untested card should render [data-vote] button');
 });
 
-test('missPanel() contains 1-click submit pointer GitHub issue link', () => {
+test('missPanel() renders GitHub issue links without fake vote button in static mode', () => {
   const { ctx } = loadWebScripts();
   const SR = ctx.__SR;
   const html = SR.missPanel(
     { is_miss: true, reason: 'no-match', query: { hw: 'rtx4090', model: 'llama3', runtime: 'llama.cpp' } },
-    { payload: { hw: 'rtx4090', model: 'llama3', runtime: 'llama.cpp' } },
+    { payload: { id: 'nvidia/sm_89/llama-3/llama_cpp', hw: 'rtx4090', model: 'llama3', runtime: 'llama.cpp' } },
   );
+  assert.ok(!html.includes('data-want-miss'), 'static mode missPanel should hide [data-want-miss] button');
   assert.ok(html.includes('I got this working'), 'missPanel should contain 1-click submit pointer text');
+  assert.ok(html.includes('Propose / request this combination'), 'static mode missPanel should contain propose/request link');
+  assert.ok(html.includes('template=submit-combo.yml'), 'missPanel links should target submit-combo.yml');
   assert.ok(html.includes('github.com'), 'missPanel should contain GitHub issue link');
+});
+
+test('static mode browseTable omits Votes column and no sample/demo fixtures remain', () => {
+  const { ctx } = loadWebScripts();
+  const SR = ctx.__SR;
+  const dataset = SR.normalizeData(ctx.SOLVE_RUN_SNAPSHOT);
+  const tableHtml = SR.browseTable(dataset.rows.slice(0, 5), { sort: 'status', dir: 'desc' });
+  assert.ok(!tableHtml.includes('data-sort="want_votes"'), 'static mode browseTable should omit Votes column');
+
+  assert.equal(fs.existsSync(path.join(webDir, 'fixtures', 'sample-combos.json')), false, 'sample-combos.json should be deleted');
+  for (const rel of ['index.html', 'js/api.js', 'js/app.js']) {
+    const src = fs.readFileSync(path.join(webDir, rel), 'utf8');
+    assert.ok(!src.includes('sample-combos.json'), `${rel} should not reference sample-combos.json`);
+    assert.ok(!src.includes('?data=sample'), `${rel} should not reference ?data=sample`);
+  }
+});
+
+test('JS lookup() resolves Apple, NVIDIA, and AMD hw_aliases', () => {
+  const { ctx } = loadWebScripts();
+  const SR = ctx.__SR;
+  const dataset = SR.normalizeData(ctx.SOLVE_RUN_SNAPSHOT);
+  const tax = ctx.SOLVE_RUN_SNAPSHOT.taxonomy;
+
+  for (const [alias, expectedArch] of [
+    ['m4_pro', 'm4-pro'],
+    ['mac-studio', 'm4-max'],
+    ['a100', 'sm_80'],
+    ['rtx4070', 'sm_89'],
+    ['rx7900xtx', 'gfx1100'],
+    ['strix-halo', 'gfx1151'],
+  ]) {
+    const res = SR.lookup(dataset.rows, { hw: alias }, dataset, tax);
+    assert.ok(res.rows.length > 0, `lookup(${alias}) should return rows`);
+    assert.ok(res.rows.some((r) => r.hw_arch === expectedArch), `lookup(${alias}) should match ${expectedArch}`);
+  }
 });
 
 test('groupVariants() nests variant rows under their parent card and Untested (0) renders cleanly', () => {

@@ -3,7 +3,6 @@
 
     python3 scripts/serve.py                 # http://127.0.0.1:8787  +  /api/docs
     python3 scripts/serve.py --port 9000
-    python3 scripts/serve.py --demo          # also fold data/demo.votes.json (synthetic votes)
     python3 scripts/serve.py --open          # ...and open a browser
     python3 scripts/serve.py --no-build      # never run the pipeline, serve what is there
     python3 scripts/serve.py --status        # report dataset state, then exit
@@ -57,7 +56,7 @@ def dataset_status(data_dir: str) -> dict:
     return out
 
 
-def run_pipeline(data_dir: str, demo: bool) -> bool:
+def run_pipeline(data_dir: str) -> bool:
     """Run pipeline/build.py. Returns True on success."""
     build_py = os.path.join(ROOT, "pipeline", "build.py")
     if not os.path.exists(build_py):
@@ -68,8 +67,6 @@ def run_pipeline(data_dir: str, demo: bool) -> bool:
     args = [sys.executable, build_py]
     if os.path.abspath(data_dir) != os.path.abspath(os.path.join(ROOT, "data")):
         args += ["--root", os.path.dirname(os.path.abspath(data_dir))]
-    if demo:
-        args.append("--demo")
     print(f"[serve] building dataset:  {' '.join(args[1:])}")
     try:
         proc = subprocess.run(args, cwd=ROOT, timeout=300)
@@ -112,8 +109,6 @@ def main(argv=None) -> int:
                     help="dataset directory (default: <project>/data)")
     ap.add_argument("--static-dir", default=os.path.join(ROOT, "web"),
                     help="site directory (default: <project>/web)")
-    ap.add_argument("--demo", action="store_true",
-                    help="fold data/demo.votes.json (synthetic votes) via the pipeline")
     ap.add_argument("--rebuild", action="store_true",
                     help="rebuild the dataset even if data/combos.json exists")
     ap.add_argument("--no-build", action="store_true",
@@ -133,18 +128,11 @@ def main(argv=None) -> int:
 
     need_build = (not status["exists"]) or status["rows"] == 0 or args.rebuild
 
-    # --demo with an existing export still needs a fold, or the demo votes never show
-    if args.demo and not need_build:
-        need_build = os.path.exists(os.path.join(ROOT, "data", "demo.votes.json"))
-
     if need_build and not args.no_build:
-        run_pipeline(data_dir, args.demo)
+        run_pipeline(data_dir)
         status = dataset_status(data_dir)
     elif need_build and args.no_build:
         print("[serve] --no-build: not running the pipeline")
-    elif args.demo:
-        print("[serve] note: --demo given but no data/demo.votes.json to fold "
-              "(try: python3 pipeline/seed_votes.py)")
 
     import server as api_server  # noqa: E402 — after sys.path setup
 

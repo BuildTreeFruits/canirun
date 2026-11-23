@@ -350,7 +350,7 @@ function rejectedCard(row) {
 }
 
 /** untested card: proposed/unverified, basis separated from demand votes. */
-function untestedCard(row, { now = new Date(), voted = false } = {}) {
+function untestedCard(row, { now = new Date(), voted = false, apiMode = false } = {}) {
   const age = ageOf(row.want_first, now);
   const votes = row.want_votes || 0;
   const requesters = (row.want_requesters || []).slice(0, 8);
@@ -402,13 +402,13 @@ function untestedCard(row, { now = new Date(), voted = false } = {}) {
           </div>
           <div class="row"><span class="k">Last activity</span><span>${esc(row.updated ? formatDate(row.updated) : formatDate(row.as_of))}</span></div>
         </div>
-        <div class="wanted-actions">
+        ${apiMode ? `<div class="wanted-actions">
           <button type="button" class="btn btn-want" data-vote="${attr(row.id)}"
             data-voted="${voted ? 'true' : 'false'}" aria-pressed="${voted ? 'true' : 'false'}"
             aria-label="${voted ? 'You want this' : 'Vote that you want'} this combination, ${votes} so far">
             <span aria-hidden="true">${voted ? '✓' : '↑'}</span><span class="vote-label">${voted ? 'Voted' : 'I want this'}</span>
           </button>
-        </div>
+        </div>` : ''}
       </div>
       ${notes}
       ${evidenceBlock(row)}
@@ -500,28 +500,33 @@ function cardGroup({ parent, variants = [] }, opts = {}) {
    about what this means, a want button, and the exact JSON payload.
    ======================================================================== */
 
-function submitPointerUrlFor(q, payload) {
+function submitIssueUrlFor(q, payload, { status = 'solved' } = {}) {
   const id = (payload && payload.id) || '';
-  const hw = (q && q.hw) || '';
-  const model = (q && q.model) || '';
+  const parts = id ? id.split('/') : [];
+  const hwVendor = parts[0] || '';
+  const hw = (q && q.hw) || parts[1] || '';
+  const model = (q && q.model) || parts[2] || '';
   const runtime = (q && q.runtime) || '';
-  const title = `Submit pointer: ${id || [hw, model, runtime].filter(Boolean).join(' / ')}`;
-  const body = [
-    `- **combo_id:** ${id}`,
-    `- **hardware:** ${hw}`,
-    `- **model:** ${model}`,
-    `- **runtime:** ${runtime}`,
-    '',
-    '### Pointer & evidence',
-    '- **pointer URL:** ',
-    '- **notes (quant, context, VRAM, etc.):** ',
-    ''
-  ].join('\n');
-  const params = new URLSearchParams({ title, body });
+  const prefix = status === 'solved' ? 'Submit pointer' : 'Request combo';
+  const title = `[combo] ${prefix}: ${id || [hw, model, runtime].filter(Boolean).join(' / ')}`;
+  const params = new URLSearchParams({
+    template: 'submit-combo.yml',
+    title,
+    status
+  });
+  if (id) params.set('combo_id', id);
+  if (hwVendor) params.set('hw_vendor', hwVendor);
+  if (hw) params.set('hw_arch', hw);
+  if (model) params.set('model_family', model);
+  if (runtime) params.set('runtime', runtime);
   return `https://github.com/BuildTreeFruits/solve-run/issues/new?${params.toString()}`;
 }
 
-function missPanel(response, { now = new Date(), payload }) {
+function submitPointerUrlFor(q, payload) {
+  return submitIssueUrlFor(q, payload, { status: 'solved' });
+}
+
+function missPanel(response, { now = new Date(), payload, apiMode = false }) {
   const miss = response.miss || {};
   const q = response.query || {};
   const ds = response.dataset || {};
@@ -585,11 +590,12 @@ function missPanel(response, { now = new Date(), payload }) {
       </div>
       <dl class="miss-facts">${facts}</dl>
       <div class="miss-actions">
-        <button type="button" class="btn btn-want" data-want-miss
+        ${apiMode ? `<button type="button" class="btn btn-want" data-want-miss
           data-id="${attr(payload.id)}" aria-pressed="false">
           <span aria-hidden="true">↑</span><span class="vote-label">Want this</span>
-        </button>
-        <a class="btn btn-primary" href="${attr(submitPointerUrlFor(q, payload))}" target="_blank" rel="noopener noreferrer">I got this working — submit pointer</a>
+        </button>` : ''}
+        <a class="btn btn-primary" href="${attr(submitIssueUrlFor(q, payload, { status: 'solved' }))}" target="_blank" rel="noopener noreferrer">I got this working — submit pointer</a>
+        ${!apiMode ? `<a class="btn btn-want" href="${attr(submitIssueUrlFor(q, payload, { status: 'untested' }))}" target="_blank" rel="noopener noreferrer">Propose / request this combination</a>` : ''}
         <button type="button" class="btn btn-ghost" data-copy-payload>Copy miss report</button>
         <button type="button" class="btn btn-ghost" data-copy-link>Copy link to this lookup</button>
         <span class="feedback" data-miss-feedback role="status" aria-live="polite"></span>
@@ -688,8 +694,9 @@ const BROWSE_COLUMNS = [
   { key: '', label: '' }
 ];
 
-function browseTable(rows, { sort, dir, now, voted = new Set(), total = rows.length, statusFilter = '' } = {}) {
-  const head = BROWSE_COLUMNS.map((c) => {
+function browseTable(rows, { sort, dir, now, voted = new Set(), total = rows.length, statusFilter = '', apiMode = false } = {}) {
+  const cols = apiMode ? BROWSE_COLUMNS : BROWSE_COLUMNS.filter((c) => c.key !== 'want_votes');
+  const head = cols.map((c) => {
     if (!c.key) return `<th scope="col"><span class="visually-hidden">Actions</span></th>`;
     const isSorted = sort === c.key;
     const ariaSort = isSorted ? (dir === 'asc' ? 'ascending' : 'descending') : 'none';
@@ -710,7 +717,7 @@ function browseTable(rows, { sort, dir, now, voted = new Set(), total = rows.len
         <td class="c-model">${r.model_family === '*' ? '<span class="star" title="Hardware-level claim, applies to all models">＊</span> <span style="color:var(--ink-3)">all</span>' : `<code>${esc(r.model_family)}</code>`}</td>
         <td class="c-runtime">${esc(r.runtime)}</td>
         <td class="c-asof"><time datetime="${attr(r.as_of || '')}">${esc(formatDateShort(r.as_of))}</time>${isWanted && age ? `<div class="age" data-age="${attr(age.bucket)}">${esc(age.text)}</div>` : ''}</td>
-        <td class="c-votes">${isWanted ? esc(r.want_votes || 0) : '<span style="color:var(--ink-3)">—</span>'}</td>
+        ${apiMode ? `<td class="c-votes">${isWanted ? esc(r.want_votes || 0) : '<span style="color:var(--ink-3)">—</span>'}</td>` : ''}
         <td class="c-kind">${kindBadge(r.source_kind)}${r.pointer_alive === false ? ' <span class="badge badge-dead" title="Pointer may be dead">● dead?</span>' : ''}${r.provisional ? ' <span class="badge badge-provisional">Provisional</span>' : ''}</td>
         <td><button type="button" class="row-open" data-open-row="${attr(r.id)}" aria-label="Open lookup for ${attr(r.hw_arch)} × ${attr(r.model_family === '*' ? 'all models' : r.model_family)} × ${attr(r.runtime)}">Open</button></td>
       </tr>`;

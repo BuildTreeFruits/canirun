@@ -1,7 +1,6 @@
 """build.py -- the one command that rebuilds the whole published dataset.
 
     python3 pipeline/build.py              # normalize -> votes -> misses -> export
-    python3 pipeline/build.py --demo       # also fold data/demo.votes.json
     python3 pipeline/build.py --dry-run    # report only, write nothing
     python3 pipeline/build.py --check      # exit 1 if a second run would change anything
 
@@ -30,9 +29,9 @@ from typing import Any, Dict, List, Mapping, Optional
 
 if __package__ in (None, ""):
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    from pipeline import export, join as join_mod, normalize, schema, seed_votes, util, votes as votes_mod
+    from pipeline import export, join as join_mod, normalize, schema, util, votes as votes_mod
 else:
-    from . import export, normalize, schema, seed_votes, util
+    from . import export, normalize, schema, util
     from . import join as join_mod, votes as votes_mod
 
 
@@ -107,7 +106,7 @@ def print_stats(st: Mapping[str, Any], *, top_runtime: int = 14) -> None:
 # Build
 # ---------------------------------------------------------------------------
 
-def _inputs_fingerprint(p: Mapping[str, str], *, demo: bool) -> Dict[str, Any]:
+def _inputs_fingerprint(p: Mapping[str, str]) -> Dict[str, Any]:
     """Everything whose change should move `updated` / bump the version."""
     srcs = {}
     for path in normalize.source_files(p) + sorted(
@@ -125,8 +124,7 @@ def _inputs_fingerprint(p: Mapping[str, str], *, demo: bool) -> Dict[str, Any]:
         except FileNotFoundError:
             continue
     votes = {}
-    vote_files = [p["votes"]] + ([os.path.join(p["root"], "data", "demo.votes.json")] if demo else [])
-    for path in vote_files:
+    for path in [p["votes"]]:
         try:
             with open(path, "rb") as fh:
                 votes[util.rel(path, p["root"])] = exports_hash(fh.read())
@@ -138,8 +136,7 @@ def _inputs_fingerprint(p: Mapping[str, str], *, demo: bool) -> Dict[str, Any]:
             misses = exports_hash(fh.read())
     except FileNotFoundError:
         pass
-    return {"sources": srcs, "taxonomy": tax, "votes": votes, "misses": misses,
-            "demo": demo}
+    return {"sources": srcs, "taxonomy": tax, "votes": votes, "misses": misses}
 
 
 def exports_hash(data: bytes) -> str:
@@ -154,7 +151,6 @@ def _state_path(p: Mapping[str, str]) -> str:
 def build(
     p: Optional[Mapping[str, str]] = None,
     *,
-    demo: bool = False,
     dry_run: bool = False,
     today_override: Optional[str] = None,
     quiet: bool = False,
@@ -169,7 +165,7 @@ def build(
     report_path = os.path.join(p["root"], "pipeline", ".build-report.json")
     prev_report = util.read_json(report_path, default={}) or {}
     demo_created_ids = set(prev_report.get("demo_created") or [])
-    fingerprint = _inputs_fingerprint(p, demo=demo)
+    fingerprint = _inputs_fingerprint(p)
     inputs_changed = prev_state.get("fingerprint") != fingerprint
 
     # --- 1. normalize ----------------------------------------------------
@@ -183,27 +179,15 @@ def build(
     # --- 2/3. join + votes + misses -------------------------------------
     rows = norm["rows"]
     rows = join_mod.apply_join(rows, run_date=tday)
-    demo_file = os.path.join(p["root"], "data", "demo.votes.json")
-    demo_misses = os.path.join(p["root"], "data", "demo.misses.jsonl")
     vote_maps = [votes_mod.load_votes(p["votes"])]
     misses = util.read_jsonl(p["misses"]) if os.path.exists(p["misses"]) else []
-    if demo:
-        if os.path.exists(demo_file):
-            vote_maps.append(seed_votes.load_demo_votes(demo_file))
-        elif not quiet:
-            print(f"  (--demo: {util.rel(demo_file, p['root'])} not found; "
-                  f"run python3 pipeline/seed_votes.py to create it)")
-        if os.path.exists(demo_misses):
-            misses = misses + util.read_jsonl(demo_misses)
     votes = votes_mod.merge_vote_sources(*vote_maps)
-    if not demo:
-        rows = votes_mod.strip_demo_votes(rows)
+    rows = votes_mod.strip_demo_votes(rows)
     rows, events = votes_mod.apply_votes(rows, votes, run_date=tday, taxonomy=taxonomy)
     rows, created, skipped = votes_mod.fold_misses(rows, misses, run_date=tday)
-    if not demo:
-        for r in rows:
-            if int(r.get("want_votes") or 0) == 0 and r.get("status") != "untested":
-                r["want_first"] = None
+    for r in rows:
+        if int(r.get("want_votes") or 0) == 0 and r.get("status") != "untested":
+            r["want_first"] = None
     # the fold must never produce an invalid row; report, don't crash the build
     invalid_after = [
         {"id": r["id"], "errors": schema.validate(r, taxonomy=taxonomy, today=tday)}
@@ -232,10 +216,8 @@ def build(
     }
     rows = vrep["rows"]
 
-    # A previous `--demo` build may have materialised rows from synthetic
-    # votes/misses.  They are not claims: withdraw them on a real build (this is
-    # the one sanctioned deletion path; a hand-authored row is never touched).
-    if not demo and not dry_run and demo_created_ids:
+    # Withdraw any leftover rows created by a legacy --demo build.
+    if not dry_run and demo_created_ids:
         keep = []
         for r in rows:
             synthetic = (r["id"] in demo_created_ids
@@ -273,25 +255,12 @@ def build(
         payload = export.build_payload(rows, tax_fields, version=version, run_date=tday,
                                        generated_at=schema.now(), previous=previous)
     diff = export.diff_summary(previous, payload)
-    if demo:
-        payload["demo"] = True
     written = {"combos_changed": False, "export_jsonl_changed": False}
     if not dry_run:
         written = export.write_export(p, payload, quiet=quiet)
         util.write_json(state_path, {"fingerprint": fingerprint, "built_at": schema.now(),
                                      "version": payload["version"], "rows": len(rows)})
 
-    # Rows created from real votes/misses are legitimate data and must never be
-    # withdrawn.  Only rows a --demo run created (i.e. not backed by a real
-    # vote/miss record now) stay on the withdrawal list.
-    if not dry_run:
-        real_vote_ids = set(votes_mod.load_votes(p["votes"]))
-        real_miss_ids = {r["id"] for r in rows if str(r.get("reported_by") or "") == "pipeline:miss-threshold"}
-        demo_created_ids = set() if not demo else {
-            r["id"] for r in rows
-            if str(r.get("reported_by") or "").startswith(("vote:", "pipeline:miss"))
-            and r["id"] not in real_vote_ids and r["id"] not in real_miss_ids
-        }
     st = stats(rows, rejects=norm["rejects"])
     st["corrections"] = norm.get("corrections", {})
     st.update({
@@ -313,11 +282,7 @@ def build(
         "warnings": norm["warnings"][:200],
     })
     if not dry_run:
-        # demo-created rows are recorded so a non-demo rebuild can withdraw them
-        # (they are not claims, and without this a --demo row would be kept
-        # forever by the never-delete rule).
         util.write_json(report_path, {
-            "demo_created": sorted(demo_created_ids) if demo else [],
             "built_at": payload["generated_at"],
             "version": payload["version"],
             "as_of": payload["as_of"],
@@ -354,12 +319,12 @@ def build(
     return st
 
 
-def check_idempotent(p: Optional[Mapping[str, str]] = None, *, demo: bool = False) -> Dict[str, Any]:
+def check_idempotent(p: Optional[Mapping[str, str]] = None) -> Dict[str, Any]:
     """Run build twice; compare combos.json ignoring `generated_at`."""
     p = p or util.paths()
-    build(p, demo=demo, quiet=True)
+    build(p, quiet=True)
     first = util.read_json(p["combos"], default={}) or {}
-    build(p, demo=demo, quiet=True)
+    build(p, quiet=True)
     second = util.read_json(p["combos"], default={}) or {}
     a = dict(first); b = dict(second)
     ga = a.pop("generated_at", None); gb = b.pop("generated_at", None)
@@ -372,7 +337,6 @@ def check_idempotent(p: Optional[Mapping[str, str]] = None, *, demo: bool = Fals
 def main(argv: Optional[List[str]] = None) -> int:
     ap = argparse.ArgumentParser(description="build data/combos.json from scrapers/out")
     ap.add_argument("--root", default=None, help="project root (default: repo root)")
-    ap.add_argument("--demo", action="store_true", help="fold data/demo.votes.json (synthetic)")
     ap.add_argument("--dry-run", action="store_true", help="report only, write nothing")
     ap.add_argument("--today", default=None, help="override the run date (YYYY-MM-DD)")
     ap.add_argument("--check", action="store_true", help="verify a second run is byte-identical")
@@ -383,13 +347,13 @@ def main(argv: Optional[List[str]] = None) -> int:
     if args.today and not schema.parse_date(args.today):
         print(f"--today {args.today!r} is not YYYY-MM-DD", file=sys.stderr)
         return 2
-    st = build(p, demo=args.demo, dry_run=args.dry_run, today_override=args.today,
+    st = build(p, dry_run=args.dry_run, today_override=args.today,
                quiet=args.json, warn_limit=args.warn_limit)
     if args.json:
         printable = {k: v for k, v in st.items() if k not in ("rejects",)}
         print(json.dumps(printable, indent=2, sort_keys=True, default=str))
     if args.check:
-        rep = check_idempotent(p, demo=args.demo)
+        rep = check_idempotent(p)
         print(f"[check] second run identical except generated_at: "
               f"{rep['identical_except_generated_at']}  (v{rep['version_1']} -> v{rep['version_2']})")
         if not rep["identical_except_generated_at"]:

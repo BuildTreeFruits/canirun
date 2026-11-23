@@ -163,7 +163,7 @@
               <option value="runtime">Runtime</option>
               <option value="as_of">As of (newest)</option>
               <option value="as_of_old">As of (oldest)</option>
-              <option value="want_votes">Votes</option>
+              <option value="want_votes" data-api-only>Votes</option>
               <option value="source_kind">Source kind</option>
             </select>
           </div>
@@ -197,7 +197,6 @@
             <li><a href="api/combos.json" data-href-api="combos.json">combos.json</a> — the merged export</li>
             <li><a href="api/lookup" data-href-api="lookup">/api/lookup docs</a> · <a href="api/docs" data-href-api="docs">API docs</a></li>
             <li><a href="api/health" data-href-api="health">health</a> · <a href="api/untested" data-href-api="wanted">untested list</a></li>
-            <li><a href="?data=sample" data-sample-link>View the sample dataset</a> — every state, including untested &amp; rejected</li>
           </ul>
         </div>
         <div>
@@ -218,7 +217,7 @@ If miss.is_miss: report the miss, don’t rebuild what exists.<button type="butt
       <div class="footer-bottom">
         <span id="footer-version">—</span>
         <span class="header-spacer"></span>
-        <span>No accounts. No tracking. Want votes are one click.</span>
+        <span>No accounts. No tracking.<span data-api-only> Want votes are one click.</span></span>
       </div>
     </div>
   </footer>

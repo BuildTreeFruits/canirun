@@ -25,11 +25,10 @@
 const state = {
   rows: [],
   dataset: null,
-  source: null, // 'api' | 'static' | 'fixture'
+  source: null, // 'api' | 'static' | 'snapshot'
   facets: null,
   votes: loadVoted(), // Set of row ids voted for in this browser
   lastResponse: null,
-  forceFixture: false,
   taxonomy: null,
   view: 'lookup',
   browse: { status: '', vendor: '', q: '', sort: 'status', dir: 'desc' }
@@ -230,25 +229,7 @@ function idFor(q) {
 
 /* ------------------------------------------------------------------- data */
 
-/**
- * `?data=sample` forces the demo fixture. It exists because the live dataset may
- * not yet contain every state (e.g. only hardware-level `*` rows), and the
- * wanted / rejected / dead-pointer surfaces still need to be reviewable. The
- * banner always says when sample data is in use.
- */
-function setDatasetParam(value) {
-  const url = new URL(location.href);
-  if (value) url.searchParams.set('data', value);
-  else url.searchParams.delete('data');
-  history.replaceState(null, '', url);
-}
-
-function readDatasetParam() {
-  return new URLSearchParams(location.search).get('data');
-}
-
 async function boot() {
-  state.forceFixture = readDatasetParam() === 'sample';
   setView(routeView(), { silent: true });
   bindEvents();
   await loadData();
@@ -258,7 +239,7 @@ async function boot() {
 async function loadData() {
   el.results.innerHTML = R.loading();
   try {
-    const data = await getAllRows(state.forceFixture ? { prefer: 'fixture' } : {});
+    const data = await getAllRows();
     state.rows = data.rows;
     state.dataset = data.dataset;
     state.source = data.source;
@@ -273,7 +254,7 @@ async function loadData() {
   } catch (err) {
     state.rows = [];
     state.dataset = null;
-    el.results.innerHTML = R.loadError({ message: err.message, tried: ['/api/lookup', '../data/combos.json', 'fixtures/sample-combos.json'] });
+    el.results.innerHTML = R.loadError({ message: err.message, tried: ['/api/lookup', '../data/combos.json', 'snapshot.js'] });
     const retry = $('#retry');
     if (retry) retry.addEventListener('click', () => loadData().then(() => route()));
     renderChrome();
@@ -284,7 +265,6 @@ async function loadData() {
 /** header, banner, runtime select, footer — everything outside the results. */
 function renderChrome() {
   const ds = state.dataset || {};
-  const isFixture = state.source === 'fixture';
   const isSnapshot = state.source === 'snapshot';
   const empty = state.rows.length === 0;
 
@@ -296,13 +276,9 @@ function renderChrome() {
     runtimes.map((r) => `<option value="${R.esc(r)}">${R.esc(r)}</option>`).join('');
   if (runtimes.includes(current)) el.runtime.value = current;
 
-  // Banner: sample data / no data. Honesty is non-negotiable.
-  el.banner.hidden = !(isFixture || isSnapshot || empty);
-  if (isFixture) {
-    el.bannerText.innerHTML =
-      `<strong>Sample data.</strong> These ${R.esc(ds.rows)} rows are a hand-written demo (as of ${R.esc(ds.as_of || '—')}) so every state can be seen, including wanted and rejected. They are not the live index. ` +
-      `<a href="#" data-try-live>Switch to the live data</a>`;
-  } else if (isSnapshot) {
+  // Banner: offline snapshot / no data. Honesty is non-negotiable.
+  el.banner.hidden = !(isSnapshot || empty);
+  if (isSnapshot) {
     el.bannerText.innerHTML =
       `<strong>Offline snapshot.</strong> Opened from a local file, so the page is showing a saved copy of the dataset` +
       `${ds.as_of ? ` as of <strong>${R.esc(ds.as_of)}</strong>` : ''} (${R.esc(ds.rows)} rows) instead of the live index. ` +
@@ -317,24 +293,29 @@ function renderChrome() {
       ? 'Live API'
       : state.source === 'static'
         ? 'Static export'
-        : state.source === 'fixture'
-          ? 'Sample data'
-          : state.source === 'snapshot'
-            ? 'Offline snapshot'
-            : 'Unavailable';
+        : state.source === 'snapshot'
+          ? 'Offline snapshot'
+          : 'Unavailable';
   el.datasetLine.innerHTML = `<span class="src">${R.esc(srcLabel)}</span>` +
     (ds.version ? ` <span>· version <code>${R.esc(ds.version)}</code></span>` : '') +
     (ds.as_of ? ` <span>· as of <strong>${R.esc(ds.as_of)}</strong></span>` : '') +
     ` <span>· ${R.esc(ds.rows ?? 0)} rows</span>`;
   el.footerVersion.textContent = `${ds.version ? `dataset ${ds.version} · ` : ''}${ds.as_of ? `as of ${ds.as_of} · ` : ''}${ds.rows ?? 0} rows`;
 
-  // Footer API links only make sense when the API exists.
+  // Footer API links and voting UI only make sense when the API exists.
   const apiOk = state.source === 'api';
+  $$('[data-api-only]').forEach((node) => {
+    node.hidden = !apiOk;
+  });
+  if (!apiOk && state.browse.sort === 'want_votes') {
+    state.browse.sort = 'status';
+    if (el.browseSort) el.browseSort.value = 'status';
+  }
   $$('[data-href-api]').forEach((a) => {
     if (!apiOk) {
       const key = a.dataset.hrefApi;
       a.setAttribute('aria-disabled', 'true');
-      a.title = 'The API is not available in this hosting mode (static / sample data).';
+      a.title = 'The API is not available in this hosting mode (static export).';
       if (key === 'lookup' || key === 'docs') a.href = '#';
     }
   });
@@ -555,7 +536,7 @@ function setView(view, { silent = false } = {}) {
  *
  * The hash wins when it carries params; otherwise the query string is used.
  * Match params are read from both, so a partial query string still works when a
- * hash is present for another reason (e.g. ?data=sample#lookup).
+ * hash is present for another reason (e.g. `#lookup`).
  */
 function readLookupParams() {
   const hash = location.hash.replace(/^#/, '');
@@ -606,7 +587,7 @@ async function performLookup(q, { push = true } = {}) {
   el.results.innerHTML = R.loading('Looking…');
   let response;
   try {
-    response = await getLookup(clean, state.forceFixture ? { prefer: 'fixture' } : {});
+    response = await getLookup(clean);
   } catch (err) {
     el.results.innerHTML = R.loadError({ message: err.message });
     return;
@@ -649,12 +630,13 @@ function renderResponse(res) {
     <button type="button" class="btn btn-ghost btn-sm" data-reveal-json>Show JSON</button>
   </div>`);
 
+  const apiMode = state.source === 'api';
   if (res.miss) {
     // THE deciding surface.
     const payload = missPayload(res);
-    parts.push(R.missPanel(res, { now, payload }));
+    parts.push(R.missPanel(res, { now, payload, apiMode }));
     if (context.length) {
-      parts.push(R.contextSection(context, { now, voted, heading: 'Hardware-level support for this card' }));
+      parts.push(R.contextSection(context, { now, voted, apiMode, heading: 'Hardware-level support for this card' }));
     }
     parts.push(R.neighbouringNote(relatedRows(res), q));
   } else {
@@ -662,8 +644,8 @@ function renderResponse(res) {
       ? SR.groupVariants(answers)
       : answers.map((r) => ({ parent: r, variants: [] }));
     const cardsHtml = R.cardGroup
-      ? groups.map((g) => R.cardGroup(g, { now, voted })).join('')
-      : answers.map((r) => R.cardFor(r, { now, voted })).join('');
+      ? groups.map((g) => R.cardGroup(g, { now, voted, apiMode })).join('')
+      : answers.map((r) => R.cardFor(r, { now, voted, apiMode })).join('');
     parts.push(`<div class="cards">${cardsHtml}</div>`);
     // Hardware-level rows always render in their own clearly-labelled section,
     // never mixed in with model answers. One list, deduped by id: with no model
@@ -911,7 +893,8 @@ async function renderBrowse() {
     now: new Date(),
     voted: state.votes,
     total: all.length,
-    statusFilter: b.status
+    statusFilter: b.status,
+    apiMode: state.source === 'api'
   });
   const goLookup = el.browseResults.querySelector('[data-go-lookup]');
   if (goLookup) {
@@ -1329,13 +1312,7 @@ function bindEvents() {
       performLookup(currentQuery(), { push: true });
       return;
     }
-    if (e.target.closest('[data-try-live]')) {
-      e.preventDefault();
-      state.forceFixture = false;
-      setDatasetParam(null);
-      loadData().then(() => route());
-      return;
-    }
+
   });
 
   el.browseQ.addEventListener(
@@ -1445,7 +1422,7 @@ function bindEvents() {
   // Refresh the dataset when the page becomes visible again after a while.
   let lastShown = Date.now();
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible' && Date.now() - lastShown > 5 * 60 * 1000 && !state.forceFixture) {
+    if (document.visibilityState === 'visible' && Date.now() - lastShown > 5 * 60 * 1000) {
       clearStaticCache();
       loadData().then(() => route());
     }
@@ -1514,30 +1491,26 @@ async function handleVote(btn) {
   const res = await voteFor(id, { extra: { voter: voterKey() } });
   btn.disabled = false;
 
-  state.votes.add(id);
-  saveVoted();
-  if (row) row.want_votes = before + 1;
-
   const card = btn.closest('.card');
   const countEl = card && card.querySelector('.vote-count .n');
-  if (countEl) countEl.textContent = String(before + 1);
-  btn.dataset.voted = 'true';
-  btn.setAttribute('aria-pressed', 'true');
-  const label = btn.querySelector('.vote-label');
-  if (label) label.textContent = 'Wanted';
-  btn.querySelector('.glyph, [aria-hidden="true"]');
 
   if (res.ok) {
-    if (typeof res.votes === 'number' && countEl) countEl.textContent = String(res.votes);
+    state.votes.add(id);
+    saveVoted();
+    const nextCount = typeof res.votes === 'number' ? res.votes : before + 1;
+    if (row) row.want_votes = nextCount;
+    if (countEl) countEl.textContent = String(nextCount);
+    btn.dataset.voted = 'true';
+    btn.setAttribute('aria-pressed', 'true');
+    const label = btn.querySelector('.vote-label');
+    if (label) label.textContent = 'Voted';
     toast('Wanted — vote counted');
   } else {
-    // Say so honestly; keep the optimistic count so the intent is not lost, and
-    // word it as not yet server-confirmed rather than as success.
-    toast('Vote saved in this browser. The vote service is unreachable right now.');
+    toast('The vote service is unreachable right now.');
     const live = card && card.querySelector('.feedback');
     if (live) {
       live.dataset.tone = 'bad';
-      live.textContent = 'not saved to the server yet — ' + (res.error || 'offline');
+      live.textContent = 'vote not recorded — ' + (res.error || 'offline');
     }
   }
 }
