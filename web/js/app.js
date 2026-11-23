@@ -174,13 +174,13 @@ function resolveVendorForArch(arch) {
   if (rowMatch && rowMatch.hw_vendor) return rowMatch.hw_vendor;
 
   const a = String(arch || '').toLowerCase();
-  if (/^sm_/.test(a)) return 'nvidia';
-  if (/^gfx/.test(a)) return 'amd';
-  if (/^(arc-|data-center-max|flex-)/.test(a)) return 'intel';
-  if (/^m[1-5]($|[-_])/.test(a)) return 'apple';
-  if (/^(snapdragon|hexagon)/.test(a)) return 'qualcomm';
-  if (/^(aarch64|arm64)/.test(a)) return 'arm-cpu';
-  if (/^x86/.test(a)) return 'x86-cpu';
+  if (/^(sm_|rtx|gtx|tesla|quadro|jetson|dgx|gb[12]0|h[12]00|a[1346]0|b[123]00|l40|t4|v100|p100|p40|m40)/.test(a)) return 'nvidia';
+  if (/^(gfx|rx-?[0-9]|radeon|instinct|mi[0-9]|strix|ryzen-ai|w[67][0-9]{3}|r9700)/.test(a)) return 'amd';
+  if (/^(arc-|data-center-max|flex-|intel-|gaudi|xeon|core-ultra|lunar-lake|meteor-lake|arrow-lake|panther-lake)/.test(a)) return 'intel';
+  if (/^(m[1-9]($|[-_])|a1[5-9]($|[-_])|apple|mac-|macbook)/.test(a)) return 'apple';
+  if (/^(snapdragon|hexagon|adreno)/.test(a)) return 'qualcomm';
+  if (/^(aarch64|arm64|armv[89]|graviton|ampereone|grace-cpu|cortex)/.test(a)) return 'arm-cpu';
+  if (/^(x86|avx|sse|amx|zen[2-6]|epyc)/.test(a)) return 'x86-cpu';
   return 'other';
 }
 
