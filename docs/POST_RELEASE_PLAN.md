@@ -1,4 +1,4 @@
-# Post-Release & Growth Plan (`solve.run`)
+# Post-Release & Growth Plan (`canirun`)
 
 > **Context:** `ee63ee4` landed the v1.0 release fixups. This plan covers the next wave: **CI/CD, repo hygiene, community contribution loops, and frontend verification**—the things that turn a clean repo into a living, credible public project.
 

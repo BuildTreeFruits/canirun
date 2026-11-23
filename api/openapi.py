@@ -162,7 +162,7 @@ def spec(base_url: str = "http://127.0.0.1:8787") -> dict:
     return {
         "openapi": "3.1.0",
         "info": {
-            "title": "solve.run combo index",
+            "title": "canirun combo index",
             "version": "0.1.0",
             "description": (
                 "Combination index for local inference: does (hardware × model × runtime) have a "

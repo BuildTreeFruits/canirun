@@ -1,17 +1,17 @@
 # systemd unit — the combo-index API + static site.
 #
 #   sudo useradd --system --home /srv/combo-index --shell /usr/sbin/nologin combo
-#   sudo cp api/systemd/solve-run.service /etc/systemd/system/
-#   sudo nano /etc/systemd/system/solve-run.service     # EDIT the WorkingDirectory + User
+#   sudo cp api/systemd/canirun.service /etc/systemd/system/
+#   sudo nano /etc/systemd/system/canirun.service     # EDIT the WorkingDirectory + User
 #   sudo systemctl daemon-reload
-#   sudo systemctl enable --now solve-run.service
-#   journalctl -u solve-run.service -f
+#   sudo systemctl enable --now canirun.service
+#   journalctl -u canirun.service -f
 #
 # Runs api/server.py directly (not scripts/serve.py): the dev entrypoint also builds
 # the dataset, and a web request must never trigger a 60-second corpus rebuild.
 
 [Unit]
-Description=solve.run combo index (local-inference combination index)
+Description=canirun combo index (local-inference combination index)
 Documentation=file:///srv/combo-index/api/DEPLOY.md
 After=network-online.target
 Wants=network-online.target

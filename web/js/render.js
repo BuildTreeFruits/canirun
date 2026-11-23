@@ -280,7 +280,7 @@ function issueUrlFor(row) {
     ''
   ].join('\n');
   const params = new URLSearchParams({ title, body });
-  return `https://github.com/BuildTreeFruits/solve-run/issues/new?${params.toString()}`;
+  return `https://github.com/BuildTreeFruits/canirun/issues/new?${params.toString()}`;
 }
 
 function footBlock(row, { showId = true } = {}) {
@@ -519,7 +519,7 @@ function submitIssueUrlFor(q, payload, { status = 'solved' } = {}) {
   if (hw) params.set('hw_arch', hw);
   if (model) params.set('model_family', model);
   if (runtime) params.set('runtime', runtime);
-  return `https://github.com/BuildTreeFruits/solve-run/issues/new?${params.toString()}`;
+  return `https://github.com/BuildTreeFruits/canirun/issues/new?${params.toString()}`;
 }
 
 function submitPointerUrlFor(q, payload) {

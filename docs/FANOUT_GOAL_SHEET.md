@@ -1,4 +1,4 @@
-# Master Fan-Out Goal Sheet — `solve.run` Pre-Launch Completeness, Bug Fixes, Variants & `untested` State
+# Master Fan-Out Goal Sheet — `canirun` Pre-Launch Completeness, Bug Fixes, Variants & `untested` State
 
 > **Purpose:** Single authoritative execution spec for `/goal` with parallel Hydrogen agents. Every requirement from all unintegrated plans is consolidated, reconciled, and partitioned into **disjoint file write scopes** so Wave 1 agents can run 100% in parallel with zero merge conflicts, followed by a single Wave 2 Integrator agent.
 
@@ -330,12 +330,12 @@ Per `docs/DESIGN_SPEC.md` §3–§4, `implementation_plan.md` Phase 3 Option A, 
 
 3. **Include `taxonomy` in `web/tools/inline-snapshot.mjs`:**
    - Read `data/taxonomy.json` (or `combos.taxonomy` + `hw_aliases` from `data/taxonomy.json` — note `combos.json` `taxonomy` may omit `hw_aliases`, so read `data/taxonomy.json` directly when present!).
-   - Attach `taxonomy` (specifically `{ hw_vendors, hw_archs, hw_aliases, models, runtimes }`) onto `window.SOLVE_RUN_SNAPSHOT.taxonomy` so alias lookup and 4-segment `idFor()` work identically offline over `file://`.
+   - Attach `taxonomy` (specifically `{ hw_vendors, hw_archs, hw_aliases, models, runtimes }`) onto `window.CANIRUN_SNAPSHOT.taxonomy` so alias lookup and 4-segment `idFor()` work identically offline over `file://`.
    - **Note:** Do not commit a regenerated `web/snapshot.js` in Wave 1 (Wave 2 runs `node web/tools/inline-snapshot.mjs`), just make sure `inline-snapshot.mjs` is valid and tested with `node --check web/tools/inline-snapshot.mjs`.
 
 4. **Create `web/llms.txt`:**
    - Concise, plain-text guide for AI agents (served at `/llms.txt` by `api/server.py` and any static host):
-     - What `solve.run` is: canonical index of `hardware × model × runtime` combinations for local LLM inference.
+     - What `canirun` is: canonical index of `hardware × model × runtime` combinations for local LLM inference.
      - State ontology: 3 stored states (`solved`, `untested`, `rejected`) + implicit unstored `not-searched`.
      - Variants: `{vendor}/{arch}/{model}/{runtime}/@{variant_slug}` hanging off base rows via `parent` with structured knobs (`quant`, `context_length`, `offload`, `runtime_version`, `driver_version`, `flags`, `fits`).
      - Key endpoints: `GET /api/lookup?hw=&model=&runtime=`, `GET /api/untested` (and `/api/wanted`), `GET /api/openapi.json`, `GET /api/export.jsonl`, `GET /api/taxonomy`, `POST /api/miss`, `POST /api/want/{id}`.
@@ -380,7 +380,7 @@ Per `docs/DESIGN_SPEC.md` §3–§4, `implementation_plan.md` Phase 3 Option A, 
      - Fix `http://127.0.0.1:8087/` → `http://127.0.0.1:8787/`.
 
 2. **Alias-Aware Lookup & Autocomplete (`web/js/app.js`):**
-   - When `state.source === 'snapshot'` and `window.SOLVE_RUN_SNAPSHOT?.taxonomy` exists, load `state.taxonomy` from it so offline `file://` has full taxonomy + aliases.
+   - When `state.source === 'snapshot'` and `window.CANIRUN_SNAPSHOT?.taxonomy` exists, load `state.taxonomy` from it so offline `file://` has full taxonomy + aliases.
    - Pass `state.taxonomy` into every `lookup(state.rows, q, state.dataset, state.taxonomy)` call.
    - Enhance hardware combobox suggestions (`hw-list`) to match `taxonomy.hw_aliases` and display the matched alias hint alongside the canonical arch (e.g., typing `rtx 4090` or `rtx4090` suggests `sm_89` with hint `rtx4090 / RTX 4090`).
    - Enhance model combobox suggestions (`model-list`) to match `taxonomy.models[].aliases` (e.g., typing `llama3` suggests `llama-3`, typing `deepseek-r1` suggests `deepseek`).
@@ -399,7 +399,7 @@ Per `docs/DESIGN_SPEC.md` §3–§4, `implementation_plan.md` Phase 3 Option A, 
 
 4. **Close the Miss → Contribution Loop (`web/js/render.js`):**
    - In `web/js/render.js` (near `issueUrlFor()` and `missPanel()`, lines 483–491):
-     - Add `submitPointerUrlFor(q, payload)` building a pre-filled GitHub issue URL (`https://github.com/BuildTreeFruits/solve-run/issues/new?...`) with `title`, `combo_id` (`payload.id`), `hardware` (`q.hw`), `model` (`q.model`), `runtime` (`q.runtime`), and a pointer/evidence template.
+     - Add `submitPointerUrlFor(q, payload)` building a pre-filled GitHub issue URL (`https://github.com/BuildTreeFruits/canirun/issues/new?...`) with `title`, `combo_id` (`payload.id`), `hardware` (`q.hw`), `model` (`q.model`), `runtime` (`q.runtime`), and a pointer/evidence template.
      - Add a 1-click link/button in `.miss-actions`: `"I got this working — submit pointer"` opening `submitPointerUrlFor(q, payload)` in a new tab (`target="_blank" rel="noopener noreferrer"`).
 
 5. **Day-0 Navigable Lookup & Browse (`web/index.html`, `web/js/app.js`, `web/js/render.js`, `web/css/app.css`):**
@@ -493,7 +493,7 @@ Per `docs/DESIGN_SPEC.md` §3–§4, `implementation_plan.md` Phase 3 Option A, 
    Verify `web/snapshot.js` includes `taxonomy.hw_aliases` and `taxonomy.models` and its `version` matches `data/combos.json`.
 
 2. **Expand `web/tests/smoke.mjs` with regression & parity tests:**
-   - Verify `SOLVE_RUN_SNAPSHOT.taxonomy` is present with `hw_aliases` and `models`.
+   - Verify `CANIRUN_SNAPSHOT.taxonomy` is present with `hw_aliases` and `models`.
    - Verify JS `lookup()` resolves aliases:
      - `hw: 'rtx4090'` and `hw: 'rtx 4090'` → matches `sm_89` rows
      - `hw: 'rdna3'` → matches `gfx1100` rows

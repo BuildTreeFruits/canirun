@@ -1,7 +1,7 @@
 {
   "as_of": "2026-11-23",
   "content_hash": "5ffcd075a4fc68346f0060c921922935b2912596c9bb30133fe0a23affe728c6",
-  "contract": "solve.run combo-index v1",
+  "contract": "canirun combo-index v1",
   "counts": {
     "by_created_by": {
       "derived": 211,
@@ -168,7 +168,7 @@
     }
   },
   "format": "1",
-  "generated_at": "2026-11-23T22:21:37Z",
+  "generated_at": "2026-11-23T23:17:02Z",
   "rows": [
     {
       "as_of": "2026-11-23",

@@ -55,7 +55,7 @@ class APITestCase(unittest.TestCase):
     """Each test gets a private data dir + static dir and its own server."""
 
     def setUp(self):
-        self.tmp = tempfile.mkdtemp(prefix="solve-run-api-test-")
+        self.tmp = tempfile.mkdtemp(prefix="canirun-api-test-")
         self.data = os.path.join(self.tmp, "data")
         shutil.copytree(FIXTURES, self.data)
         self.static = os.path.join(self.tmp, "web")
@@ -836,7 +836,7 @@ class TestW1BAliasesAndUntested(APITestCase):
         created = False
         if not os.path.exists(llms_path):
             with open(llms_path, "w", encoding="utf-8") as fh:
-                fh.write("# solve.run\n")
+                fh.write("# canirun\n")
             created = True
         try:
             code, headers, _raw = self.get("/llms.txt")

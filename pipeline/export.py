@@ -141,7 +141,7 @@ def build_payload(
     as_of = dataset_as_of(rows, run_date)
     payload = {
         "format": FORMAT_VERSION,
-        "contract": "solve.run combo-index v1",
+        "contract": "canirun combo-index v1",
         "version": version,
         "generated_at": generated_at,
         "as_of": as_of,

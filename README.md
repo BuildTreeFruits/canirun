@@ -1,4 +1,4 @@
-# solve.run
+# canirun
 
 A canonical index of **hardware × model × runtime** combinations for local LLM inference. It answers whether a working path exists for a specific card, model family, and engine—or whether that combination is a recorded gap or has never been searched.
 

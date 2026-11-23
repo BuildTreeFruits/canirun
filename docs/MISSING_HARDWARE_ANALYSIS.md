@@ -1,4 +1,4 @@
-# Missing Hardware Analysis (`solve.run`)
+# Missing Hardware Analysis (`canirun`)
 
 An audit of [taxonomy.json](file:///Users/windows/Model%20support%20for%20hardware%20site/data/taxonomy.json), [data/rows/*.jsonl](file:///Users/windows/Model%20support%20for%20hardware%20site/data/rows), and the scraper corpus in [scrapers/sources/](file:///Users/windows/Model%20support%20for%20hardware%20site/scrapers/sources) reveals **four distinct layers of missing hardware**:
 
@@ -114,13 +114,13 @@ Beyond filling the taxonomy gaps above, these categories are increasingly promin
    - **Google Cloud TPU (`tpu-v5e`, `tpu-v6e`)**
    - **Intel Gaudi (`gaudi-2`, `gaudi-3`)**
    - **AWS Neuron (`inferentia2`, `trainium1`, `trainium2`)**
-   - **Meta MTIA / Groq LPU / Cerebras** (if tracking hosted open-weight engines, though `solve.run` focuses on local/self-hosted runtimes).
+   - **Meta MTIA / Groq LPU / Cerebras** (if tracking hosted open-weight engines, though `canirun` focuses on local/self-hosted runtimes).
 
 ---
 
 ## 7. How Users Can Add Their Own Hardware Today (and Where the Gaps Are)
 
-`solve.run` has **four paths** for users/agents to add combinations or request missing hardware—two live in-app paths (which create `untested` demand rows) and two GitHub contribution paths (which add verified rows or new taxonomy hardware):
+`canirun` has **four paths** for users/agents to add combinations or request missing hardware—two live in-app paths (which create `untested` demand rows) and two GitHub contribution paths (which add verified rows or new taxonomy hardware):
 
 ### Path 1: In-App "+1 Want" Voting on Any Hardware Slug (`POST /api/want/{id}`)
 - **How it works:** When a user types *any* hardware slug into the Lookup UI (even a brand-new `hw_arch` that does **not** exist in `taxonomy.json` yet, e.g. `apple/m4-ultra/qwen3/mlx-lm`) and gets a miss, they can click **`+1 want this Combo`** (or an agent can `POST /api/want/apple/m4-ultra/qwen3/mlx-lm`).

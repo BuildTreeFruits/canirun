@@ -1,4 +1,4 @@
-# Release Fixup Plan & Agent Spec — `solve.run` v1.0
+# Release Fixup Plan & Agent Spec — `canirun` v1.0
 
 **Goal:** Resolve all P0 data-credibility blockers, P1 repo/ops hygiene items, and corpus gaps before public release (r/LocalLLaMA, Hacker News, portfolio).
 

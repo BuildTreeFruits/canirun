@@ -170,7 +170,7 @@ async function loadRowsWithSnapshotFallback(prefer, opts) {
  * reached: /api/lookup and data/combos.json answer first.
  */
 function loadSnapshot() {
-  const raw = typeof window !== 'undefined' ? window.SOLVE_RUN_SNAPSHOT : null;
+  const raw = typeof window !== 'undefined' ? window.CANIRUN_SNAPSHOT : null;
   if (!raw || !Array.isArray(raw.rows) || !raw.rows.length) return null;
   const { rows, dataset } = normalizeData(raw);
   return {

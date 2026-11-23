@@ -97,14 +97,14 @@ async function copyText(text, okMsg) {
 
 function loadVoted() {
   try {
-    return new Set(JSON.parse(localStorage.getItem('solve.run.voted') || '[]'));
+    return new Set(JSON.parse(localStorage.getItem('canirun.voted') || '[]'));
   } catch {
     return new Set();
   }
 }
 function saveVoted() {
   try {
-    localStorage.setItem('solve.run.voted', JSON.stringify([...state.votes]));
+    localStorage.setItem('canirun.voted', JSON.stringify([...state.votes]));
   } catch {
     /* private mode: votes still submit, just not remembered locally */
   }
@@ -113,7 +113,7 @@ function saveVoted() {
 function voterKey() {
   let k = null;
   try {
-    k = localStorage.getItem('solve.run.voter');
+    k = localStorage.getItem('canirun.voter');
   } catch {
     /* ignore */
   }
@@ -121,7 +121,7 @@ function voterKey() {
     const rand = Math.random().toString(36).slice(2, 10);
     k = `web-${rand}`;
     try {
-      localStorage.setItem('solve.run.voter', k);
+      localStorage.setItem('canirun.voter', k);
     } catch {
       /* ignore */
     }
@@ -244,8 +244,8 @@ async function loadData() {
     state.dataset = data.dataset;
     state.source = data.source;
     state.facets = facets(data.rows);
-    if (state.source === 'snapshot' && window.SOLVE_RUN_SNAPSHOT && window.SOLVE_RUN_SNAPSHOT.taxonomy) {
-      state.taxonomy = window.SOLVE_RUN_SNAPSHOT.taxonomy;
+    if (state.source === 'snapshot' && window.CANIRUN_SNAPSHOT && window.CANIRUN_SNAPSHOT.taxonomy) {
+      state.taxonomy = window.CANIRUN_SNAPSHOT.taxonomy;
     } else if (!state.taxonomy) {
       state.taxonomy = await loadTaxonomy().catch(() => null);
     }
@@ -525,7 +525,7 @@ function setView(view, { silent = false } = {}) {
     if (a.dataset.nav === view) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');
   });
-  if (!silent) document.title = view === 'browse' ? 'Browse all combinations — solve.run' : 'solve.run — does this combination exist?';
+  if (!silent) document.title = view === 'browse' ? 'Browse all combinations — canirun' : 'canirun — does this combination exist?';
 }
 
 /**
@@ -1343,13 +1343,13 @@ function bindEvents() {
     const next = cur === 'dark' ? 'light' : 'dark';
     root.dataset.theme = next;
     try {
-      localStorage.setItem('solve.run.theme', next);
+      localStorage.setItem('canirun.theme', next);
     } catch {
       /* ignore */
     }
   });
   try {
-    const t = localStorage.getItem('solve.run.theme');
+    const t = localStorage.getItem('canirun.theme');
     if (t) document.documentElement.dataset.theme = t;
   } catch {
     /* ignore */

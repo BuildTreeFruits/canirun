@@ -1,4 +1,4 @@
-"""Canonical row schema for the solve.run combination index.
+"""Canonical row schema for the canirun combination index.
 
 This module is the single source of truth for CONTRACT.md §1 (the row),
 §2 (canonical id) and the row-level invariants.  It is deliberately
@@ -851,9 +851,9 @@ def validate(
                     errs.append(f"evidence[{i}] is not an object")
                     continue
                 url = ev.get("url")
-                # http(s) for real sources; the scheme "solve.run://" is the
+                # http(s) for real sources; the scheme "canirun://" is the
                 # pipeline's internal reference for vote/miss derived evidence.
-                if not isinstance(url, str) or not re.match(r"^(https?|solve\.run)://", url):
+                if not isinstance(url, str) or not re.match(r"^(https?|canirun)://", url):
                     errs.append(f"evidence[{i}].url missing or not http(s)")
                 if not isinstance(ev.get("quote"), str) or not ev.get("quote", "").strip():
                     errs.append(f"evidence[{i}].quote missing or empty")

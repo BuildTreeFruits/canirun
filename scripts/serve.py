@@ -83,7 +83,7 @@ def run_pipeline(data_dir: str) -> bool:
 def print_banner(host: str, port: int, status: dict) -> None:
     site = f"http://{host}:{port}/"
     print()
-    print("  solve.run combo index")
+    print("  canirun combo index")
     print("  " + "-" * 56)
     if status["rows"]:
         print(f"  site      {site}")

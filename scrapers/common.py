@@ -1,4 +1,4 @@
-"""Shared helpers for the solve.run combo-index scrapers.
+"""Shared helpers for the canirun combo-index scrapers.
 
 Contract highlights (see CONTRACT.md §1):
   - every row needs: id, status, source_kind, hw_vendor, hw_arch, model_family,
@@ -29,7 +29,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 CACHE = ROOT / "scrapers" / "cache"
 OUT = ROOT / "scrapers" / "out"
-UA = "solve.run-index/0.1 (+combo index; contact via repo)"
+UA = "canirun-index/0.1 (+combo index; contact via repo)"
 
 # today's date, frozen once per process so one run produces one as_of everywhere
 AS_OF = os.environ.get("SCRAPER_AS_OF") or _dt.date.today().isoformat()

@@ -37,7 +37,7 @@ else:
 
 TTL_DAYS = 7
 DEFAULT_TIMEOUT = 5.0
-USER_AGENT = "solve.run-index/0.1 (+link-check; contact via repo)"
+USER_AGENT = "canirun-index/0.1 (+link-check; contact via repo)"
 # Verdicts that are allowed to move pointer_alive.  Everything else leaves the
 # stored value untouched.
 ALIVE_STATUSES = range(200, 400)

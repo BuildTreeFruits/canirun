@@ -1,4 +1,4 @@
-"""solve.run combo-index — read/write store.
+"""canirun combo-index — read/write store.
 
 Standard library only. This module owns:
 
@@ -203,7 +203,7 @@ def _has_text(row: dict, needle: str) -> bool:
 
 
 
-def resolve_runtime_segment(segment: str, taxonomy: dict) -> tuple[str | None, list[str]]:
+def recaniruntime_segment(segment: str, taxonomy: dict) -> tuple[str | None, list[str]]:
     """Map a 4th id segment back to a taxonomy runtime slug.
 
     Ids may not contain dots (CONTRACT §2), so `llama.cpp` arrives as `llama_cpp`.
@@ -253,7 +253,7 @@ def canonical_vote_id(row_id: str, taxonomy: dict) -> tuple[str, str | None, lis
         return row_id, None, [], None
     if len(parts) == 5 and not _VARIANT_SLUG_RE.match(parts[4]):
         return row_id, None, [], None
-    slug, known = resolve_runtime_segment(parts[3], taxonomy)
+    slug, known = recaniruntime_segment(parts[3], taxonomy)
     if slug is None:
         return row_id, None, known, None
 

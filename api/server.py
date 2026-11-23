@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""solve.run combo-index — the API service.
+"""canirun combo-index — the API service.
 
 Standard library only (http.server, json, urllib, threading, hashlib, base64).
 No Flask, no FastAPI, no pip installs — because the whole point is that the dataset
@@ -129,7 +129,7 @@ class RateLimiter:
 # --------------------------------------------------------------------------
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = f"solve-run-index/{VERSION}"
+    server_version = f"canirun-index/{VERSION}"
     sys_version = ""
     protocol_version = "HTTP/1.1"
 
@@ -365,7 +365,7 @@ class Handler(BaseHTTPRequestHandler):
     def _index(self):
         ds = self.store.dataset()
         self._json(200, {
-            "service": "solve.run combo-index",
+            "service": "canirun combo-index",
             "version": VERSION,
             "contract": "CONTRACT.md §4",
             "dataset": ds.meta(),
@@ -717,7 +717,7 @@ def _port_free(host: str, port: int) -> bool:
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="solve.run combo-index API server (stdlib only)")
+    ap = argparse.ArgumentParser(description="canirun combo-index API server (stdlib only)")
     ap.add_argument("--host", default="127.0.0.1")
     ap.add_argument("--port", type=int, default=8787,
                     help="port; 0 picks a free one (used by the tests)")

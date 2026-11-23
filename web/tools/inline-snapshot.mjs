@@ -61,7 +61,7 @@ const out = `/**
  *
  * built: ${new Date().toISOString()} · rows: ${rows.length} · as_of: ${payload.dataset.as_of}
  */
-window.SOLVE_RUN_SNAPSHOT = ${JSON.stringify(payload)};
+window.CANIRUN_SNAPSHOT = ${JSON.stringify(payload)};
 `;
 
 writeFileSync(join(here, '..', 'snapshot.js'), out);

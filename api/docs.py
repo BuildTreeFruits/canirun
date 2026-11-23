@@ -152,10 +152,10 @@ def render_html(store, base_url: str = "http://127.0.0.1:8787") -> str:
 <html lang="en"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>solve.run combo index — API</title>
+<title>canirun combo index — API</title>
 <style>{CSS}</style>
 </head><body><main>
-<h1>solve.run combo index — API</h1>
+<h1>canirun combo index — API</h1>
 <p class="sub">Local-inference combination index. {_esc(ds_line)}. Standard library only; the export is a plain file at a stable URL.</p>
 {err}
 <nav class="toc">

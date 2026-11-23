@@ -1,4 +1,4 @@
-# CONTRACT — solve.run combo-index v1
+# CONTRACT — canirun combo-index v1
 
 Frozen interface between the scraper pipeline, the export, the vote service and the web UI.
 **Do not change a key name or enum value without messaging `lead`.** Everything here is derived

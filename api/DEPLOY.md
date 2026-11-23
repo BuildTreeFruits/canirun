@@ -45,9 +45,9 @@ sudo chown -R combo:combo /srv/combo-index
 sudo -u combo python3 /srv/combo-index/pipeline/build.py
 
 # 3. the service
-sudo cp /srv/combo-index/api/systemd/solve-run.service /etc/systemd/system/
-sudo systemctl daemon-reload && sudo systemctl enable --now solve-run.service
-systemctl status solve-run.service --no-pager
+sudo cp /srv/combo-index/api/systemd/canirun.service /etc/systemd/system/
+sudo systemctl daemon-reload && sudo systemctl enable --now canirun.service
+systemctl status canirun.service --no-pager
 curl -s localhost:8787/api/health | python3 -m json.tool
 
 # 4. TLS front door
@@ -71,7 +71,7 @@ plain copy is safe to take at any time — it is never observed half-written.
 5 * * * *  combo  rsync -a --remove-source-files /srv/backups/ remote:combo-index-backups/
 ```
 
-Restore is `cp` back into place and `systemctl restart solve-run`. Keep the hourly copies
+Restore is `cp` back into place and `systemctl restart canirun`. Keep the hourly copies
 in git (a commit per hour is fine here) if you want the cheapest possible durable backup.
 
 ## Rebuilding the dataset

@@ -200,7 +200,7 @@ def fold_misses(
             # A miss IS evidence (people searched and found nothing), so it is
             # recorded -- but it points at the miss log, not at an upstream doc.
             "evidence": [{
-                "url": "solve.run://misses",
+                "url": "canirun://misses",
                 "quote": f"{n} distinct searchers looked for {hw} x {model} x {runtime} "
                          f"and found nothing on record (first {g['first']}, last {g['last']}).",
                 "kind": "community",

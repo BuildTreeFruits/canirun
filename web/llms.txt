@@ -1,4 +1,4 @@
-# solve.run
+# canirun
 
 Canonical index of `hardware × model × runtime` combinations for local LLM inference.
 

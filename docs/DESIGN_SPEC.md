@@ -172,7 +172,7 @@ Failure mode avoided: comments as strings-on-a-row, then 4,000 of them to migrat
 Not on taste — structurally. Reddit is topic-threaded; this index needs row-anchored
 discussion. On Reddit the discussion of `sm_86 × qwen3 × llama.cpp` lives inside a comment
 tree under a post whose title is not the combination, so it can never be returned by a
-lookup. A row page reachable from a search (`solve.run/nvidia/sm_86/qwen3/llama_cpp`) is
+lookup. A row page reachable from a search (`canirun/nvidia/sm_86/qwen3/llama_cpp`) is
 already a better venue, and Reddit cannot be that.
 
 ### D13 — No accounts; anonymous writes with an optional handle
@@ -210,7 +210,7 @@ sits behind no sign-in.
 ### D16 — Licences: no change. MIT stands.
 
 Checked this session: `LICENSE` is MIT, repo is public at
-`https://github.com/BuildTreeFruits/solve-run`, CI exists. The open-source ask
+`https://github.com/BuildTreeFruits/canirun`, CI exists. The open-source ask
 ("someone can land a fix while I'm moving") is **already satisfied** by MIT + public repo
 + CI. No per-path licence scheme, no AGPL, no data licence was adopted. Relicensing is a
 later fight that requires traction worth protecting first; optimising for protection at

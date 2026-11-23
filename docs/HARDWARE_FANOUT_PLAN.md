@@ -1,4 +1,4 @@
-# Master Hardware Expansion & Apple Completeness Fan-Out Plan (`solve.run`)
+# Master Hardware Expansion & Apple Completeness Fan-Out Plan (`canirun`)
 
 > **Purpose:** Single authoritative execution spec for fanning out parallel Hydrogen agents (via `/goal`, `/teamwork`, or `run_workflow`) to eliminate the hardware coverage gaps identified in [docs/MISSING_HARDWARE_ANALYSIS.md](file:///Users/windows/Model%20support%20for%20hardware%20site/docs/MISSING_HARDWARE_ANALYSIS.md).
 >

@@ -46,14 +46,14 @@ test('snapshot.js loads with zero errors and renders expected combo rows on look
   const { ctx, errors } = loadWebScripts();
   assert.deepEqual(errors, [], `Expected zero console errors/warnings, got: ${errors.join('; ')}`);
 
-  assert.ok(ctx.SOLVE_RUN_SNAPSHOT, 'SOLVE_RUN_SNAPSHOT should be defined');
-  assert.ok(Array.isArray(ctx.SOLVE_RUN_SNAPSHOT.rows), 'snapshot rows should be an array');
-  assert.ok(ctx.SOLVE_RUN_SNAPSHOT.rows.length > 0, 'snapshot should contain at least 1 row');
+  assert.ok(ctx.CANIRUN_SNAPSHOT, 'CANIRUN_SNAPSHOT should be defined');
+  assert.ok(Array.isArray(ctx.CANIRUN_SNAPSHOT.rows), 'snapshot rows should be an array');
+  assert.ok(ctx.CANIRUN_SNAPSHOT.rows.length > 0, 'snapshot should contain at least 1 row');
 
   const SR = ctx.__SR;
   assert.ok(SR, 'window.__SR should be initialized');
 
-  const dataset = SR.normalizeData(ctx.SOLVE_RUN_SNAPSHOT);
+  const dataset = SR.normalizeData(ctx.CANIRUN_SNAPSHOT);
   assert.ok(dataset.rows.length > 0, 'normalized dataset should contain rows');
 
   // Search/filter for a known combo in snapshot.js: amd/gfx1100/qwen3/llama_cpp
@@ -76,9 +76,9 @@ test('snapshot.js loads with zero errors and renders expected combo rows on look
   assert.ok(emptyTableHtml.includes('No rows match these filters.'), 'empty browseTable should render empty state');
 });
 
-test('SOLVE_RUN_SNAPSHOT.taxonomy includes hw_aliases and models', () => {
+test('CANIRUN_SNAPSHOT.taxonomy includes hw_aliases and models', () => {
   const { ctx } = loadWebScripts();
-  const tax = ctx.SOLVE_RUN_SNAPSHOT.taxonomy;
+  const tax = ctx.CANIRUN_SNAPSHOT.taxonomy;
   assert.ok(tax && typeof tax === 'object', 'taxonomy should be present');
   assert.ok(tax.hw_aliases && Object.keys(tax.hw_aliases).length > 0, 'hw_aliases should be non-empty');
   assert.ok(tax.models && Object.keys(tax.models).length > 0, 'models should be non-empty');
@@ -87,9 +87,9 @@ test('SOLVE_RUN_SNAPSHOT.taxonomy includes hw_aliases and models', () => {
 test('JS lookup() resolves hw and model aliases', () => {
   const { ctx } = loadWebScripts();
   const SR = ctx.__SR;
-  const dataset = SR.normalizeData(ctx.SOLVE_RUN_SNAPSHOT);
+  const dataset = SR.normalizeData(ctx.CANIRUN_SNAPSHOT);
 
-  const tax = ctx.SOLVE_RUN_SNAPSHOT.taxonomy;
+  const tax = ctx.CANIRUN_SNAPSHOT.taxonomy;
 
   for (const hwQuery of ['rtx4090', 'rtx 4090']) {
     const res = SR.lookup(dataset.rows, { hw: hwQuery }, dataset, tax);
@@ -188,7 +188,7 @@ test('missPanel() renders GitHub issue links without fake vote button in static 
 test('static mode browseTable omits Votes column and no sample/demo fixtures remain', () => {
   const { ctx } = loadWebScripts();
   const SR = ctx.__SR;
-  const dataset = SR.normalizeData(ctx.SOLVE_RUN_SNAPSHOT);
+  const dataset = SR.normalizeData(ctx.CANIRUN_SNAPSHOT);
   const tableHtml = SR.browseTable(dataset.rows.slice(0, 5), { sort: 'status', dir: 'desc' });
   assert.ok(!tableHtml.includes('data-sort="want_votes"'), 'static mode browseTable should omit Votes column');
 
@@ -203,8 +203,8 @@ test('static mode browseTable omits Votes column and no sample/demo fixtures rem
 test('JS lookup() resolves Apple, NVIDIA, and AMD hw_aliases', () => {
   const { ctx } = loadWebScripts();
   const SR = ctx.__SR;
-  const dataset = SR.normalizeData(ctx.SOLVE_RUN_SNAPSHOT);
-  const tax = ctx.SOLVE_RUN_SNAPSHOT.taxonomy;
+  const dataset = SR.normalizeData(ctx.CANIRUN_SNAPSHOT);
+  const tax = ctx.CANIRUN_SNAPSHOT.taxonomy;
 
   for (const [alias, expectedArch] of [
     ['m4_pro', 'm4-pro'],

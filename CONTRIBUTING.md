@@ -1,4 +1,4 @@
-# Contributing to solve.run
+# Contributing to canirun
 
 Contributions of `solved`, `untested` (proposed, unverified), and `rejected` hardware × model × runtime combinations—as well as configuration **variants**—are welcome. Every row must follow the schema in `CONTRACT.md` and include at least one `evidence` entry with a real URL and verbatim quote.
 
