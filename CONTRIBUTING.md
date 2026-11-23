@@ -30,3 +30,14 @@ If you don't want to edit code, open an issue using the **Submit Combo** form (`
    python3 pipeline/build.py --check
    ```
 3. Commit your changes and open a Pull Request.
+
+## Adding a New Hardware Architecture or Alias
+
+1. **In the Lookup UI (no PR required):**
+   - Users can immediately vote on any unlisted hardware slug using the **Want this** button.
+   - Users who have a working setup can submit a pointer directly via the 1-click **"I got this working — submit pointer"** button, which pre-fills the GitHub issue form.
+2. **In the repository (for contributors & maintainers):**
+   - Register a new `hw_arch` under `hw_archs.<vendor>` and any search `hw_aliases` in `data/taxonomy.json`, or use the helper CLI:
+     ```bash
+     python3 scripts/ingest_combo.py --vendor apple --arch m4-ultra --hw-name "Apple M4 Ultra" --model qwen3 --runtime mlx-lm --status solved --quant mlx-4bit --pointer "https://huggingface.co/mlx-community/Qwen3-32B-4bit" --quote "from mlx_lm import load, generate" --notes "Qwen3-32B-4bit runs on Apple M4 Ultra via mlx-lm." --register-taxonomy
+     ```

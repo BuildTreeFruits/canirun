@@ -1,1 +1,21 @@
-[]
+[
+ {
+  "spec": {
+   "hw_vendor": "amd",
+   "hw_arch": "gfx1030",
+   "hw_name": "Radeon RX 6800 XT / 6900 XT",
+   "hw_extra": {
+    "vram_gb": 16
+   },
+   "model_family": "llama-3",
+   "runtime": "ollama",
+   "status": "solved",
+   "quant": "Q4_K_M",
+   "pointer": "https://raw.githubusercontent.com/ollama/ollama/main/docs/gpu.mdx",
+   "evidence_kind": "upstream-doc",
+   "quote": "| gfx1030 | Radeon RX 6800/6900 XT |",
+   "notes": "Llama 3 Q4_K_M runs on RX 6800/6900 XT (gfx1030) via Ollama ROCm."
+  },
+  "error": "quote not found verbatim in source: '| gfx1030 | Radeon RX 6800/6900 XT |'"
+ }
+]

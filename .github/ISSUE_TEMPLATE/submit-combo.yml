@@ -38,6 +38,24 @@ body:
       required: true
 
   - type: input
+    id: hw_name_and_extra
+    attributes:
+      label: Hardware Display Name & Specs (optional)
+      description: Human-readable hardware name and key specs (e.g. Apple M4 Ultra, 192GB unified memory) if this is a new architecture.
+      placeholder: Apple M4 Ultra (192GB)
+    validations:
+      required: false
+
+  - type: input
+    id: hw_aliases
+    attributes:
+      label: Search Aliases (optional)
+      description: Comma-separated search aliases for this hardware (e.g. m4 ultra, apple m4 ultra).
+      placeholder: m4 ultra, apple m4 ultra
+    validations:
+      required: false
+
+  - type: input
     id: model_family
     attributes:
       label: Model Family

@@ -204,12 +204,19 @@ def fetch(http):
             evidence=[verbatim(kleidi, "| Android | `arm64-v8a` | Use the Android NDK command below for a portable build. |")],
             source_kind="derived",
             notes="DERIVED: build.md §Arm KleidiAI: Android arm64-v8a build with -DGGML_CPU_KLEIDIAI=ON.")
-        add(b, hw=_hw("apple", "m1", "Apple Silicon arm64 (Metal + KleidiAI CPU kernels)", {"backend": "Metal"}),
-            evidence=[q(b, "On MacOS, Metal is enabled by default. Using Metal makes the computation run on the GPU.")],
-            source_kind="derived",
-            notes="DERIVED: build.md §Metal Build: on macOS Metal is on by default, i.e. llama.cpp uses the Apple GPU on "
-                  "Apple Silicon machines. arch narrowed to the m1 family because the doc names macOS/Metal, not a "
-                  "specific M-series chip.")
+        metal_quote = q(b, "On MacOS, Metal is enabled by default. Using Metal makes the computation run on the GPU.")
+        for m_arch in [
+            "m1", "m1-pro", "m1-max", "m1-ultra",
+            "m2", "m2-pro", "m2-max", "m2-ultra",
+            "m3", "m3-pro", "m3-max", "m3-ultra",
+            "m4", "m4-pro", "m4-max",
+            "m5", "m5-pro", "m5-max",
+        ]:
+            add(b, hw=_hw("apple", m_arch, f"Apple Silicon {m_arch} (Metal)", {"backend": "Metal"}),
+                evidence=[metal_quote],
+                source_kind="derived",
+                notes="DERIVED: build.md §Metal Build: on macOS Metal is on by default, i.e. llama.cpp uses the Apple GPU on "
+                      "Apple Silicon machines.")
 
         # ------------------------------------------------------------ build.md OpenVINO
         add(b, hw=_hw("intel", "intel-npu", "Intel NPU (Core Ultra, Lunar Lake) via OpenVINO", {"backend": "OpenVINO"}),
@@ -230,13 +237,23 @@ def fetch(http):
         devs = [
             ("intel", "data-center-max-1550", "Intel Data Center GPU Max 1550",
              verbatim(sy, "| Intel Data Center Max Series  | Support | Max 1550, 1100                        |")),
+            ("intel", "data-center-max-1100", "Intel Data Center GPU Max 1100",
+             verbatim(sy, "| Intel Data Center Max Series  | Support | Max 1550, 1100                        |")),
             ("intel", "flex-170", "Intel Data Center GPU Flex 170",
              verbatim(sy, "| Intel Data Center Flex Series | Support | Flex 170                              |")),
             ("intel", "arc-a770", "Intel Arc A770",
              verbatim(sy, "| Intel Arc A-Series            | Support | Arc A770, Arc A730M, Arc A750         |")),
+            ("intel", "arc-a750", "Intel Arc A750",
+             verbatim(sy, "| Intel Arc A-Series            | Support | Arc A770, Arc A730M, Arc A750         |")),
+            ("intel", "arc-a730m", "Intel Arc A730M",
+             verbatim(sy, "| Intel Arc A-Series            | Support | Arc A770, Arc A730M, Arc A750         |")),
             ("intel", "arc-b580", "Intel Arc B580",
              verbatim(sy, "| Intel Arc B-Series            | Support | Arc B580                              |")),
             ("intel", "arc-igpu-meteor-lake", "built-in Arc GPU in Meteor Lake",
+             verbatim(sy, "| Intel built-in Arc GPU        | Support | built-in Arc GPU in Meteor Lake, Arrow Lake, Lunar Lake |")),
+            ("intel", "arc-igpu-arrow-lake", "built-in Arc GPU in Arrow Lake",
+             verbatim(sy, "| Intel built-in Arc GPU        | Support | built-in Arc GPU in Meteor Lake, Arrow Lake, Lunar Lake |")),
+            ("intel", "arc-igpu-lunar-lake", "built-in Arc GPU in Lunar Lake",
              verbatim(sy, "| Intel built-in Arc GPU        | Support | built-in Arc GPU in Meteor Lake, Arrow Lake, Lunar Lake |")),
             ("intel", "intel-igpu-11th-gen", "Intel iGPU in Core CPU (11th gen+)",
              verbatim(sy, "| Intel iGPU                    | Support | iGPU in 13700k, 13400, i5-1250P, i7-1260P, i7-1165G7  |")),
@@ -494,5 +511,74 @@ def fetch(http):
         add(ad, hw=_hw("arm-cpu", "arm64-android", "Android arm64-v8a device (llama.android example)", {"backend": "CPU"}),
             evidence=[verbatim(adt, "llama.android")],
             notes="android.md: building llama.cpp for Android arm64-v8a (Termux + Android Studio example).")
+
+    # ---------------------------------------------------------------- ollama gpu.mdx
+    ollama_raw = "https://raw.githubusercontent.com/ollama/ollama/main/docs/gpu.mdx"
+    ollama_blob = "https://github.com/ollama/ollama/blob/main/docs/gpu.mdx"
+    ollama_txt = http.get_text(ollama_raw, ttl_s=3600)
+    if ollama_txt:
+        def add_ollama(vendor, arch, name, quote, *, status="solved", notes, hw_extra=None):
+            rows.append(make_row(
+                hw_vendor=vendor, hw_arch=arch, model_family="*",
+                runtime="ollama", status=status, source_kind="scraped",
+                evidence=[{"url": ollama_blob, "quote": verbatim(ollama_txt, quote), "kind": "upstream-doc"}],
+                reported_by=REPORTED, notes=notes, pointer=ollama_blob,
+                hw_name=name, hw_extra=hw_extra or {},
+                runtime_rev=None, missing=["model"], created_by="derived",
+            ))
+
+        for arch, name, quote in [
+            ("sm_121", "NVIDIA GB10 (DGX Spark, CC 12.1)",
+             "| 12.1               | NVIDIA              | `GB10 (DGX Spark)`                                                                                                             |"),
+            ("sm_120", "NVIDIA GeForce RTX 50xx (CC 12.0)",
+             "| 12.0               | GeForce RTX 50xx    | `RTX 5060` `RTX 5060 Ti` `RTX 5070` `RTX 5070 Ti` `RTX 5080` `RTX 5090`                                                        |"),
+            ("sm_90", "NVIDIA H200 / H100 (CC 9.0)",
+             "| 9.0                | NVIDIA              | `H200` `H100`                                                                                                                  |"),
+            ("sm_89", "NVIDIA GeForce RTX 40xx (CC 8.9)",
+             "| 8.9                | GeForce RTX 40xx    | `RTX 4090` `RTX 4080 SUPER` `RTX 4080` `RTX 4070 Ti SUPER` `RTX 4070 Ti` `RTX 4070 SUPER` `RTX 4070` `RTX 4060 Ti` `RTX 4060`  |"),
+            ("sm_86", "NVIDIA GeForce RTX 30xx (CC 8.6)",
+             "| 8.6                | GeForce RTX 30xx    | `RTX 3090 Ti` `RTX 3090` `RTX 3080 Ti` `RTX 3080` `RTX 3070 Ti` `RTX 3070` `RTX 3060 Ti` `RTX 3060` `RTX 3050 Ti` `RTX 3050`   |"),
+            ("sm_80", "NVIDIA A100 / A30 (CC 8.0)",
+             "| 8.0                | NVIDIA              | `A100` `A30`                                                                                                                   |"),
+            ("sm_75", "NVIDIA GeForce GTX/RTX (Turing, CC 7.5)",
+             "| 7.5                | GeForce GTX/RTX     | `GTX 1650 Ti` `TITAN RTX` `RTX 2080 Ti` `RTX 2080` `RTX 2070` `RTX 2060`                                                       |"),
+            ("sm_70", "NVIDIA TITAN V / V100 (CC 7.0)",
+             "| 7.0                | NVIDIA              | `TITAN V` `V100` `Quadro GV100`                                                                                                |"),
+            ("sm_61", "NVIDIA TITAN Xp / X (CC 6.1)",
+             "| 6.1                | NVIDIA TITAN        | `TITAN Xp` `TITAN X`                                                                                                           |"),
+            ("sm_60", "NVIDIA Tesla P100 / Quadro GP100 (CC 6.0)",
+             "| 6.0                | NVIDIA              | `Tesla P100` `Quadro GP100`                                                                                                    |"),
+            ("sm_52", "NVIDIA GeForce GTX 9xx / TITAN X (CC 5.2)",
+             "| 5.2                | GeForce GTX         | `GTX TITAN X` `GTX 980 Ti` `GTX 980` `GTX 970` `GTX 960` `GTX 950`                                                             |"),
+        ]:
+            add_ollama("nvidia", arch, name, quote,
+                       notes=f"ollama docs/gpu.mdx NVIDIA table lists {name} as supported.",
+                       hw_extra={"backend": "CUDA"})
+
+        for arch, name, quote in [
+            ("gfx908", "AMD Radeon Instinct MI100 (gfx908)", "| gfx908 | Radeon Instinct MI100 |"),
+            ("gfx90a", "AMD Radeon Instinct MI210/MI250 (gfx90a)", "| gfx90a | Radeon Instinct MI210/MI250 |"),
+            ("gfx942", "AMD Radeon Instinct MI300X/MI300A (gfx942)", "| gfx942 | Radeon Instinct MI300X/MI300A |"),
+            ("gfx950", "AMD Radeon Instinct MI350X (gfx950)", "| gfx950 | Radeon Instinct MI350X |"),
+            ("gfx1030", "AMD Radeon PRO V620 (gfx1030)", "| gfx1030 | Radeon PRO V620 |"),
+            ("gfx1100", "AMD Radeon PRO W7900 (gfx1100)", "| gfx1100 | Radeon PRO W7900 |"),
+            ("gfx1101", "AMD Radeon PRO W7700 (gfx1101)", "| gfx1101 | Radeon PRO W7700 |"),
+            ("gfx1102", "AMD Radeon RX 7600 (gfx1102)", "| gfx1102 | Radeon RX 7600 |"),
+            ("gfx1150", "AMD Ryzen AI 9 HX 375 (gfx1150)", "| gfx1150 | Ryzen AI 9 HX 375 |"),
+            ("gfx1151", "AMD Ryzen AI Max+ 395 (gfx1151)", "| gfx1151 | Ryzen AI Max+ 395 |"),
+            ("gfx1200", "AMD Radeon RX 9070 (gfx1200)", "| gfx1200 | Radeon RX 9070 |"),
+            ("gfx1201", "AMD Radeon RX 9070 XT (gfx1201)", "| gfx1201 | Radeon RX 9070 XT |"),
+        ]:
+            add_ollama("amd", arch, name, quote,
+                       notes=f"ollama docs/gpu.mdx AMD ROCm LLVM target table lists {name} as supported.",
+                       hw_extra={"backend": "ROCm"})
+
+        add_ollama(
+            "amd", "gfx1034", "AMD Radeon RX 5400 (gfx1034)",
+            "For example The Radeon RX 5400 is `gfx1034` (also known as 10.3.4) however, ROCm does not currently support this target.",
+            status="rejected",
+            notes="ollama docs/gpu.mdx explicitly states ROCm does not currently support gfx1034 (Radeon RX 5400).",
+            hw_extra={"backend": "ROCm"},
+        )
 
     return rows, rejects

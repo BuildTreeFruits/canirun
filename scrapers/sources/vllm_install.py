@@ -119,6 +119,32 @@ def fetch(http):
                 quotes=[cc, bins],
                 notes="vLLM CUDA wheels: pre-compiled CUDA 13.0 binaries; the requirements list names this "
                       "card class and sets the floor at compute capability 7.5.")
+        for arch, name in [
+            ("sm_86", "Ampere consumer/workstation: RTX 30xx, A40, A10 (CC 8.6)"),
+            ("sm_87", "Ampere Jetson Orin (CC 8.7)"),
+            ("sm_90a", "Hopper H100/H200 SXM/NVL (CC 9.0a)"),
+            ("sm_100a", "Blackwell datacenter: B200/GB200 (CC 10.0a)"),
+            ("sm_103", "Blackwell Ultra (CC 10.3)"),
+            ("sm_120", "Blackwell consumer/workstation: RTX 50xx (CC 12.0)"),
+            ("sm_121", "Blackwell DGX Spark GB10 (CC 12.1)"),
+        ]:
+            add(cu, hw={"hw_vendor": "nvidia", "hw_arch": arch, "hw_name": name,
+                        "hw_extra": {"backend": "CUDA", "cuda": "13.0 wheel"}},
+                quotes=[cc, bins],
+                source_kind="derived",
+                notes="DERIVED: vLLM CUDA requirements set the floor at compute capability 7.5 or higher; "
+                      f"{arch} meets or exceeds CC 7.5.")
+        for arch, name in [
+            ("sm_60", "Pascal datacenter: P100 (CC 6.0)"),
+            ("sm_61", "Pascal consumer/workstation: GTX 10xx, P40 (CC 6.1)"),
+            ("sm_70", "Volta: V100, TITAN V (CC 7.0)"),
+        ]:
+            add(cu, hw={"hw_vendor": "nvidia", "hw_arch": arch, "hw_name": name,
+                        "hw_extra": {"backend": "CUDA", "cuda": "13.0 wheel"}},
+                quotes=[cc, bins],
+                status="rejected",
+                source_kind="derived",
+                notes="vLLM CUDA prebuilt wheels require compute capability 7.5 or higher; Pascal (sm_60/sm_61) and Volta (sm_70) are below the CC 7.5 floor.")
 
     # ------------------------------------------------------------ ROCm
     ro = "docs/getting_started/installation/gpu.rocm.inc.md"
