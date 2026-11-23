@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Schema & Contract Reference (CONTRACT.md)
+    url: https://github.com/BuildTreeFruits/canirun/blob/main/CONTRACT.md
+    about: Read the canonical row schema, ID rules, and data-honesty invariants before filing.
+  - name: Contributing Guide (CONTRIBUTING.md)
+    url: https://github.com/BuildTreeFruits/canirun/blob/main/CONTRIBUTING.md
+    about: Learn how to add combinations, variants, or new hardware architectures via Issue or PR.
