@@ -249,7 +249,9 @@ def canonical_vote_id(row_id: str, taxonomy: dict) -> tuple[str, str | None, lis
     returned untouched for the caller to reject.
     """
     parts = str(row_id).split("/")
-    if len(parts) != 4:
+    if len(parts) not in (4, 5):
+        return row_id, None, [], None
+    if len(parts) == 5 and not _VARIANT_SLUG_RE.match(parts[4]):
         return row_id, None, [], None
     slug, known = resolve_runtime_segment(parts[3], taxonomy)
     if slug is None:
@@ -262,7 +264,8 @@ def canonical_vote_id(row_id: str, taxonomy: dict) -> tuple[str, str | None, lis
             segment = schema.runtime_id_segment(slug)
         except Exception:  # noqa: BLE001 — fall back to the plain flattening
             pass
-    stored = "/".join(parts[:3] + [segment])
+    tail = [segment, parts[4]] if len(parts) == 5 else [segment]
+    stored = "/".join(parts[:3] + tail)
     return stored, slug, known, segment
 
 
@@ -291,41 +294,52 @@ def _schema_module():
 
 
 _LOCAL_ID_SEG = re.compile(r"^[a-z0-9*][a-z0-9_.-]*$")
+_VARIANT_SLUG_RE = re.compile(r"^@[a-z0-9][a-z0-9_-]*$")
+
+
+def compact_token(s: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", str(s or "").lower())
 
 
 def validate_row_id(row_id: str) -> tuple[bool, str, dict | None]:
-    """Is `row_id` a legal CONTRACT §2 id? Returns (ok, reason, segments).
-
-    Delegates to pipeline.schema.parse_id() + derive_id() round-trip (the pipeline
-    materialises vote rows from these segments, so an id it cannot parse becomes a
-    `vote-orphan` and the vote silently produces no row — better to reject it here).
+    """Is `row_id` a legal CONTRACT §2 id (4-segment base or 5-segment /@slug variant)?
+    Returns (ok, reason, segments).
     """
     if not isinstance(row_id, str) or not row_id or len(row_id) > 300:
         return False, "id missing, not a string, or absurdly long", None
 
+    parts = row_id.split("/")
+    if len(parts) not in (4, 5):
+        return False, "id must be <hw_vendor>/<hw_arch>/<model_family>/<runtime>[/@slug]", None
+    if len(parts) == 5 and not _VARIANT_SLUG_RE.match(parts[4]):
+        return False, f"variant slug {parts[4]!r} must match ^@[a-z0-9][a-z0-9_-]*$", None
+
+    base_id = "/".join(parts[:4])
     schema = _schema_module()
     if schema is not None:
         try:
-            seg = schema.parse_id(row_id)               # raises IdError if not 4 segments
+            seg = schema.parse_id(base_id)               # raises IdError if not 4 segments
             roundtrip = schema.derive_id(seg["hw_vendor"], seg["hw_arch"],
                                          seg["model_family"], seg["runtime"])
         except Exception as exc:  # noqa: BLE001 — IdError/ValueError both mean "bad id"
             return False, str(exc) or type(exc).__name__, None
-        if roundtrip != row_id:
-            return False, (f"id is not canonical: {row_id!r} would be stored as "
+        if roundtrip != base_id:
+            return False, (f"id is not canonical: {base_id!r} would be stored as "
                            f"{roundtrip!r} (lowercase, dots flattened to '_')"), None
+        if len(parts) == 5:
+            seg = dict(seg)
+            seg["variant_slug"] = parts[4]
         return True, "", seg
 
     # Fallback when pipeline/schema.py is absent: local shape check only.
-    parts = row_id.split("/")
-    if len(parts) != 4:
-        return False, "id must be <hw_vendor>/<hw_arch>/<model_family>/<runtime>", None
-    for part in parts:
+    for part in parts[:4]:
         if not _LOCAL_ID_SEG.match(part) or "." in part:
             return False, f"id segment {part!r} is not lowercase dot-free [a-z0-9_-]", None
-    vendor, arch, family, runtime = parts
-    return True, "", {"hw_vendor": vendor, "hw_arch": arch,
-                      "model_family": family, "runtime": runtime}
+    vendor, arch, family, runtime = parts[:4]
+    seg = {"hw_vendor": vendor, "hw_arch": arch, "model_family": family, "runtime": runtime}
+    if len(parts) == 5:
+        seg["variant_slug"] = parts[4]
+    return True, "", seg
 
 
 # --------------------------------------------------------------------------
@@ -337,6 +351,7 @@ class Dataset:
 
     __slots__ = ("rows", "version", "generated_at", "as_of", "error", "source",
                  "taxonomy", "_runtime_labels", "_runtime_collapsed", "_hw_vendors",
+                 "_hw_alias_map", "_model_alias_map", "_row_by_id",
                  "wanted_override")
 
     def __init__(self, rows, version=None, generated_at=None, as_of=None,
@@ -365,6 +380,26 @@ class Dataset:
         self._hw_vendors = set()
         for k in (self.taxonomy.get("hw_vendors") or {}):
             self._hw_vendors.add(norm_token(k))
+        self._hw_alias_map: dict[str, str] = {}
+        for k, v in (self.taxonomy.get("hw_aliases") or {}).items():
+            if k and v:
+                canon = norm_token(v)
+                self._hw_alias_map[norm_token(k)] = canon
+                self._hw_alias_map[compact_token(k)] = canon
+        self._model_alias_map: dict[str, str] = {}
+        for m in (self.taxonomy.get("models") or []):
+            if not isinstance(m, dict) or not m.get("family"):
+                continue
+            fam = norm_token(m["family"])
+            self._model_alias_map[fam] = fam
+            self._model_alias_map[compact_token(fam)] = fam
+            for a in (m.get("aliases") or []):
+                if a:
+                    self._model_alias_map[norm_token(a)] = fam
+                    self._model_alias_map[compact_token(a)] = fam
+        self._row_by_id: dict[str, dict] = {
+            str(r["id"]): r for r in self.rows if r.get("id")
+        }
 
     # -- derived -----------------------------------------------------------
 
@@ -393,26 +428,32 @@ class Dataset:
     def match_hw(self, row: dict, hw: str) -> bool:
         """CONTRACT §4: hw_arch exactly, else hw_vendor exactly, else prefix."""
         want = norm_token(hw)
+        canon = self._hw_alias_map.get(want) or self._hw_alias_map.get(compact_token(hw))
+        candidates = [want] + ([canon] if canon and canon != want else [])
         arch = norm_token(row.get("hw_arch") or "")
         vendor = norm_token(row.get("hw_vendor") or "")
-        if arch == want or vendor == want:
-            return True
-        if arch.startswith(want) or vendor.startswith(want):
-            return True
         name = norm_token(row.get("hw_name") or "")
-        if name and want in name:
-            return True
+        for c in candidates:
+            if arch == c or vendor == c:
+                return True
+            if arch.startswith(c) or vendor.startswith(c):
+                return True
+            if name and c in name:
+                return True
         return False
 
     def match_model(self, row: dict, model: str) -> bool:
         """CONTRACT §4: model_family exactly, else contains. Returns True for `*` rows
         only when the caller asked for a specific model (they are context, never an answer)."""
         want = norm_token(model)
+        canon = self._model_alias_map.get(want) or self._model_alias_map.get(compact_token(model))
+        candidates = [want] + ([canon] if canon and canon != want else [])
         fam = norm_token(row.get("model_family") or "")
-        if fam == want:
-            return True
-        if want and fam and (want in fam or fam in want):
-            return True
+        for c in candidates:
+            if fam == c:
+                return True
+            if c and fam and (c in fam or fam in c):
+                return True
         return False
 
     def canonical_runtime(self, value: str) -> str:
@@ -484,7 +525,13 @@ class Dataset:
         # a status, most-recent as_of first, then id for determinism.
         answers.sort(key=_sort_key)
 
-        rows_out = answers[:limit]
+        rows_out = []
+        for r in answers[:limit]:
+            pid = r.get("parent")
+            if pid and (self._row_by_id.get(str(pid)) or {}).get("status") == "untested":
+                r = dict(r)
+                r["parent_untested"] = True
+            rows_out.append(r)
         # `*` rows are `context` only when a model was asked -- otherwise they were
         # promoted into `rows` above and listing them again would double-count them.
         context_out = ([] if not ask_model else stars)[:limit]
@@ -502,8 +549,8 @@ class Dataset:
         statuses = {r.get("status") for r in unfiltered}
         if not unfiltered and not stars:
             reason = "no-match"
-        elif unfiltered and statuses == {"wanted"}:
-            reason = "wanted-only"
+        elif unfiltered and statuses == {"untested"}:
+            reason = "untested-only"
         elif unfiltered and statuses == {"rejected"}:
             reason = "rejected-only"
         elif not unfiltered and stars:
@@ -511,9 +558,10 @@ class Dataset:
         else:
             reason = "no-match"
 
-        # wanted rows that match this query (for vote counts / first-wanted date)
-        wanted = [r for r in unfiltered if r.get("status") == "wanted"]
-        wanted_votes = max((r.get("want_votes") or 0) for r in wanted) if wanted else 0
+        # untested rows that match this query (for vote counts / basis)
+        untested = [r for r in unfiltered if r.get("status") == "untested"]
+        wanted_votes = max((r.get("want_votes") or 0) for r in untested) if untested else 0
+        untested_basis = sorted({str(r["basis"]) for r in untested if r.get("basis")})
         last_checked = None
         dated = sorted(str(r.get("as_of")) for r in (unfiltered or stars) if _DATE_RE.match(str(r.get("as_of") or "")))
         if dated:
@@ -523,14 +571,17 @@ class Dataset:
             "is_miss": True,
             "reason": reason,
             "partial": bool(stars),
-            "hint": self._hint(q, reason, stars, wanted_votes),
-            "known_wanted": bool(wanted),
+            "hint": self._hint(q, reason, stars, wanted_votes, untested_basis),
+            "known_untested": bool(untested),
+            "known_wanted": bool(untested),
             "wanted_votes": wanted_votes,
+            "untested_basis": untested_basis,
             "last_checked": last_checked,
             "counts": {"exact": 0, "context": len(stars)},
         }
 
-    def _hint(self, q: dict, reason: str, stars: list[dict], wanted_votes: int) -> str:
+    def _hint(self, q: dict, reason: str, stars: list[dict], wanted_votes: int,
+              untested_basis: list[str] | None = None) -> str:
         def label() -> str:
             parts = []
             if q.get("hw"):
@@ -548,9 +599,14 @@ class Dataset:
             rts = sorted({str(s.get("runtime")) for s in stars if s.get("runtime")})
             tail = f" Hardware-level support exists for {', '.join(rts)}; no model-specific claim." if rts else ""
             return f"No claim on record for {where}.{tail}"
-        if reason == "wanted-only":
-            return (f"No claim on record for {where} yet — it is wanted by {wanted_votes} voter(s) and not solved. "
-                    "Vote to raise it, or add a pointer if you have one.")
+        if reason == "untested-only":
+            if untested_basis:
+                return (f"Proposed, unverified claim on record for {where} "
+                        f"(basis: {', '.join(untested_basis)}; {wanted_votes} want vote(s)). "
+                        "Do not treat as verified fact — check the basis note or verify before relying on it.")
+            return (f"Proposed, unverified gap on record for {where} "
+                    f"({wanted_votes} want vote(s), no basis claim yet). "
+                    "Vote to raise it, or submit a verified pointer.")
         if reason == "rejected-only":
             return (f"No solved claim on record for {where}; what is on record is a rejection. "
                     "Read the rejection notes before trying — that is why it fails on this card.")
@@ -558,9 +614,11 @@ class Dataset:
 
 
 def _sort_key(row: dict):
-    status_rank = {"wanted": 0, "solved": 1, "rejected": 2}.get(str(row.get("status")), 3)
+    status = str(row.get("status"))
+    status_rank = {"untested": 0, "solved": 1, "rejected": 2}.get(status, 3)
+    basis_rank = 0 if (status == "untested" and row.get("basis")) else (1 if status == "untested" else 0)
     votes = row.get("want_votes") or 0
-    return (status_rank, -votes, _neg_date(row.get("as_of")), str(row.get("id") or ""))
+    return (status_rank, basis_rank, -votes, _neg_date(row.get("as_of")), str(row.get("id") or ""))
 
 
 def _neg_date(d) -> str:
@@ -740,8 +798,8 @@ class Store:
             r["want_votes"] = count
             r["want_requesters"] = list(rec.get("requesters") or [])[:10]
             r["want_first"] = rec.get("first")
-            if (row.get("status") in (None, "wanted") and count >= 1 and not row.get("pointer")):
-                r["status"] = "wanted"
+            if (row.get("status") in (None, "wanted", "untested") and count >= 1 and not row.get("pointer")):
+                r["status"] = "untested"
             changed = True
             out.append(r)
         # votes for ids that are not in the export (row not built yet) stay addressable

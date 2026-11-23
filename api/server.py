@@ -304,7 +304,7 @@ class Handler(BaseHTTPRequestHandler):
             return self._do_lookup(params, log_miss=False)
         if path == "/api/rows":
             return self._do_rows(params)
-        if path == "/api/wanted":
+        if path in ("/api/wanted", "/api/untested"):
             q = store_mod.parse_query(params)
             ds = self.store.dataset()
             rows = views_mod.wanted_rows(self.store, q)
@@ -369,7 +369,7 @@ class Handler(BaseHTTPRequestHandler):
             "version": VERSION,
             "contract": "CONTRACT.md §4",
             "dataset": ds.meta(),
-            "routes": ["/api/lookup", "/api/rows", "/api/wanted", "/api/combos.json",
+            "routes": ["/api/lookup", "/api/rows", "/api/wanted", "/api/untested", "/api/combos.json",
                        "/api/export.jsonl", "/api/taxonomy", "/api/health", "/api/docs",
                        "/api/openapi.json", "POST /api/want/{id}", "DELETE /api/want/{id}",
                        "POST /api/miss"],
@@ -491,12 +491,18 @@ class Handler(BaseHTTPRequestHandler):
         # pipeline materialises a vote into a stored row from the id's segments, so a
         # garbage id would become a vote-orphan (demand that produces no row).
         #
-        # 1. Structural shape first: exactly 4 non-empty segments. Everything below
-        #    indexes segment 3, so this must not be skipped or reordered.
-        if row_id.count("/") != 3 or not all(row_id.split("/")):
+        # 1. Structural shape first: 4 non-empty segments (base) or 5 (variant /@slug).
+        parts = row_id.split("/")
+        if len(parts) not in (4, 5) or not all(parts):
             return self._json(400, {"error": {
                 "code": "bad-id", "status": 400, "id": row_id,
-                "message": f"id: {row_id!r} is not of the form vendor/arch/model/runtime",
+                "message": f"id: {row_id!r} is not of the form vendor/arch/model/runtime[/@slug]",
+                "hint": "see CONTRACT.md §2",
+            }}, {"Cache-Control": "no-store"})
+        if len(parts) == 5 and not store_mod._VARIANT_SLUG_RE.match(parts[4]):
+            return self._json(400, {"error": {
+                "code": "bad-id", "status": 400, "id": row_id,
+                "message": f"variant slug {parts[4]!r} must match ^@[a-z0-9][a-z0-9_-]*$",
                 "hint": "see CONTRACT.md §2",
             }}, {"Cache-Control": "no-store"})
 
@@ -529,7 +535,7 @@ class Handler(BaseHTTPRequestHandler):
         existing = self.store.row_by_id(stored_id)
 
         result = self.store.vote(stored_id, voter, add=add)
-        result["status"] = (existing or {}).get("status") or ("wanted" if result["want_votes"] else None)
+        result["status"] = (existing or {}).get("status") or ("untested" if result["want_votes"] else None)
         result["row_known"] = existing is not None
         result["runtime"] = runtime_slug
         if stored_id != row_id:

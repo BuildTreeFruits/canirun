@@ -172,7 +172,10 @@ def fold_misses(
             continue
         row = {
             "id": rid,
-            "status": "wanted",
+            "status": "untested",
+            "basis": None,
+            "basis_note": None,
+            "parent": None,
             "source_kind": "hand",
             "provisional": True,
             "hw_vendor": vendor,
@@ -309,7 +312,10 @@ def materialise_vote_row(
     missing = ["hw", "model"] if model == "*" else ["hw"]
     row = {
         "id": row_id,
-        "status": "wanted",
+        "status": "untested",
+        "basis": None,
+        "basis_note": None,
+        "parent": None,
         "source_kind": "hand",
         "provisional": True,
         "hw_vendor": vendor,
@@ -393,10 +399,9 @@ def apply_votes(
                 row["want_first"] = first
             continue  # NEVER downgrade a solved row
         prev_status = row["status"]
-        if prev_status == "rejected" and not row.get("resolves_no_claim"):
-            # a real rejection (someone tested it and it does not work) keeps
-            # its status; votes are a demand signal only.  A rejection that
-            # merely records "not found" is an absence claim and may flip.
+        if prev_status == "rejected" and not (row.get("resolves_no_claim") and row.get("pointer")):
+            # An absence-claim rejection without a pointer has no belief attached
+            # and must not silently flip to untested.
             continue
         if row["want_votes"] < threshold:
             continue
@@ -404,8 +409,10 @@ def apply_votes(
             row["as_of"] = run_date
         firsts = [x for x in (row.get("want_first"), first) if x]
         row["want_first"] = min(firsts) if firsts else run_date
-        if prev_status != "wanted":
-            row["status"] = "wanted"
+        if prev_status != "untested":
+            row["status"] = "untested"
+            if prev_status == "rejected":
+                row["basis"] = "docs-claim"
             events.append({"id": rid, "event": "promoted", "from": prev_status,
                            "votes": row["want_votes"]})
         _make_wanted_valid(row, run_date)

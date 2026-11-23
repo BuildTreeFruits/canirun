@@ -24,6 +24,20 @@ if (!existsSync(combosPath)) {
 
 const combos = JSON.parse(readFileSync(combosPath, 'utf8'));
 const rows = Array.isArray(combos.rows) ? combos.rows : [];
+
+const taxonomyPath = join(root, 'data', 'taxonomy.json');
+let taxonomy = null;
+if (existsSync(taxonomyPath)) {
+  const rawTax = JSON.parse(readFileSync(taxonomyPath, 'utf8'));
+  taxonomy = {
+    hw_vendors: rawTax.hw_vendors || [],
+    hw_archs: rawTax.hw_archs || [],
+    hw_aliases: rawTax.hw_aliases || {},
+    models: rawTax.models || [],
+    runtimes: rawTax.runtimes || []
+  };
+}
+
 const payload = {
   dataset: {
     rows: rows.length,
@@ -33,7 +47,8 @@ const payload = {
     source_url: 'web/snapshot.js'
   },
   generated_at: combos.generated_at || null,
-  rows
+  rows,
+  ...(taxonomy ? { taxonomy } : {})
 };
 
 const out = `/**

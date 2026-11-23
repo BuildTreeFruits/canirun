@@ -60,7 +60,7 @@ Every row below is complete: fields not listed as "optional" must be present.
 | field | type | rule |
 |---|---|---|
 | `id` | string | see §2 |
-| `status` | enum | `solved` \| `wanted` \| `rejected` (**never** `not-searched` — it is unstored) |
+| `status` | enum | `solved` \| `untested` \| `rejected` (**never** `not-searched` — it is unstored) |
 | `source_kind` | enum | `scraped` \| `derived` \| `hand` \| `author-claim` |
 | `hw_vendor` | enum | `nvidia` \| `amd` \| `intel` \| `apple` \| `qualcomm` \| `arm-cpu` \| `x86-cpu` \| `other` |
 | `hw_arch` | string | `sm_86`, `gfx1100`, `m4`, `snapdragon-x-elite`, `x86-64-avx2`, … snake_case |
@@ -71,7 +71,7 @@ Every row below is complete: fields not listed as "optional" must be present.
 | `first_seen`, `updated` | `YYYY-MM-DD` | set by the pipeline, not by scrapers |
 | `pointer_alive` | bool | set by link-checker; `true` at creation |
 | `want_votes` | int | ≥ 0, `0` at creation |
-| `want_first` | date\|null | null unless status == `wanted` |
+| `want_first` | date\|null | required iff `want_votes >= 1` (nullable when `want_votes == 0`) |
 | `want_requesters` | string[] | capped at 10 for display; `want_votes` is authoritative |
 | `evidence` | object[] | ≥ 1. Each `{url, quote, kind}`, `kind` ∈ `upstream-doc`\|`package-table`\|`model-repo`\|`release`\|`issue`\|`community` |
 
@@ -79,7 +79,12 @@ Every row below is complete: fields not listed as "optional" must be present.
 
 `provisional`, `hw_name`, `hw_extra` (object, default `{}`), `model_rev`, `quant`, `runtime_rev`,
 `pointer`, `notes`, `measurement` (`{tok_s, source}` or null), `missing` (string[], default `[]`),
-`created_by` (`scraper`\|`derived`\|`hand`\|`vote`\|`miss`).
+`created_by` (`scraper`\|`derived`\|`hand`\|`vote`\|`miss`),
+`basis` (`docs-claim`\|`analogy`\|`author-says`\|`mine`\|null — required on `untested` rows unless `created_by` ∈ `vote`\|`miss`),
+`basis_note` (string\|null),
+and variant fields: `parent` (string\|null, base row `id`), `context_length` (int > 0\|null),
+`offload` (string\|null), `runtime_version` (string\|null), `driver_version` (string\|null),
+`flags` (string\|null), `fits` (`writing`\|`coding`\|`tools`\|`long-context`\|`multimodal`\|`speed`\|null).
 
 ### Invariants (the validator enforces these)
 
@@ -90,12 +95,16 @@ Every row below is complete: fields not listed as "optional" must be present.
    The earlier "scraped ⇒ missing == []" reading made every scraped hardware claim invalid
    by construction, which would have forced honest rows to masquerade as `derived`.)*
 3. `source_kind == "derived"` ⇒ `len(missing) >= 1` — a derived row **states what it lacks**.
-4. `status == "wanted"` ⇒ `want_votes >= 1` and `want_first` non-null.
+4. `status == "untested"` ⇒ `basis` ∈ `("docs-claim", "analogy", "author-says", "mine")` unless
+   `created_by` ∈ `("vote", "miss")` (where `basis` may be `null`); `want_votes >= 0`; and
+   `want_first` is non-null iff `want_votes >= 1`.
 5. `status == "rejected"` ⇒ `notes` non-null (why it fails on this card is the whole value).
 6. `runtime_rev` is never the string `latest`, `master`, `main`, `HEAD`, or empty.
 7. `as_of` matches `^\d{4}-\d{2}-\d{2}$` and is not in the future.
-8. `id` must equal the slug of `hw_vendor` + `hw_arch` + `model_family` + `runtime` (§2).
+8. `id` must equal the slug of `hw_vendor` + `hw_arch` + `model_family` + `runtime` (§2), or `{parent_id}/@{variant_slug}` for variants.
 9. `model_family == "*"` ⇒ `"model"` ∈ `missing` (the `*` is always declared, whatever the kind).
+10. `parent != null` ⇒ at least one of `(quant, context_length, offload, runtime_version, driver_version, flags, fits)` is non-null/non-empty, and `parent` resolves to an existing base row `id` in the dataset.
+11. `fits` ∈ `("writing", "coding", "tools", "long-context", "multimodal", "speed")` or `null`; `context_length > 0` or `null`.
 
 ## 2. Canonical id
 
@@ -134,6 +143,24 @@ One row per id per *stored set*. The normalizer merges rows sharing an id (see �
 Ids are permanent: once a row is stored its id is the vote key and the deep link, so a change here
 is a data migration. That is why this is nailed down before the corpus grows.
 
+### Variant IDs (5 segments)
+
+When `parent` is non-null, the canonical `id` is:
+
+`{parent_id}/@{variant_slug}`
+
+`variant_slug` is derived deterministically in this fixed knob order (omitting `null`/empty knobs, joining present parts with `-`):
+
+1. `quant`: lowercase, strip `_` and non-`[a-z0-9]` (e.g. `Q4_K_M` → `q4km`)
+2. `offload`: lowercase, strip `=` and spaces, keep `[a-z0-9]` (e.g. `ngl=99` → `ngl99`)
+3. `context_length`: `c{int}` (e.g. `8192` → `c8192`)
+4. `runtime_version`: `rv-{slug}` (`[a-z0-9]`, `.` → `_`)
+5. `driver_version`: `drv-{slug}` (`[a-z0-9-]`, `.` → `_`)
+6. `flags`: `f-{slug}` (lowercase tokens joined by `-`, leading `--` stripped)
+7. `fits`: `fit-{fits}` (exact enum value)
+
+Example: `nvidia/sm_86/qwen3/llama_cpp/@q4km-ngl99-c8192`. `variant_slug` must match `^@[a-z0-9][a-z0-9_-]*$`.
+
 ## 3. The `*` model family (hardware claims)
 
 When a source makes a claim about **hardware × runtime** only (a backend works on an arch,
@@ -149,9 +176,10 @@ still returns `miss.partial: true` with the `*` rows attached as context.
 Query params (all optional, unknown params ignored): `hw`, `model`, `runtime`, `status`,
 `kind` (`source_kind`), `q` (free text), `limit` (default 50, max 500).
 
-Matching: `hw` matches `hw_arch` exactly, else `hw_vendor` exactly, else prefix.
-`model` matches `model_family` exactly, else contains; a `*` row matches any model **as context only**
-(see §3). `runtime` matches slug, then display name.
+Matching: `hw` matches `hw_arch` exactly, else `hw_vendor` exactly, else prefix, resolving
+`taxonomy.hw_aliases` (via `normToken` and compact alphanumeric key). `model` matches `model_family`
+exactly, else contains, resolving `taxonomy.models[].aliases`; a `*` row matches any model
+**as context only** (see §3). `runtime` matches slug, then display name.
 
 Response:
 
@@ -168,6 +196,8 @@ Response:
     "hint": "No claim on record for sm_86 × qwen3. Hardware-level support exists for llama.cpp; no model-specific claim.",
     "known_wanted": false,
     "wanted_votes": 0,
+    "known_untested": false,
+    "untested_basis": [],
     "last_checked": null,
     "counts": {"exact": 0, "context": 2}
   },
@@ -177,9 +207,14 @@ Response:
 }
 ```
 
-`miss.reason` ∈ `no-claim` (nothing at all) \| `wanted-only` (only `wanted` rows matched) \|
+`miss.reason` ∈ `no-claim` (nothing at all) \| `untested-only` (only `untested` rows matched) \|
 `rejected-only` (only `rejected` rows matched) \| `partial-context` (only `*` rows matched) \|
 `no-match` (query produced nothing, including no context).
+
+For `untested` rows, API hints and UI payloads MUST explicitly state **"proposed, unverified"**
+and surface `basis` / `basis_note` separately from `want_votes` — never present an `untested`
+row as a verified fact. `known_wanted` and `wanted_votes` are kept alongside `known_untested`
+and `untested_basis` for backwards compatibility.
 
 `miss.is_miss` is `true` iff `len(rows) == 0`; `context` rows never count as an answer.
 The miss object is **always** present when `is_miss` is true. An empty array alone is a bug.
@@ -226,3 +261,4 @@ pipeline merges. Do not edit `data/taxonomy.json` directly.
 | **lead** | `CONTRACT.md`, `data/taxonomy.json`, `README.md`, `scripts/serve.py`, `api/**` final integration |
 
 Nobody edits another owner's files. If a contract change is unavoidable, message `lead` first.
+File ownership above is unchanged for variants: variants live in `data/rows/<vendor>.jsonl` alongside their base rows.

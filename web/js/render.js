@@ -39,7 +39,8 @@ function safeHref(url) {
 
 const STATE_META = {
   solved: { label: 'Solved', glyph: '✓', word: 'has a known solution' },
-  wanted: { label: 'Wanted', glyph: '↑', word: 'is wanted, not solved' },
+  untested: { label: 'Untested', glyph: '?', word: 'is proposed, unverified' },
+  wanted: { label: 'Untested', glyph: '?', word: 'is proposed, unverified' },
   rejected: { label: 'Rejected', glyph: '✕', word: 'was tried and does not work' },
   context: { label: 'Hardware-level', glyph: '＊', word: 'says the backend supports this card' },
   miss: { label: 'Not searched', glyph: '∅', word: 'has no claim on record' }
@@ -56,6 +57,10 @@ const REASON_META = {
   'no-claim': {
     label: 'no claim on record',
     lead: 'Nobody has recorded this combination.'
+  },
+  'untested-only': {
+    label: 'untested only',
+    lead: 'Proposed or requested, but unverified — nobody has solved it yet.'
   },
   'wanted-only': {
     label: 'wanted only',
@@ -220,13 +225,43 @@ function evidenceBlock(row) {
 
 /* ------------------------------------------------------------------- cards */
 
+function hwExtraFact(row) {
+  const extra = row && row.hw_extra;
+  if (!extra || typeof extra !== 'object' || Array.isArray(extra)) return '';
+  const entries = Object.entries(extra).filter(([, v]) => v !== null && v !== undefined && v !== '');
+  if (!entries.length) return '';
+  return entries
+    .map(([k, v]) => {
+      let label = k;
+      let val = String(v);
+      if (k === 'vram_gb') {
+        label = 'VRAM';
+        val = `${v} GB`;
+      } else if (k === 'cuda_min') {
+        label = 'CUDA';
+        val = `≥ ${v}`;
+      } else if (k === 'rocm_min') {
+        label = 'ROCm';
+        val = `≥ ${v}`;
+      } else if (k === 'metal_min') {
+        label = 'Metal';
+        val = `≥ ${v}`;
+      } else if (k === 'macos_min') {
+        label = 'macOS';
+        val = `≥ ${v}`;
+      }
+      return `<div class="kv"><dt>${esc(label)}</dt><dd>${esc(val)}</dd></div>`;
+    })
+    .join('');
+}
+
 function factsBlock(row, { emphasis = 'as_of' } = {}) {
   const asOf = row.as_of
     ? `<div class="kv kv-emphasis"><dt>Checked as of</dt><dd><time datetime="${attr(row.as_of)}">${esc(formatDate(row.as_of))}</time></dd></div>`
     : `<div class="kv kv-missing"><dt>As of</dt><dd>no date — treat with suspicion</dd></div>`;
   const parts = [asOf];
   if (emphasis !== 'as_of') parts.unshift(parts.pop()); // keep dominant field first
-  parts.push(revFact(row), quantFact(row), modelRevFact(row), measurementFact(row), missingFact(row));
+  parts.push(revFact(row), quantFact(row), modelRevFact(row), measurementFact(row), hwExtraFact(row), missingFact(row));
   return `<dl class="claim-facts">${parts.join('')}</dl>`;
 }
 
@@ -314,38 +349,50 @@ function rejectedCard(row) {
   return claimCard(row, { state: 'rejected' });
 }
 
-/** wanted card: the vote count is the loudest element; the age is visible. */
-function wantedCard(row, { now = new Date(), voted = false } = {}) {
+/** untested card: proposed/unverified, basis separated from demand votes. */
+function untestedCard(row, { now = new Date(), voted = false } = {}) {
   const age = ageOf(row.want_first, now);
   const votes = row.want_votes || 0;
   const requesters = (row.want_requesters || []).slice(0, 8);
   const hidden = Math.max(0, (row.want_votes || 0) - requesters.length);
   const meter = ageMeter(age.days);
   const notes = row.notes ? `<p class="notes">${esc(row.notes)}</p>` : '';
-  return `<article class="card" data-state="wanted" data-row-id="${attr(row.id)}" tabindex="-1"
+  const doubleWish = row.parent_untested
+    ? `<div class="double-wish-badge" role="note">Untested variant of an untested base — double-wish, not a lead</div>`
+    : '';
+  const basisBlock = (row.basis || row.basis_note)
+    ? `<div class="untested-basis">
+        ${row.basis ? `<span class="basis-tag">Basis: <strong>${esc(row.basis)}</strong></span>` : ''}
+        ${row.basis_note ? `<span class="basis-note">${esc(row.basis_note)}</span>` : ''}
+      </div>`
+    : '';
+  return `<article class="card" data-state="untested" data-row-id="${attr(row.id)}" tabindex="-1"
       aria-labelledby="t-${attr(cssId(row.id))}">
     <div class="card-head">
-      ${stateChip('wanted')}
+      ${stateChip('untested')}
       <div class="chips">${kindBadge(row.source_kind)}${derivedNote(row.source_kind)}${provenanceBadges(row)}</div>
     </div>
     <h3 class="card-title" id="t-${attr(cssId(row.id))}">${comboTitle(row)}</h3>
     <div class="card-sub">${hwLine(row)}<span class="dot" aria-hidden="true">·</span>${esc(row.runtime)}</div>
     <div class="card-body">
+      <div class="untested-notice"><strong>Proposed, unverified</strong> — not yet confirmed to work or fail.</div>
+      ${doubleWish}
+      ${basisBlock}
       <div class="wanted-block">
         <div class="vote-count" aria-label="${votes} ${plural(votes, 'person wants')} this">
           <span class="n">${esc(votes)}</span>
           <span class="l">${plural(votes, 'vote')}</span>
         </div>
         <div class="wanted-meta">
-          <div class="row"><span class="k">First wanted</span>
+          <div class="row"><span class="k">First requested</span>
             <time datetime="${attr(row.want_first || '')}">${esc(row.want_first ? formatDate(row.want_first) : 'unknown date')}</time>
             <span class="age" data-age="${attr(age.bucket)}">
               <span aria-hidden="true">${age.bucket === 'stale' ? '⚠' : age.bucket === 'aging' ? '·' : '○'}</span>
-              wanted ${esc(age.text)}
+              untested ${esc(age.text)}
               ${meter}
             </span>
           </div>
-          <div class="row"><span class="k">Wanted by</span>
+          <div class="row"><span class="k">Requested by</span>
             <span class="requesters">${
               requesters.length
                 ? requesters.map((r) => `<span class="requester">${esc(r)}</span>`).join('') +
@@ -359,7 +406,7 @@ function wantedCard(row, { now = new Date(), voted = false } = {}) {
           <button type="button" class="btn btn-want" data-vote="${attr(row.id)}"
             data-voted="${voted ? 'true' : 'false'}" aria-pressed="${voted ? 'true' : 'false'}"
             aria-label="${voted ? 'You want this' : 'Vote that you want'} this combination, ${votes} so far">
-            <span aria-hidden="true">${voted ? '✓' : '↑'}</span><span class="vote-label">${voted ? 'Wanted' : 'I want this'}</span>
+            <span aria-hidden="true">${voted ? '✓' : '↑'}</span><span class="vote-label">${voted ? 'Voted' : 'I want this'}</span>
           </button>
         </div>
       </div>
@@ -369,6 +416,7 @@ function wantedCard(row, { now = new Date(), voted = false } = {}) {
     ${footBlock(row)}
   </article>`;
 }
+const wantedCard = untestedCard;
 
 function ageMeter(days) {
   const lvl = ageLevel(days);
@@ -405,9 +453,44 @@ function contextCard(row) {
 
 function cardFor(row, opts = {}) {
   if (row.model_family === '*') return contextCard(row, opts);
-  if (row.status === 'wanted') return wantedCard(row, opts);
+  if (row.status === 'untested' || row.status === 'wanted') return untestedCard(row, opts);
   if (row.status === 'rejected') return rejectedCard(row, opts);
   return solvedCard(row, opts);
+}
+
+function variantKnobs(v) {
+  const knobs = [];
+  if (v.quant) knobs.push(`quant: ${v.quant}`);
+  if (v.context_length) knobs.push(`ctx: ${v.context_length}`);
+  if (v.offload) knobs.push(`offload: ${v.offload}`);
+  if (v.runtime_version) knobs.push(`rv: ${v.runtime_version}`);
+  if (v.driver_version) knobs.push(`drv: ${v.driver_version}`);
+  if (v.flags) knobs.push(`flags: ${v.flags}`);
+  if (v.fits) knobs.push(`fits: ${v.fits}`);
+  return knobs;
+}
+
+function cardGroup({ parent, variants = [] }, opts = {}) {
+  const parentHtml = cardFor(parent, opts);
+  if (!variants || !variants.length) return parentHtml;
+  const items = variants
+    .map((v) => {
+      const st = v.status === 'wanted' ? 'untested' : (v.status || 'untested');
+      const knobs = variantKnobs(v).map((k) => `<span class="variant-knob">${esc(k)}</span>`).join('');
+      const dw = v.parent_untested ? `<span class="double-wish-badge">double-wish</span>` : '';
+      return `<div class="variant-item" data-row-id="${attr(v.id)}">
+        <div class="variant-head">${stateChip(st)} ${dw} <div class="variant-knobs">${knobs}</div></div>
+        ${v.notes ? `<div class="variant-notes">${esc(v.notes)}</div>` : ''}
+      </div>`;
+    })
+    .join('');
+  return `<div class="card-with-variants">
+    ${parentHtml}
+    <details class="variant-group" open>
+      <summary>Variants (${variants.length})</summary>
+      <div class="variant-list">${items}</div>
+    </details>
+  </div>`;
 }
 
 /* ================================================================ MISS PANEL
@@ -416,6 +499,27 @@ function cardFor(row, opts = {}) {
    So: big plain sentence, the dataset date, the counts, one honest paragraph
    about what this means, a want button, and the exact JSON payload.
    ======================================================================== */
+
+function submitPointerUrlFor(q, payload) {
+  const id = (payload && payload.id) || '';
+  const hw = (q && q.hw) || '';
+  const model = (q && q.model) || '';
+  const runtime = (q && q.runtime) || '';
+  const title = `Submit pointer: ${id || [hw, model, runtime].filter(Boolean).join(' / ')}`;
+  const body = [
+    `- **combo_id:** ${id}`,
+    `- **hardware:** ${hw}`,
+    `- **model:** ${model}`,
+    `- **runtime:** ${runtime}`,
+    '',
+    '### Pointer & evidence',
+    '- **pointer URL:** ',
+    '- **notes (quant, context, VRAM, etc.):** ',
+    ''
+  ].join('\n');
+  const params = new URLSearchParams({ title, body });
+  return `https://github.com/BuildTreeFruits/solve-run/issues/new?${params.toString()}`;
+}
 
 function missPanel(response, { now = new Date(), payload }) {
   const miss = response.miss || {};
@@ -485,6 +589,7 @@ function missPanel(response, { now = new Date(), payload }) {
           data-id="${attr(payload.id)}" aria-pressed="false">
           <span aria-hidden="true">↑</span><span class="vote-label">Want this</span>
         </button>
+        <a class="btn btn-primary" href="${attr(submitPointerUrlFor(q, payload))}" target="_blank" rel="noopener noreferrer">I got this working — submit pointer</a>
         <button type="button" class="btn btn-ghost" data-copy-payload>Copy miss report</button>
         <button type="button" class="btn btn-ghost" data-copy-link>Copy link to this lookup</button>
         <span class="feedback" data-miss-feedback role="status" aria-live="polite"></span>
@@ -583,7 +688,7 @@ const BROWSE_COLUMNS = [
   { key: '', label: '' }
 ];
 
-function browseTable(rows, { sort, dir, now, voted = new Set(), total = rows.length } = {}) {
+function browseTable(rows, { sort, dir, now, voted = new Set(), total = rows.length, statusFilter = '' } = {}) {
   const head = BROWSE_COLUMNS.map((c) => {
     if (!c.key) return `<th scope="col"><span class="visually-hidden">Actions</span></th>`;
     const isSorted = sort === c.key;
@@ -613,6 +718,13 @@ function browseTable(rows, { sort, dir, now, voted = new Set(), total = rows.len
     .join('');
 
   if (!rows.length) {
+    if (statusFilter === 'untested' || statusFilter === 'wanted') {
+      return `<div class="empty-state" style="margin-top:14px">
+        <h3>Untested (0)</h3>
+        <p>No untested combinations yet. Untested rows appear when someone proposes an unverified combination or votes on a miss.</p>
+        <p><button type="button" class="btn btn-primary" data-go-lookup>Search a combination in Lookup</button></p>
+      </div>`;
+    }
     return `<div class="empty-state" style="margin-top:14px"><p>No rows match these filters.</p></div>`;
   }
   return `<div class="table-wrap">
@@ -624,5 +736,5 @@ function browseTable(rows, { sort, dir, now, voted = new Set(), total = rows.len
   </div>`;
 }
 
-  Object.assign(SR, { esc, cssId, STATE_META, KIND_META, stateChip, kindBadge, comboTitle, pointerBlock, evidenceBlock, solvedCard, rejectedCard, wantedCard, contextCard, cardFor, missPanel, emptyDataset, loadError, loading, contextSection, neighbouringNote, browseTable });
+  Object.assign(SR, { esc, cssId, STATE_META, KIND_META, stateChip, kindBadge, comboTitle, pointerBlock, evidenceBlock, hwExtraFact, solvedCard, rejectedCard, untestedCard, wantedCard, contextCard, cardFor, cardGroup, submitPointerUrlFor, missPanel, emptyDataset, loadError, loading, contextSection, neighbouringNote, browseTable });
 })(window.__SR = window.__SR || {});

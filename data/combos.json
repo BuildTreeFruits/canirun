@@ -1,6 +1,6 @@
 {
-  "as_of": "2026-11-22",
-  "content_hash": "faa99fb62a40ede3ebe6c6915ab9570ce14a1369ebcdc713d60a92b7064aeb01",
+  "as_of": "2026-11-23",
+  "content_hash": "37bd005823e71037391bd525d44eadf750ef495a8eec32f540b88b8dfca73b2f",
   "contract": "solve.run combo-index v1",
   "counts": {
     "by_created_by": {
@@ -136,11 +136,15 @@
     }
   },
   "format": "1",
-  "generated_at": "2026-11-22T16:17:50Z",
+  "generated_at": "2026-11-23T19:54:17Z",
   "rows": [
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -149,6 +153,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx1030",
       "hw_extra": {
         "backend": "HIP"
@@ -165,6 +171,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "llama.cpp HIP backend, Linux build command in build.md is written for a gfx1030-compatible AMD GPU.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md",
       "pointer_alive": true,
       "provisional": false,
@@ -173,12 +181,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -186,7 +195,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -195,6 +208,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx1031",
       "hw_extra": {
         "backend": "HIP"
@@ -211,6 +226,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "build.md HIP: unsupported GPUs can use HSA_OVERRIDE_GFX_VERSION; RDNA2 example names gfx1031.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md",
       "pointer_alive": true,
       "provisional": false,
@@ -219,12 +236,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -232,7 +250,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -241,6 +263,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx1035",
       "hw_extra": {
         "backend": "HIP"
@@ -257,6 +281,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "build.md HIP: gfx1035 named as an RDNA2 target for HSA_OVERRIDE_GFX_VERSION.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md",
       "pointer_alive": true,
       "provisional": false,
@@ -265,12 +291,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -278,7 +305,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -287,6 +318,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx1100",
       "hw_extra": {
         "backend": "HIP"
@@ -303,6 +336,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "llama.cpp HIP backend, Windows build command in build.md is written for gfx1100 (RX 7900 XTX/XT/GRE).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md",
       "pointer_alive": true,
       "provisional": false,
@@ -311,12 +346,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -324,7 +360,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -333,6 +373,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx1100",
       "hw_extra": {
         "backend": "ROCm"
@@ -349,6 +391,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM ROCm: requirements section lists Radeon RX 7900 series (gfx1100/1101) as a supported GPU; prebuilt wheels are published per ROCm variant (rocm700/rocm721/rocm72/rocm100).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.rocm.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -357,12 +401,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -370,7 +415,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -379,6 +428,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx1100",
       "hw_extra": {
         "vram_gb": 24
@@ -393,6 +444,8 @@
       "model_family": "deepseek",
       "model_rev": null,
       "notes": "RDNA3 (gfx1100 / RX 7900 XTX) lacks hardware FP8 matrix cores; vLLM's ROCm FP8 DeepSeek kernels target CDNA3 (gfx942 / MI300X) and are unsupported on gfx1100.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://raw.githubusercontent.com/ollama/ollama/main/docs/gpu.mdx",
       "pointer_alive": true,
       "provisional": false,
@@ -401,12 +454,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "rejected",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -414,7 +468,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -423,6 +481,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx1100",
       "hw_extra": {
         "vram_gb": 24
@@ -437,6 +497,8 @@
       "model_family": "llama-3",
       "model_rev": null,
       "notes": "Ollama officially supports RX 7900 XTX (gfx1100) via ROCm for Llama 3.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://raw.githubusercontent.com/ollama/ollama/main/docs/gpu.mdx",
       "pointer_alive": true,
       "provisional": false,
@@ -445,12 +507,13 @@
       "resolves_no_claim": false,
       "runtime": "ollama",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -458,7 +521,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -467,6 +534,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx1100",
       "hw_extra": {
         "vram_gb": 24
@@ -481,6 +550,8 @@
       "model_family": "qwen3",
       "model_rev": null,
       "notes": "Qwen3-32B Q4_K_M runs on RX 7900 XTX (gfx1100, 24 GB) via llama.cpp HIP/ROCm or Vulkan.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://raw.githubusercontent.com/ggml-org/llama.cpp/master/docs/build.md",
       "pointer_alive": true,
       "provisional": false,
@@ -489,12 +560,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -502,7 +574,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -511,6 +587,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx1101",
       "hw_extra": {
         "backend": "ROCm"
@@ -527,6 +605,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM ROCm: requirements section lists Radeon RX 7900 (gfx1101) as a supported GPU; prebuilt wheels are published per ROCm variant (rocm700/rocm721/rocm72/rocm100).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.rocm.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -535,12 +615,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -548,7 +629,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -557,6 +642,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx1150",
       "hw_extra": {
         "backend": "ROCm",
@@ -574,6 +661,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM ROCm: requirements section lists Ryzen AI 300 (gfx1150) as a supported GPU (ROCm 7.0.2+); prebuilt wheels are published per ROCm variant (rocm700/rocm721/rocm72/rocm100).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.rocm.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -582,12 +671,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -595,7 +685,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -604,6 +698,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx1151",
       "hw_extra": {
         "backend": "ROCm",
@@ -621,6 +717,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM ROCm: requirements section lists Ryzen AI MAX / AI 300 (gfx1151/1150) as a supported GPU (ROCm 7.0.2+); prebuilt wheels are published per ROCm variant (rocm700/rocm721/rocm72/rocm100).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.rocm.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -629,12 +727,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -642,7 +741,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -651,6 +754,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx1151",
       "hw_extra": {
         "unified_memory_gb": 128
@@ -665,6 +770,8 @@
       "model_family": "llama-3",
       "model_rev": null,
       "notes": "Llama 3.3 70B Q4_K_M fits in unified memory on Strix Halo (gfx1151) via llama.cpp.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/bartowski/Llama-3.3-70B-Instruct-GGUF/raw/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -673,12 +780,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -686,7 +794,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -695,6 +807,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx1151",
       "hw_extra": {
         "unified_memory_gb": 128
@@ -709,6 +823,8 @@
       "model_family": "qwen3",
       "model_rev": null,
       "notes": "Strix Halo (gfx1151) with up to 128 GB unified memory runs Qwen3 via llama.cpp Vulkan/ROCm.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://raw.githubusercontent.com/ggml-org/llama.cpp/master/docs/build.md",
       "pointer_alive": true,
       "provisional": false,
@@ -717,12 +833,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -730,7 +847,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -739,6 +860,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx1200",
       "hw_extra": {
         "backend": "ROCm"
@@ -755,6 +878,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM ROCm: requirements section lists Radeon RX 9000 series (gfx1200/1201) as a supported GPU; prebuilt wheels are published per ROCm variant (rocm700/rocm721/rocm72/rocm100).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.rocm.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -763,12 +888,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -776,7 +902,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -785,6 +915,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx1201",
       "hw_extra": {
         "backend": "ROCm"
@@ -801,6 +933,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM ROCm: requirements section lists Radeon RX 9000 (gfx1201) as a supported GPU; prebuilt wheels are published per ROCm variant (rocm700/rocm721/rocm72/rocm100).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.rocm.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -809,12 +943,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -822,7 +957,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -831,6 +970,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx90a",
       "hw_extra": {
         "backend": "ROCm"
@@ -847,6 +988,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM ROCm: requirements section lists MI200s (MI210/MI250/MI250X, gfx90a) as a supported GPU; prebuilt wheels are published per ROCm variant (rocm700/rocm721/rocm72/rocm100).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.rocm.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -855,12 +998,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -868,7 +1012,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -882,6 +1030,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx942",
       "hw_extra": {
         "backend": "ROCm"
@@ -898,6 +1048,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM ROCm: requirements section lists MI300 / MI325X (gfx942) as a supported GPU; prebuilt wheels are published per ROCm variant (rocm700/rocm721/rocm72/rocm100).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.rocm.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -906,13 +1058,14 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install",
         "scraper:gh_releases"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -920,7 +1073,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -929,6 +1086,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx942",
       "hw_extra": {
         "vram_gb": 192
@@ -943,6 +1102,8 @@
       "model_family": "deepseek",
       "model_rev": null,
       "notes": "DeepSeek-R1 FP8 runs on MI300X (gfx942, 192 GB HBM3) with vLLM ROCm.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/deepseek-ai/DeepSeek-R1/raw/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -951,12 +1112,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -964,7 +1126,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -973,6 +1139,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx942",
       "hw_extra": {
         "vram_gb": 192
@@ -987,6 +1155,8 @@
       "model_family": "llama-3",
       "model_rev": null,
       "notes": "Ollama officially lists gfx942 (MI300X/MI300A) as supported for ROCm GPU inference.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://raw.githubusercontent.com/ollama/ollama/main/docs/gpu.mdx",
       "pointer_alive": true,
       "provisional": false,
@@ -995,12 +1165,13 @@
       "resolves_no_claim": false,
       "runtime": "ollama",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1008,7 +1179,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -1017,6 +1192,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx942",
       "hw_extra": {
         "vram_gb": 192
@@ -1031,6 +1208,8 @@
       "model_family": "qwen3",
       "model_rev": null,
       "notes": "Qwen3-32B BF16 runs on MI300X (gfx942) via vLLM ROCm.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/Qwen/Qwen3-32B/raw/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1039,12 +1218,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1052,7 +1232,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -1061,6 +1245,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "gfx950",
       "hw_extra": {
         "backend": "ROCm",
@@ -1078,6 +1264,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM ROCm: requirements section lists MI350 / MI355X (gfx950) as a supported GPU (ROCm 7.0+); prebuilt wheels are published per ROCm variant (rocm700/rocm721/rocm72/rocm100).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.rocm.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1086,12 +1274,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1099,7 +1288,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -1108,6 +1301,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "m1",
       "hw_extra": {
         "backend": "Metal"
@@ -1124,6 +1319,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "DERIVED: build.md §Metal Build: on macOS Metal is on by default, i.e. llama.cpp uses the Apple GPU on Apple Silicon machines. arch narrowed to the m1 family because the doc names macOS/Metal, not a specific M-series chip.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1132,12 +1329,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1145,7 +1343,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "scraper",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -1154,6 +1356,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "m1",
       "hw_extra": {},
       "hw_name": "Apple Silicon (Metal)",
@@ -1168,6 +1372,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": null,
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/mlc-ai/mlc-llm/blob/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1176,12 +1382,13 @@
       "resolves_no_claim": false,
       "runtime": "mlc-llm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:apple_integrations"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1189,7 +1396,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "scraper",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -1198,6 +1409,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "m1",
       "hw_extra": {},
       "hw_name": "Apple Silicon (Metal)",
@@ -1212,6 +1425,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": null,
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ml-explore/mlx/blob/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1220,12 +1435,13 @@
       "resolves_no_claim": false,
       "runtime": "mlx",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:apple_integrations"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1233,7 +1449,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "scraper",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -1242,6 +1462,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "m1",
       "hw_extra": {},
       "hw_name": "Apple Silicon (Metal)",
@@ -1256,6 +1478,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": null,
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ml-explore/mlx-lm/blob/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1264,12 +1488,13 @@
       "resolves_no_claim": false,
       "runtime": "mlx-lm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:apple_integrations"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1277,7 +1502,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "scraper",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -1286,6 +1515,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "m1",
       "hw_extra": {},
       "hw_name": "macOS (Apple Silicon)",
@@ -1300,6 +1531,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": null,
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ollama/ollama/blob/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1308,12 +1541,13 @@
       "resolves_no_claim": false,
       "runtime": "ollama",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:apple_integrations"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1321,7 +1555,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -1335,6 +1573,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "m1",
       "hw_extra": {
         "backend": "Metal"
@@ -1351,6 +1591,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM's Apple GPU path is the vLLM-Metal plugin: Apple Silicon + Metal, runs MLX-optimized mlx-community models. Doc says Apple Silicon, not an M-generation; arch is the baseline M1 family.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm-metal",
       "pointer_alive": true,
       "provisional": false,
@@ -1359,12 +1601,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1372,7 +1615,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "scraper",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -1381,6 +1628,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "m1",
       "hw_extra": {},
       "hw_name": "Apple Silicon (macOS 15+)",
@@ -1395,6 +1644,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": null,
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm-metal/blob/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1403,12 +1654,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm-metal",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:apple_integrations"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1416,7 +1668,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -1425,6 +1681,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "m3-max",
       "hw_extra": {
         "unified_memory_gb": 128
@@ -1439,6 +1697,8 @@
       "model_family": "gemma-3",
       "model_rev": null,
       "notes": "Gemma 3 27B 4-bit runs on Apple M3 Max via mlx-lm.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/mlx-community/gemma-3-27b-it-4bit/raw/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1447,12 +1707,13 @@
       "resolves_no_claim": false,
       "runtime": "mlx-lm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1460,7 +1721,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -1469,6 +1734,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "m3-max",
       "hw_extra": {
         "unified_memory_gb": 128
@@ -1483,6 +1750,8 @@
       "model_family": "qwen3",
       "model_rev": null,
       "notes": "Qwen3-32B-4bit runs on Apple M3 Max via mlx-lm.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/mlx-community/Qwen3-32B-4bit/raw/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1491,12 +1760,13 @@
       "resolves_no_claim": false,
       "runtime": "mlx-lm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1504,7 +1774,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -1513,6 +1787,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "m3-max",
       "hw_extra": {
         "unified_memory_gb": 128
@@ -1527,6 +1803,8 @@
       "model_family": "qwen3",
       "model_rev": null,
       "notes": "Upstream vLLM GPU backend targets NVIDIA CUDA/ROCm/XPU and does not support Apple Silicon Metal; use mlx-lm or vllm-metal instead.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://raw.githubusercontent.com/vllm-project/vllm/main/docs/getting_started/installation/gpu.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1535,12 +1813,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "rejected",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1548,7 +1827,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -1557,6 +1840,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "m4-max",
       "hw_extra": {
         "unified_memory_gb": 128
@@ -1571,6 +1856,8 @@
       "model_family": "deepseek",
       "model_rev": null,
       "notes": "DeepSeek-R1-Distill-Qwen-32B-4bit runs on Apple M4 Max via mlx-lm.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/mlx-community/DeepSeek-R1-Distill-Qwen-32B-4bit/raw/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1579,12 +1866,13 @@
       "resolves_no_claim": false,
       "runtime": "mlx-lm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1592,7 +1880,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -1601,6 +1893,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "m4-max",
       "hw_extra": {
         "unified_memory_gb": 128
@@ -1615,6 +1909,8 @@
       "model_family": "llama-3",
       "model_rev": null,
       "notes": "Llama-3.3-70B-Instruct-4bit runs on Apple M4 Max (128 GB unified memory) via mlx-lm.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/mlx-community/Llama-3.3-70B-Instruct-4bit/raw/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1623,12 +1919,13 @@
       "resolves_no_claim": false,
       "runtime": "mlx-lm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1636,7 +1933,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -1645,6 +1946,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "m4-max",
       "hw_extra": {
         "unified_memory_gb": 128
@@ -1659,6 +1962,8 @@
       "model_family": "mistral",
       "model_rev": null,
       "notes": "Mistral-Small-24B-Instruct-2501-4bit runs on Apple M4 Max via mlx-lm.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/mlx-community/Mistral-Small-24B-Instruct-2501-4bit/raw/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1667,12 +1972,13 @@
       "resolves_no_claim": false,
       "runtime": "mlx-lm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1680,7 +1986,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "scraper",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -1689,6 +1999,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "m5",
       "hw_extra": {},
       "hw_name": "Apple M5 (NAX tensor units)",
@@ -1703,6 +2015,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": null,
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm-metal/blob/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1711,12 +2025,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm-metal",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:apple_integrations"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1724,7 +2039,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -1733,6 +2052,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "aarch64-bf16",
       "hw_extra": {
         "backend": "CPU"
@@ -1749,6 +2070,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM CPU (ARM): BF16 requires ARMv8.6-A (FEAT_BF16), supported on Graviton3/4 and AmpereOne.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/cpu.arm.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1757,12 +2080,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1770,7 +2094,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -1784,6 +2112,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "aarch64-neon",
       "hw_extra": {
         "backend": "CPU_KLEIDIAI"
@@ -1800,6 +2130,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "DERIVED: build.md §Arm KleidiAI: Linux AArch64/arm64 with runtime CPU feature detection.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1808,12 +2140,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1821,7 +2154,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -1830,6 +2167,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "aarch64-neon",
       "hw_extra": {
         "backend": "CPU"
@@ -1846,6 +2185,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM CPU (ARM AArch64): NEON is the required ISA baseline.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/cpu.arm.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1854,12 +2195,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1867,7 +2209,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -1881,6 +2227,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "arm64-android",
       "hw_extra": {
         "backend": "CPU_KLEIDIAI"
@@ -1897,6 +2245,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "DERIVED: build.md §Arm KleidiAI: Android arm64-v8a build with -DGGML_CPU_KLEIDIAI=ON.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1905,12 +2255,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1918,7 +2269,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -1932,6 +2287,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "arc-a770",
       "hw_extra": {
         "backend": "SYCL"
@@ -1948,6 +2305,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "docs/backend/SYCL.md verified-devices table lists Intel Arc A770 as Support.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/SYCL.md",
       "pointer_alive": true,
       "provisional": false,
@@ -1956,12 +2315,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -1969,7 +2329,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -1978,6 +2342,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "arc-a770",
       "hw_extra": {
         "backend": "XPU"
@@ -1994,6 +2360,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM XPU: supports Intel ARC GPUs via vllm-xpu-kernels.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.xpu.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2002,12 +2370,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2015,7 +2384,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -2024,6 +2397,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "arc-a770",
       "hw_extra": {
         "vram_gb": 16
@@ -2038,6 +2413,8 @@
       "model_family": "gemma-3",
       "model_rev": null,
       "notes": "Gemma 3 12B/4B GGUF runs on Intel Arc A770 (16 GB) via llama.cpp SYCL.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://raw.githubusercontent.com/ggml-org/llama.cpp/master/docs/backend/SYCL.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2046,12 +2423,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2059,7 +2437,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -2068,6 +2450,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "arc-a770",
       "hw_extra": {
         "vram_gb": 16
@@ -2082,6 +2466,8 @@
       "model_family": "mistral",
       "model_rev": null,
       "notes": "Mistral 7B/Small GGUF runs on Intel Arc A770 (16 GB) via SYCL/Vulkan-accelerated runtimes.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://raw.githubusercontent.com/ggml-org/llama.cpp/master/docs/backend/SYCL.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2090,12 +2476,13 @@
       "resolves_no_claim": false,
       "runtime": "ollama",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2103,7 +2490,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -2112,6 +2503,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "arc-a770",
       "hw_extra": {
         "vram_gb": 16
@@ -2126,6 +2519,8 @@
       "model_family": "qwen3",
       "model_rev": null,
       "notes": "Intel Arc A770 (16 GB) is supported in llama.cpp SYCL backend for Qwen3.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://raw.githubusercontent.com/ggml-org/llama.cpp/master/docs/backend/SYCL.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2134,12 +2529,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2147,7 +2543,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -2156,6 +2556,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "arc-b580",
       "hw_extra": {
         "backend": "SYCL"
@@ -2172,6 +2574,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "docs/backend/SYCL.md verified-devices table lists Intel Arc B580 as Support.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/SYCL.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2180,12 +2584,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2193,7 +2598,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -2202,6 +2611,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "arc-b580",
       "hw_extra": {
         "vram_gb": 12
@@ -2216,6 +2627,8 @@
       "model_family": "gpt-oss",
       "model_rev": null,
       "notes": "Standard vLLM CUDA wheels require NVIDIA CUDA; Intel Arc B580 requires vllm-xpu-kernels or llama.cpp SYCL.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://raw.githubusercontent.com/vllm-project/vllm/main/docs/getting_started/installation/gpu.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2224,12 +2637,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "rejected",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2237,7 +2651,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -2246,6 +2664,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "arc-b580",
       "hw_extra": {
         "vram_gb": 12
@@ -2260,6 +2680,8 @@
       "model_family": "llama-3",
       "model_rev": null,
       "notes": "Llama 3 8B Q4_K_M runs on Intel Arc B580 via llama.cpp SYCL backend.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://raw.githubusercontent.com/ggml-org/llama.cpp/master/docs/backend/SYCL.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2268,12 +2690,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2281,7 +2704,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -2290,6 +2717,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "arc-b580",
       "hw_extra": {
         "vram_gb": 12
@@ -2304,6 +2733,8 @@
       "model_family": "qwen3",
       "model_rev": null,
       "notes": "Intel Arc B580 (12 GB) is officially supported in llama.cpp SYCL backend for Qwen3.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://raw.githubusercontent.com/ggml-org/llama.cpp/master/docs/backend/SYCL.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2312,12 +2743,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2325,7 +2757,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -2334,6 +2770,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "arc-igpu-arrow-lake",
       "hw_extra": {
         "backend": "SYCL"
@@ -2350,6 +2788,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "DERIVED (doc reports a measured speedup, not a support statement): SYCL.md news 2025.2 benchmark table measures MUL_MAT Q4_0 built-in Arc GPU in Arrow Lake-H; the doc reports reach that device, which is stronger evidence than a support-matrix row.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/SYCL.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2358,12 +2798,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2371,7 +2812,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -2380,6 +2825,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "arc-igpu-lunar-lake",
       "hw_extra": {
         "backend": "OpenVINO"
@@ -2396,6 +2843,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "OPENVINO.md: validated on Lunar Lake / Panther Lake AI PCs, with GPU + NPU device selection.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/OPENVINO.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2404,12 +2853,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2417,7 +2867,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -2426,6 +2880,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "arc-igpu-meteor-lake",
       "hw_extra": {
         "backend": "SYCL"
@@ -2442,6 +2898,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "DERIVED (doc reports a measured speedup, not a support statement): SYCL.md news 2025.2 benchmark table measures MUL_MAT Q4_0 built-in Arc GPU in Meteor Lake; the doc reports reach that device, which is stronger evidence than a support-matrix row.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/SYCL.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2450,12 +2908,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2463,7 +2922,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -2472,6 +2935,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "arc-igpu-panther-lake",
       "hw_extra": {
         "backend": "OpenVINO"
@@ -2488,6 +2953,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "OPENVINO.md names Panther Lake (Core Ultra Series 3) as validated hardware.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/OPENVINO.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2496,12 +2963,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2509,7 +2977,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -2523,6 +2995,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "data-center-max-1550",
       "hw_extra": {
         "backend": "SYCL"
@@ -2539,6 +3013,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "docs/backend/SYCL.md verified-devices table lists Intel Data Center GPU Max 1550 as Support.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/SYCL.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2547,12 +3023,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2560,7 +3037,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -2569,6 +3050,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "data-center-max-1550",
       "hw_extra": {
         "backend": "XPU"
@@ -2585,6 +3068,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM XPU: supports Intel Data Center GPU and Intel ARC GPU via vllm-xpu-kernels.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.xpu.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2593,12 +3078,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2606,7 +3092,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -2615,6 +3105,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "flex-170",
       "hw_extra": {
         "backend": "SYCL"
@@ -2631,6 +3123,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "DERIVED (doc reports a measured speedup, not a support statement): SYCL.md news 2025.2 benchmark table measures MUL_MAT Q4_0 Intel Data Center GPU Flex 170; the doc reports reach that device, which is stronger evidence than a support-matrix row.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/SYCL.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2639,12 +3133,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2652,7 +3147,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -2661,6 +3160,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "intel-igpu-11th-gen",
       "hw_extra": {
         "backend": "SYCL"
@@ -2677,6 +3178,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "docs/backend/SYCL.md verified-devices table lists Intel iGPU in Core CPU (11th gen+) as Support.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/SYCL.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2685,12 +3188,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2698,7 +3202,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -2707,6 +3215,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "intel-igpu-12th-gen",
       "hw_extra": {
         "backend": "OpenCL"
@@ -2723,6 +3233,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "OPENCL.md OS table verifies Intel 12700H iGPU over OpenCL on Ubuntu 22.04 WSL2.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/OPENCL.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2731,12 +3243,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2744,7 +3257,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -2758,6 +3275,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "intel-npu",
       "hw_extra": {
         "backend": "OpenVINO"
@@ -2774,6 +3293,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "build.md §OpenVINO: OpenVINO is the only llama.cpp backend with Intel NPU support.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2782,12 +3303,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2795,7 +3317,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -2804,6 +3330,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "sm_100",
       "hw_extra": {
         "backend": "CUDA",
@@ -2821,6 +3349,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM CUDA wheels: pre-compiled CUDA 13.0 binaries; the requirements list names this card class and sets the floor at compute capability 7.5.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.cuda.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2829,12 +3359,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2842,7 +3373,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -2851,6 +3386,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "sm_120",
       "hw_extra": {
         "cuda_min": "12.8",
@@ -2866,6 +3403,8 @@
       "model_family": "gemma-3",
       "model_rev": null,
       "notes": "Gemma 3 27B GGUF (Q4_K_M) runs in 32 GB VRAM on RTX 5090 via llama.cpp CUDA.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/unsloth/gemma-3-27b-it-GGUF/raw/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2874,12 +3413,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2887,7 +3427,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -2896,6 +3440,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "sm_120",
       "hw_extra": {
         "cuda_min": "12.8",
@@ -2911,6 +3457,8 @@
       "model_family": "gpt-oss",
       "model_rev": null,
       "notes": "gpt-oss-20b runs on RTX 5090 (sm_120) via vLLM with native Blackwell MXFP4 support.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/openai/gpt-oss-20b/raw/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2919,12 +3467,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -2932,7 +3481,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -2941,6 +3494,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "sm_120",
       "hw_extra": {
         "cuda_min": "12.8",
@@ -2956,6 +3511,8 @@
       "model_family": "qwen3",
       "model_rev": null,
       "notes": "Qwen3-32B Q4_K_M fits comfortably in 32 GB GDDR7 on RTX 5090 (sm_120) with llama.cpp CUDA.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/Qwen/Qwen3-32B/raw/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -2964,12 +3521,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3023,7 +3581,7 @@
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3031,7 +3589,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -3040,6 +3602,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "sm_75",
       "hw_extra": {
         "backend": "CUDA",
@@ -3057,6 +3621,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM CUDA wheels: pre-compiled CUDA 13.0 binaries; the requirements list names this card class and sets the floor at compute capability 7.5.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.cuda.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3065,12 +3631,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3078,7 +3645,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -3087,6 +3658,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "sm_80",
       "hw_extra": {
         "backend": "CUDA",
@@ -3104,6 +3677,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM CUDA wheels: pre-compiled CUDA 13.0 binaries; the requirements list names this card class and sets the floor at compute capability 7.5.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.cuda.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3112,12 +3687,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3125,7 +3701,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -3134,6 +3714,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "sm_86",
       "hw_extra": {
         "backend": "CUDA",
@@ -3151,6 +3733,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "llama.cpp CUDA backend; build.md lists RTX 3080 Ti and RTX 3070 at compute capability 8.6, and the example arch list is \"86;89\".",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3159,12 +3743,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3172,7 +3757,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -3181,6 +3770,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "sm_86",
       "hw_extra": {
         "cuda_min": "11.8",
@@ -3196,6 +3787,8 @@
       "model_family": "deepseek",
       "model_rev": null,
       "notes": "Ampere (sm_86 / RTX 3090) lacks hardware FP8 tensor cores (introduced in Ada sm_89 / Hopper sm_90); native FP8 DeepSeek-R1/V3 kernels in vLLM are unsupported on sm_86.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://raw.githubusercontent.com/vllm-project/vllm/main/docs/getting_started/installation/gpu.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3204,12 +3797,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "rejected",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3217,7 +3811,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -3226,6 +3824,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "sm_86",
       "hw_extra": {
         "cuda_min": "11.8",
@@ -3241,6 +3841,8 @@
       "model_family": "llama-3",
       "model_rev": null,
       "notes": "Llama 3 8B/70B-Q2/32B-class models run on RTX 3090 (sm_86) via Ollama CUDA.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://raw.githubusercontent.com/ollama/ollama/main/docs/gpu.mdx",
       "pointer_alive": true,
       "provisional": false,
@@ -3249,12 +3851,13 @@
       "resolves_no_claim": false,
       "runtime": "ollama",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3262,7 +3865,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -3271,6 +3878,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "sm_86",
       "hw_extra": {
         "cuda_min": "11.8",
@@ -3286,6 +3895,8 @@
       "model_family": "qwen3",
       "model_rev": null,
       "notes": "Qwen3-32B Q4_K_M runs on RTX 3090 (sm_86, 24 GB) via llama.cpp CUDA backend.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://raw.githubusercontent.com/ggml-org/llama.cpp/master/docs/build.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3294,12 +3905,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3307,7 +3919,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -3316,6 +3932,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "sm_89",
       "hw_extra": {
         "backend": "CUDA",
@@ -3333,6 +3951,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "llama.cpp CUDA backend; build.md lists RTX 4090 at compute capability 8.9 and shows -DCMAKE_CUDA_ARCHITECTURES=\"86;89\".",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3341,12 +3961,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3354,7 +3975,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -3363,6 +3988,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "sm_89",
       "hw_extra": {
         "backend": "CUDA",
@@ -3380,6 +4007,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM CUDA wheels: pre-compiled CUDA 13.0 binaries; the requirements list names this card class and sets the floor at compute capability 7.5.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.cuda.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3388,12 +4017,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3401,7 +4031,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -3410,6 +4044,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "sm_89",
       "hw_extra": {
         "cuda_min": "11.8",
@@ -3425,6 +4061,8 @@
       "model_family": "gpt-oss",
       "model_rev": null,
       "notes": "gpt-oss-20b runs locally on RTX 4090 (24 GB VRAM) via Ollama.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/openai/gpt-oss-20b/raw/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3433,12 +4071,13 @@
       "resolves_no_claim": false,
       "runtime": "ollama",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3446,7 +4085,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -3455,6 +4098,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "sm_89",
       "hw_extra": {
         "cuda_min": "11.8",
@@ -3470,6 +4115,8 @@
       "model_family": "mistral",
       "model_rev": null,
       "notes": "Mistral Small 24B runs on RTX 4090 (sm_89) with vLLM in FP8/AWQ within 24 GB VRAM.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/mistralai/Mistral-Small-24B-Instruct-2501/raw/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3478,12 +4125,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3491,7 +4139,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -3500,6 +4152,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "sm_89",
       "hw_extra": {
         "cuda_min": "11.8",
@@ -3515,6 +4169,8 @@
       "model_family": "qwen3",
       "model_rev": null,
       "notes": "Qwen3 runs on RTX 4090 (sm_89) with vLLM >=0.8.5, including Ada FP8 tensor core acceleration.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/Qwen/Qwen3-32B/raw/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3523,12 +4179,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3536,7 +4193,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -3545,6 +4206,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "sm_90",
       "hw_extra": {
         "backend": "CUDA",
@@ -3562,6 +4225,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM CUDA wheels: pre-compiled CUDA 13.0 binaries; the requirements list names this card class and sets the floor at compute capability 7.5.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/gpu.cuda.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3570,12 +4235,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3583,7 +4249,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -3592,6 +4262,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "sm_90",
       "hw_extra": {
         "cuda_min": "12.0",
@@ -3607,6 +4279,8 @@
       "model_family": "deepseek",
       "model_rev": null,
       "notes": "DeepSeek-R1 runs on H100 (sm_90) with vLLM using native Hopper FP8 tensor cores.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/deepseek-ai/DeepSeek-R1/raw/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3615,12 +4289,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3628,7 +4303,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -3637,6 +4316,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "sm_90",
       "hw_extra": {
         "cuda_min": "12.0",
@@ -3652,6 +4333,8 @@
       "model_family": "llama-3",
       "model_rev": null,
       "notes": "Llama 3.3 70B BF16/FP8 runs on H100 (sm_90, 80 GB HBM3) via vLLM.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://raw.githubusercontent.com/vllm-project/vllm/main/docs/getting_started/installation/gpu.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3660,12 +4343,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3673,7 +4357,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "hand",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -3682,6 +4370,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "sm_90",
       "hw_extra": {
         "cuda_min": "12.0",
@@ -3697,6 +4387,8 @@
       "model_family": "qwen3",
       "model_rev": null,
       "notes": "Qwen3-32B BF16 runs on a single H100 (sm_90, 80 GB) with vLLM >=0.8.5.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/Qwen/Qwen3-32B/raw/main/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3705,12 +4397,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "hand",
       "sources": [
         "curated:v1"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3718,7 +4411,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -3727,6 +4424,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "ascend-310p",
       "hw_extra": {
         "backend": "CANN"
@@ -3743,6 +4442,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "CANN.md device table marks device d500 (Atlas 300I Duo, chip 310P) as Support; news also adds F16/F32 support for 310P.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/CANN.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3751,12 +4452,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3764,7 +4466,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -3778,6 +4484,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "ascend-910b",
       "hw_extra": {
         "backend": "CANN"
@@ -3794,6 +4502,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "DERIVED (doc names 'Ascend NPU' generically; device d802/910B comes from CANN.md): build.md §CANN enables the Ascend NPU backend; docs/backend/CANN.md verifies device d802 (Atlas 300I A2 / 910B).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/CANN.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3802,12 +4512,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3815,7 +4526,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -3824,6 +4539,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "ascend-910b",
       "hw_extra": {
         "backend": "CANN"
@@ -3840,6 +4557,8 @@
       "model_family": "llama-3",
       "model_rev": null,
       "notes": "CANN.md text-only model support table marks Llama-2 supported on Ascend NPU with fp16.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/CANN.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3848,12 +4567,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3861,7 +4581,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -3870,6 +4594,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "ascend-910b",
       "hw_extra": {
         "backend": "CANN"
@@ -3884,6 +4610,8 @@
       "model_family": "mistral",
       "model_rev": null,
       "notes": "CANN.md text-only model support table marks Mistral-7B supported on Ascend NPU with fp16.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/CANN.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3892,12 +4620,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3905,7 +4634,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -3914,6 +4647,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "ascend-910b",
       "hw_extra": {
         "backend": "CANN"
@@ -3930,6 +4665,8 @@
       "model_family": "mixtral",
       "model_rev": null,
       "notes": "CANN.md text-only model support table marks Mistral MOE (doc name 'Mistral MOE') supported on Ascend NPU with fp16.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/CANN.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3938,12 +4675,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3951,7 +4689,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -3960,6 +4702,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "et-soc-1",
       "hw_extra": {
         "backend": "ET"
@@ -3976,6 +4720,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "ET.md: backend for the ET-SOC RISC-V accelerator; only q8_0/q4_0 (partial fp16/q4_K).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/ET.md",
       "pointer_alive": true,
       "provisional": false,
@@ -3984,12 +4730,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -3997,7 +4744,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "scraper",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -4006,6 +4757,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "et-soc-1",
       "hw_extra": {},
       "hw_name": null,
@@ -4020,6 +4773,8 @@
       "model_family": "llama-3",
       "model_rev": null,
       "notes": "ET.md 'Fully supported models' lists the Llama 3.1 family.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/ET.md",
       "pointer_alive": true,
       "provisional": false,
@@ -4028,12 +4783,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4041,7 +4797,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "scraper",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -4050,6 +4810,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "et-soc-1",
       "hw_extra": {},
       "hw_name": null,
@@ -4062,6 +4824,8 @@
       "model_family": "qwen3",
       "model_rev": null,
       "notes": "ET.md 'Fully supported models' list names Qwen3 models (without MoE); the doc's runnable example is q8_0.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/ET.md",
       "pointer_alive": true,
       "provisional": false,
@@ -4070,12 +4834,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4083,7 +4848,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "scraper",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -4092,6 +4861,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "et-soc-1",
       "hw_extra": {},
       "hw_name": null,
@@ -4104,6 +4875,8 @@
       "model_family": "smollm",
       "model_rev": null,
       "notes": "ET.md 'Fully supported models' list names SmolLM2; the doc's runnable example is q8_0.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/ET.md",
       "pointer_alive": true,
       "provisional": false,
@@ -4112,12 +4885,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4125,7 +4899,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -4134,6 +4912,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "ibm-z-s390x",
       "hw_extra": {
         "backend": "CPU"
@@ -4150,6 +4930,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "build-s390x.md documents building llama.cpp on IBM Z / LinuxONE (s390x) with the CPU backend.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build-s390x.md",
       "pointer_alive": true,
       "provisional": false,
@@ -4158,12 +4940,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4171,7 +4954,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -4180,6 +4967,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "ibm-z15",
       "hw_extra": {
         "backend": "CPU"
@@ -4196,6 +4985,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM CPU (s390x): requires VXE, works on z15 and above; FP32/BF16/FP16 + AWQ/GPTQ 4-bit.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/cpu.s390x.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -4204,12 +4995,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4217,7 +5009,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -4226,6 +5022,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "ibm-z16",
       "hw_extra": {},
       "hw_name": null,
@@ -4240,6 +5038,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "zDNN backend explicitly does not support IBM z16 / LinuxONE 4 — the NNPA format it needs requires z17. Use the plain s390x CPU build there instead.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/zDNN.md#software--hardware-support",
       "pointer_alive": true,
       "provisional": false,
@@ -4248,12 +5048,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "rejected",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4261,7 +5062,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -4270,6 +5075,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "ibm-z17",
       "hw_extra": {
         "backend": "zDNN"
@@ -4286,6 +5093,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "zDNN.md hardware table: IBM z17 / LinuxONE 5 supported (RHEL 9.6 verified).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/zDNN.md",
       "pointer_alive": true,
       "provisional": false,
@@ -4294,12 +5103,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4307,7 +5117,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -4316,6 +5130,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "mtt-s4000",
       "hw_extra": {
         "backend": "MUSA",
@@ -4333,6 +5149,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "llama.cpp MUSA backend enabled by default for MUSA compute capability 2.2 (MTT S4000).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md",
       "pointer_alive": true,
       "provisional": false,
@@ -4341,12 +5159,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4354,7 +5173,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -4363,6 +5186,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "mtt-s5000",
       "hw_extra": {
         "backend": "MUSA",
@@ -4380,6 +5205,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "llama.cpp MUSA backend enabled by default for MUSA compute capability 3.1 (MTT S5000).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md",
       "pointer_alive": true,
       "provisional": false,
@@ -4388,12 +5215,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4401,7 +5229,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -4410,6 +5242,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "mtt-s80",
       "hw_extra": {
         "backend": "MUSA",
@@ -4427,6 +5261,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "build.md: MUSA CC 2.1 (MTT S70/S80/S3000) is deprecated; it builds only with an explicit MUSA_ARCHITECTURES. Deprecated-but-buildable => solved with a warning in notes.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/build.md",
       "pointer_alive": true,
       "provisional": false,
@@ -4435,12 +5271,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4448,7 +5285,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -4457,6 +5298,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "virtgpu-generic",
       "hw_extra": {
         "backend": "VirtGPU"
@@ -4473,6 +5316,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "VirtGPU.md: inside a VM, forward ggml ops over virtio-gpu to whatever backend the host exposes (CPU, CUDA, Metal...).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/VirtGPU.md",
       "pointer_alive": true,
       "provisional": false,
@@ -4481,12 +5326,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4494,7 +5340,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -4503,6 +5353,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "adreno-gpu",
       "hw_extra": {
         "backend": "OpenCL"
@@ -4519,6 +5371,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "build.md §OpenCL: acceleration through OpenCL on recent Adreno GPUs (per-device table lives in docs/backend/OPENCL.md, emits its own rows).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/OPENCL.md",
       "pointer_alive": true,
       "provisional": false,
@@ -4527,12 +5381,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4540,7 +5395,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -4549,6 +5408,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "hexagon-npu",
       "hw_extra": {
         "backend": "Hexagon"
@@ -4565,6 +5426,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "docs/backend/snapdragon/README.md: Hexagon NPU (HTP) is one of the three llama.cpp backends on Snapdragon devices; HTP libraries are built for v73/v75/v79/v81.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/snapdragon/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -4573,12 +5436,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4586,7 +5450,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -4595,6 +5463,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "snapdragon-7s-gen3",
       "hw_extra": {
         "backend": "OpenCL"
@@ -4611,6 +5481,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "llama.cpp OpenCL backend verifies Adreno 810 (Snapdragon 7s Gen 3).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/OPENCL.md",
       "pointer_alive": true,
       "provisional": false,
@@ -4619,12 +5491,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4632,7 +5505,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -4641,6 +5518,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "snapdragon-8-elite-gen5",
       "hw_extra": {
         "backend": "OpenCL"
@@ -4657,6 +5536,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "llama.cpp OpenCL backend verifies Adreno 840 (Snapdragon 8 Elite Gen 5).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/OPENCL.md",
       "pointer_alive": true,
       "provisional": false,
@@ -4665,12 +5546,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4678,7 +5560,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -4687,6 +5573,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "snapdragon-8-elite",
       "hw_extra": {
         "backend": "OpenCL"
@@ -4703,6 +5591,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "llama.cpp OpenCL backend verifies Adreno 830 (Snapdragon 8 Elite) on Android.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/OPENCL.md",
       "pointer_alive": true,
       "provisional": false,
@@ -4711,12 +5601,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4724,7 +5615,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -4733,6 +5628,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "snapdragon-8-gen3",
       "hw_extra": {
         "backend": "OpenCL"
@@ -4749,6 +5646,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "llama.cpp OpenCL backend verifies Adreno 750 (Snapdragon 8 Gen 3) on Android.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/OPENCL.md",
       "pointer_alive": true,
       "provisional": false,
@@ -4757,12 +5656,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4770,7 +5670,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -4784,6 +5688,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "snapdragon-x-elite",
       "hw_extra": {
         "backend": "Hexagon"
@@ -4800,6 +5706,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "snapdragon README documents Linux/Windows on Snapdragon; Windows on Snapdragon = Snapdragon X series. The doc names the platform, not a specific chip.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/snapdragon/README.md",
       "pointer_alive": true,
       "provisional": false,
@@ -4808,12 +5716,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4821,7 +5730,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "scraper",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "issue",
@@ -4830,6 +5743,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "snapdragon-x-elite",
       "hw_extra": {},
       "hw_name": null,
@@ -4844,6 +5759,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "Applies to all models (model_family '*'): this is an engine x hardware siting, not a per-model claim. GitHub issue ollama/ollama#5360 (open, created 2024-06-28) names Snapdragon X Elite with a working report for ollama. Community report, not an upstream support statement.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ollama/ollama/issues/5360",
       "pointer_alive": true,
       "provisional": false,
@@ -4852,12 +5769,13 @@
       "resolves_no_claim": false,
       "runtime": "ollama",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:gh_issues"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4865,7 +5783,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -4874,6 +5796,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "snapdragon-x2-elite",
       "hw_extra": {
         "backend": "OpenCL"
@@ -4890,6 +5814,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "llama.cpp OpenCL backend verifies Adreno X2-90 (Snapdragon X2 Elite).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/OPENCL.md",
       "pointer_alive": true,
       "provisional": false,
@@ -4898,12 +5824,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4911,7 +5838,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -4920,6 +5851,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "ACE-Step/Ace-Step1.5",
@@ -4943,6 +5876,8 @@
       "model_family": "acestep",
       "model_rev": "5140b027d3c416e5e3719002f98f09a196e0db6a",
       "notes": "audio-cpp/audio.cpp-gguf publishes MiniMax-H3-Q4-GGUF/audio_vae.gguf (quant Q4); 9,842,687 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/audio-cpp/audio.cpp-gguf",
       "pointer_alive": true,
       "provisional": false,
@@ -4951,12 +5886,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -4964,7 +5900,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -4973,6 +5913,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "prism-ml/Bonsai-27B-unpacked",
@@ -4996,6 +5938,8 @@
       "model_family": "bonsai",
       "model_rev": "f4e1b84fac8d99a340cc87d06cd572dbe8a974d5",
       "notes": "lmstudio-community/Bonsai-27B-GGUF publishes mmproj-Bonsai-27B-BF16.gguf (quant BF16); 244,093 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/lmstudio-community/Bonsai-27B-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -5004,12 +5948,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -5017,7 +5962,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -5026,6 +5975,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
@@ -5049,6 +6000,8 @@
       "model_family": "deepseek-v4",
       "model_rev": "65d53bc8be65123e255ff02f3ded958b6dbf54fd",
       "notes": "ISTA-DASLab/DeepSeek-V4.1-Flash-1017-GSQ-RCO-GGUF publishes DeepSeek-V4.1-Flash-1017-GSQ-RCO-IQ2_XXS-00001-of-00006.gguf (quant IQ2_XXS); 4,500,696 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/ISTA-DASLab/DeepSeek-V4.1-Flash-1017-GSQ-RCO-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -5057,12 +6010,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -5070,7 +6024,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -5079,6 +6037,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "deepseek-ai/DeepSeek-R1-0528-Qwen3-8B",
@@ -5102,6 +6062,8 @@
       "model_family": "deepseek",
       "model_rev": "eb48357c179d34dbf515983f798dfb8752a0f261",
       "notes": "unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF publishes DeepSeek-R1-0528-Qwen3-8B-IQ4_NL.gguf (quant IQ4_NL); 147,724 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/unsloth/DeepSeek-R1-0528-Qwen3-8B-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -5110,12 +6072,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -5123,7 +6086,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -5132,6 +6099,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "mistralai/Devstral-2-123B-Instruct-2512",
@@ -5155,6 +6124,8 @@
       "model_family": "devstral",
       "model_rev": "1f2bfbe35f7f9071d9b318374bf5eeffefab4459",
       "notes": "unsloth/Devstral-2-123B-Instruct-2512-GGUF publishes BF16/Devstral-2-123B-Instruct-2512-BF16-00001-of-00006.gguf (quant BF16); 26,146 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/unsloth/Devstral-2-123B-Instruct-2512-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -5163,12 +6134,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -5176,7 +6148,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -5185,6 +6161,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "black-forest-labs/FLUX.2-klein-4B",
@@ -5208,6 +6186,8 @@
       "model_family": "flux",
       "model_rev": "a09d5bb51ac4000ccd9643d10e9db3ed14200508",
       "notes": "unsloth/FLUX.2-klein-4B-GGUF publishes flux-2-klein-4b-Q3_K_M.gguf (quant Q3_K_M); 517,982 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/unsloth/FLUX.2-klein-4B-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -5216,12 +6196,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -5229,7 +6210,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -5238,6 +6223,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "google/gemma-3-1b-it",
@@ -5261,6 +6248,8 @@
       "model_family": "gemma-3",
       "model_rev": "f9c28bcd85737ffc5aef028638d3341d49869c27",
       "notes": "ggml-org/gemma-3-1b-it-GGUF publishes gemma-3-1b-it-Q4_K_M.gguf (quant Q4_K_M); 573,590 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/ggml-org/gemma-3-1b-it-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -5269,12 +6258,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -5282,7 +6272,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -5291,6 +6285,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "google/gemma-4-26B-A4B-it",
@@ -5314,6 +6310,8 @@
       "model_family": "gemma-4",
       "model_rev": "7ff608e3d02a1960dac5a3da518fc80878a972d4",
       "notes": "farbodtavakkoli/OTel-2.0-Decision-26B-A4B-4bit publishes gguf/OTel-2.0-Decision-26B-A4B-Q4_K_M.gguf (quant Q4_K_M); 3,881,971 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/farbodtavakkoli/OTel-2.0-Decision-26B-A4B-4bit",
       "pointer_alive": true,
       "provisional": false,
@@ -5322,12 +6320,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -5335,7 +6334,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -5344,6 +6347,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "google/gemma-4-E2B-it-qat-q4_0-unquantized",
@@ -5367,6 +6372,8 @@
       "model_family": "gemma",
       "model_rev": "58a5dbc8b32a1652cb440bad33fe1c864fe189c7",
       "notes": "turintech/gemma-4-E2B-it-Artemis-GGUF publishes MTP/mtp-gemma-4-E2B-it-Artemis-Q4_0.gguf (quant Q4_0); 1,152,412 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/turintech/gemma-4-E2B-it-Artemis-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -5375,12 +6382,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -5388,7 +6396,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -5397,6 +6409,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "zai-org/GLM-4-9B-0414",
@@ -5420,6 +6434,8 @@
       "model_family": "glm",
       "model_rev": "12a60e3ee08c2af2d4cb5afdeec1d0b02e1dbb4b",
       "notes": "cgus/GLM-4-9B-0414-exl2 publishes output.safetensors (quant exl2-4.0bpw); 13 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/cgus/GLM-4-9B-0414-exl2",
       "pointer_alive": true,
       "provisional": false,
@@ -5428,12 +6444,13 @@
       "resolves_no_claim": false,
       "runtime": "exllamav2",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -5441,7 +6458,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -5450,6 +6471,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "zai-org/GLM-5.3-Flash",
@@ -5473,6 +6496,8 @@
       "model_family": "glm",
       "model_rev": "6f6c6a8394c32f556c09bea0a06dce0b76a3dc37",
       "notes": "peasantsmith/GLM-5.3-Flash-Maya-GGUF publishes Maya-S-v2-IQ2_XXS/GLM-5.3-Flash-Maya-S-v2-IQ2_XXS-00001-of-00003.gguf (quant IQ2_XXS); 1,741,022 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/peasantsmith/GLM-5.3-Flash-Maya-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -5481,12 +6506,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -5494,7 +6520,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -5503,6 +6533,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "zai-org/GLM-5.3-Flash",
@@ -5526,6 +6558,8 @@
       "model_family": "glm",
       "model_rev": "ef3f9cff8ad6c5db6fefdcbcb2414c30cb86bf9f",
       "notes": "autotrust/GLM5.3-Flash-E192-DGX-Spark publishes mtp-nvfp4/model.safetensors (quant nvfp4); 20,681 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/autotrust/GLM5.3-Flash-E192-DGX-Spark",
       "pointer_alive": true,
       "provisional": false,
@@ -5534,12 +6568,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -5547,7 +6582,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -5556,6 +6595,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "openai/gpt-oss-20b",
@@ -5579,6 +6620,8 @@
       "model_family": "gpt-oss",
       "model_rev": "d449b42d93e1c2c7bda5312f5c25c8fb91dfa9b4",
       "notes": "unsloth/gpt-oss-20b-GGUF publishes gpt-oss-20b-Q2_K_L.gguf (quant Q2_K_L); 601,166 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/unsloth/gpt-oss-20b-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -5587,12 +6630,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -5600,7 +6644,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -5609,6 +6657,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "ibm-granite/granite-3.2-8b-instruct-preview",
@@ -5632,6 +6682,8 @@
       "model_family": "granite",
       "model_rev": "dc5f78c12cfab6937fa01134878c3ff9a59ababf",
       "notes": "cgus/granite-3.2-8b-instruct-preview-exl2 publishes output.safetensors (quant exl2-4.0bpw); 21 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/cgus/granite-3.2-8b-instruct-preview-exl2",
       "pointer_alive": true,
       "provisional": false,
@@ -5640,12 +6692,13 @@
       "resolves_no_claim": false,
       "runtime": "exllamav2",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -5653,7 +6706,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -5662,6 +6719,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "ibm-granite/granite-4.2-8b",
@@ -5685,6 +6744,8 @@
       "model_family": "granite",
       "model_rev": "93f3f6a8938ee922b784cf4e5b4203cd3428df8f",
       "notes": "ibm-granite/granite-4.2-8b-GGUF publishes granite-4.2-8b-Q3_K_L.gguf (quant Q3_K_L); 284,692 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/ibm-granite/granite-4.2-8b-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -5693,12 +6754,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -5706,7 +6768,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -5715,6 +6781,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "inclusionAI/Ling-3.0-tiny",
@@ -5738,6 +6806,8 @@
       "model_family": "ling",
       "model_rev": "947514b2ea038203acb47dfc6fa4e53d2edfc9c8",
       "notes": "bloomer010/Ling-3.0-tiny-GGUF publishes Ling-3.0-tiny-IQ2_XS.gguf (quant IQ2_XS); 242,760 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/bloomer010/Ling-3.0-tiny-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -5746,12 +6816,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -5759,7 +6830,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -5768,6 +6843,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "meta-llama/Llama-3.1-8B-Instruct",
@@ -5791,6 +6868,8 @@
       "model_family": "llama-3",
       "model_rev": "bf5b95e96dac0462e2a09145ec66cae9a3f12067",
       "notes": "bartowski/Meta-Llama-3.1-8B-Instruct-GGUF publishes Meta-Llama-3.1-8B-Instruct-IQ3_XS.gguf (quant IQ3_XS); 349,531 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/bartowski/Meta-Llama-3.1-8B-Instruct-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -5799,12 +6878,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -5812,7 +6892,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -5821,6 +6905,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "MiniMaxAI/MiniMax-H3",
@@ -5844,6 +6930,8 @@
       "model_family": "minimax",
       "model_rev": "babc040eff0084465460ead58fdb8ec44296f8dd",
       "notes": "unsloth/MiniMax-H3-GGUF publishes minimax_h3_fl2va_pruned-Q2_K.gguf (quant Q2_K); 3,482,113 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/unsloth/MiniMax-H3-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -5852,12 +6940,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -5865,7 +6954,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -5874,6 +6967,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "mistralai/Ministral-3-8B-Instruct-2512",
@@ -5897,6 +6992,8 @@
       "model_family": "mistral",
       "model_rev": "0102285ad796bd99af90f58de616092e5630e970",
       "notes": "mistralai/Ministral-3-8B-Instruct-2512-GGUF publishes Ministral-3-8B-Instruct-2512-BF16-mmproj.gguf (quant BF16); 94,907 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/mistralai/Ministral-3-8B-Instruct-2512-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -5905,12 +7002,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -5918,7 +7016,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -5927,6 +7029,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "DS-Archive/Mixtral-8x7B-Instruct-v0.1-LimaRP-ZLoss",
@@ -5950,6 +7054,8 @@
       "model_family": "mixtral",
       "model_rev": "a41b8c507c154beb87595d0e2a24e240a01575f0",
       "notes": "Kooten/BagelMix-8x7B-3.5bpw-exl2 publishes output-00001-of-00003.safetensors (quant exl2-4.0bpw); 11 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/Kooten/BagelMix-8x7B-3.5bpw-exl2",
       "pointer_alive": true,
       "provisional": false,
@@ -5958,12 +7064,13 @@
       "resolves_no_claim": false,
       "runtime": "exllamav2",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -5971,7 +7078,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -5980,6 +7091,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "mistralai/Mixtral-8x7B-Instruct-v0.1",
@@ -6003,6 +7116,8 @@
       "model_family": "mixtral",
       "model_rev": "92bb790b153033f0594934ee23bb0e12ba897f4e",
       "notes": "mradermacher/Mixtral-8x7B-Instruct-v0.1-GGUF publishes Mixtral-8x7B-Instruct-v0.1.IQ4_XS.gguf (quant IQ4_XS); 4,368 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/mradermacher/Mixtral-8x7B-Instruct-v0.1-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -6011,12 +7126,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6024,7 +7140,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -6033,6 +7153,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "nvidia/nemotron-3.5-asr-streaming-0.6b",
@@ -6056,6 +7178,8 @@
       "model_family": "nemotron",
       "model_rev": "53ce288f69326b415aeef030cfcb02a08a8096dd",
       "notes": "handy-computer/nemotron-3.5-asr-streaming-0.6b-gguf publishes nemotron-3.5-asr-streaming-0.6b-Q4_K_M.gguf (quant Q4_K_M); 1,374,872 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/handy-computer/nemotron-3.5-asr-streaming-0.6b-gguf",
       "pointer_alive": true,
       "provisional": false,
@@ -6064,12 +7188,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6077,7 +7202,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -6086,6 +7215,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": null,
@@ -6109,6 +7240,8 @@
       "model_family": "ornith",
       "model_rev": "abdd624b12ebf020b767fff532ff44fe552b28c3",
       "notes": "ornith-ai/Ornith-1.5-9B-GGUF publishes Ornith-1.5-9B-Q4_K_M.gguf (quant Q4_K_M); 5,610,894 downloads, family matched by repo-name. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/ornith-ai/Ornith-1.5-9B-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -6117,12 +7250,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6130,7 +7264,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -6139,6 +7277,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "nvidia/parakeet-tdt-0.6b-v3",
@@ -6162,6 +7302,8 @@
       "model_family": "parakeet",
       "model_rev": "d8d8c32cb2017c57e5307767343e97870f8a7f53",
       "notes": "handy-computer/parakeet-tdt-0.6b-v3-gguf publishes parakeet-tdt-0.6b-v3-Q4_K_M.gguf (quant Q4_K_M); 1,233,918 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/handy-computer/parakeet-tdt-0.6b-v3-gguf",
       "pointer_alive": true,
       "provisional": false,
@@ -6170,12 +7312,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6183,7 +7326,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -6192,6 +7339,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "microsoft/Phi-4-mini-instruct",
@@ -6215,6 +7364,8 @@
       "model_family": "phi",
       "model_rev": "78eb92a46fc37e6b524df991ed9aca9bc6aa7b80",
       "notes": "unsloth/Phi-4-mini-instruct-GGUF publishes Phi-4-mini-instruct-Q2_K_L.gguf (quant Q2_K_L); 118,324 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/unsloth/Phi-4-mini-instruct-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -6223,12 +7374,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6236,7 +7388,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -6245,6 +7401,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "Qwen/Qwen3-ASR-1.7B",
@@ -6268,6 +7426,8 @@
       "model_family": "qwen3-asr",
       "model_rev": "0e0a596e3959c3f3f2ab7d443a5b6f0f4a4bba6f",
       "notes": "handy-computer/Qwen3-ASR-1.7B-gguf publishes Qwen3-ASR-1.7B-Q4_K_M.gguf (quant Q4_K_M); 2,630,735 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/handy-computer/Qwen3-ASR-1.7B-gguf",
       "pointer_alive": true,
       "provisional": false,
@@ -6276,12 +7436,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6289,7 +7450,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -6298,6 +7463,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "Qwen/Qwen3-VL-8B-Instruct",
@@ -6321,6 +7488,8 @@
       "model_family": "qwen3-vl",
       "model_rev": "f982a07559d4a2f6c8744d840bf6fccab30eea96",
       "notes": "Qwen/Qwen3-VL-8B-Instruct-GGUF publishes Qwen3VL-8B-Instruct-Q4_K_M.gguf (quant Q4_K_M); 2,399,391 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/Qwen/Qwen3-VL-8B-Instruct-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -6329,12 +7498,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6342,7 +7512,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -6351,6 +7525,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "Qwen/Qwen3.8-27B",
@@ -6374,6 +7550,8 @@
       "model_family": "qwen3",
       "model_rev": "4af51b3542f775b0a8e4b310bfb3f17e01c306c9",
       "notes": "unsloth/Qwen3.8-27B-GGUF publishes BF16/Qwen3.8-27B-BF16-00001-of-00002.gguf (quant BF16); 7,532,043 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/unsloth/Qwen3.8-27B-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -6382,12 +7560,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6395,7 +7574,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -6404,6 +7587,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "HuggingFaceTB/SmolLM3-3B",
@@ -6427,6 +7612,8 @@
       "model_family": "smollm",
       "model_rev": "8ae76904e5d23c09b5eb23bf13370fa950355eb5",
       "notes": "webAI-Official/TwIL-LM3 publishes TwIL-LM3-Q4_K_M.gguf (quant Q4_K_M); 257,936 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/webAI-Official/TwIL-LM3",
       "pointer_alive": true,
       "provisional": false,
@@ -6435,12 +7622,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6448,7 +7636,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -6457,6 +7649,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "Wan-AI/Wan2.1-T2V-1.3B",
@@ -6480,6 +7674,8 @@
       "model_family": "wan",
       "model_rev": "378286d397e160409d4d453e0c9336d54780ac74",
       "notes": "DeepBeepMeep/Wan2.1 publishes Qwen3_8_27B_Uncensored/Ternary-Bonsai-2-27B-Abliterated-PTQ1_0.gguf (quant TQ1_0); 1,355,048 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/DeepBeepMeep/Wan2.1",
       "pointer_alive": true,
       "provisional": false,
@@ -6488,12 +7684,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6501,7 +7698,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -6510,6 +7711,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "openai/whisper-large-v3",
@@ -6533,6 +7736,8 @@
       "model_family": "whisper",
       "model_rev": "274ad1d1cf680b7ee53cc70f78461394cd3a344b",
       "notes": "handy-computer/whisper-large-v3-gguf publishes whisper-large-v3-Q4_K_M.gguf (quant Q4_K_M); 976,916 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/handy-computer/whisper-large-v3-gguf",
       "pointer_alive": true,
       "provisional": false,
@@ -6541,12 +7746,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6554,7 +7760,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "model-repo",
@@ -6563,6 +7773,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "generic",
       "hw_extra": {
         "base_model": "Mothersuperior/yue2-mothersuperior-realaudio-tokenizer-v4",
@@ -6586,6 +7798,8 @@
       "model_family": "yue",
       "model_rev": "e630f2b8f6aedf8254c3186438633c1b5eeaf80a",
       "notes": "Serveurperso/YuE2-GGUF publishes MERT-v2-FullSong-Q8_0.gguf (quant Q8_0); 6,431,436 downloads, family matched by base_model-tag. The repo proves the model+quant exists, not which hardware runs it.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://huggingface.co/Serveurperso/YuE2-GGUF",
       "pointer_alive": true,
       "provisional": false,
@@ -6594,12 +7808,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": null,
+      "runtime_version": null,
       "source_kind": "derived",
       "sources": [
         "scraper:hf_models"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6607,7 +7822,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -6616,6 +7835,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "x86-64-amd-zen2",
       "hw_extra": {
         "backend": "ZenDNN"
@@ -6632,6 +7853,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "DERIVED: ZenDNN.md Q&A states the backend is for AMD EPYC/Ryzen Zen 2 or newer (a floor, not a verified device).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/ZenDNN.md",
       "pointer_alive": true,
       "provisional": false,
@@ -6640,12 +7863,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6653,7 +7877,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -6667,6 +7895,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "x86-64-amd-zen3",
       "hw_extra": {
         "backend": "ZenDNN"
@@ -6683,6 +7913,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "ZenDNN.md hardware table marks AMD EPYC 7003 (Milan, Zen 3) supported for the llama.cpp ZenDNN backend.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/ZenDNN.md",
       "pointer_alive": true,
       "provisional": false,
@@ -6691,12 +7923,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6704,7 +7937,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -6718,6 +7955,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "x86-64-amd-zen4",
       "hw_extra": {
         "backend": "ZenDNN"
@@ -6734,6 +7973,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "ZenDNN.md hardware table marks AMD EPYC 9004 (Genoa, Zen 4) supported for the llama.cpp ZenDNN backend.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/ZenDNN.md",
       "pointer_alive": true,
       "provisional": false,
@@ -6742,12 +7983,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6755,7 +7997,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -6764,6 +8010,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "x86-64-amd-zen4",
       "hw_extra": {
         "backend": "CPU",
@@ -6781,6 +8029,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM CPU: AMD Zen 4/5 get the `zen` extra (zentorch, ZenDNN-backed GEMMs); float16 needs AVX512-FP16 (Venice / EPYC 6th gen), earlier Zen is bf16/f32 only.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/cpu.md",
       "pointer_alive": true,
       "provisional": false,
@@ -6789,12 +8039,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6802,7 +8053,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -6811,6 +8066,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "x86-64-amd-zen5",
       "hw_extra": {
         "backend": "ZenDNN"
@@ -6827,6 +8084,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "ZenDNN.md hardware table marks AMD Ryzen AI MAX (Strix Halo, Zen 5) supported for the llama.cpp ZenDNN backend.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/ZenDNN.md",
       "pointer_alive": true,
       "provisional": false,
@@ -6835,12 +8094,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6848,7 +8108,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -6857,6 +8121,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "x86-64-amd-zen5",
       "hw_extra": {
         "backend": "CPU",
@@ -6874,6 +8140,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM CPU: AMD Zen 4/5 get the `zen` extra (zentorch, ZenDNN-backed GEMMs); float16 needs AVX512-FP16 (Venice / EPYC 6th gen), earlier Zen is bf16/f32 only.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/cpu.md",
       "pointer_alive": true,
       "provisional": false,
@@ -6882,12 +8150,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6895,7 +8164,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -6904,6 +8177,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "x86-64-avx2",
       "hw_extra": {
         "backend": "CPU",
@@ -6921,6 +8196,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM CPU (x86): AVX2-only CPUs work with limited features.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/cpu.x86.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -6929,12 +8206,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6942,7 +8220,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -6956,6 +8238,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "x86-64-avx512",
       "hw_extra": {
         "backend": "ZenDNN"
@@ -6972,6 +8256,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "ZenDNN.md: AVX2 + AVX-512 are used; BF16 needs Zen 4/5.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/ZenDNN.md",
       "pointer_alive": true,
       "provisional": false,
@@ -6980,12 +8266,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -6993,7 +8280,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -7002,6 +8293,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "x86-64-avx512",
       "hw_extra": {
         "backend": "CPU"
@@ -7018,6 +8311,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "vLLM CPU (x86): AVX-512 is the recommended target.",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/vllm-project/vllm/blob/main/docs/getting_started/installation/cpu.x86.inc.md",
       "pointer_alive": true,
       "provisional": false,
@@ -7026,12 +8321,13 @@
       "resolves_no_claim": false,
       "runtime": "vllm",
       "runtime_rev": "v0.34.0",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:vllm_install"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -7039,7 +8335,11 @@
     },
     {
       "as_of": "2026-11-22",
+      "basis": null,
+      "basis_note": null,
+      "context_length": null,
       "created_by": "derived",
+      "driver_version": null,
       "evidence": [
         {
           "kind": "upstream-doc",
@@ -7053,6 +8353,8 @@
         }
       ],
       "first_seen": "2026-11-22",
+      "fits": null,
+      "flags": null,
       "hw_arch": "x86-64-generic",
       "hw_extra": {
         "backend": "BLAS (BLIS)"
@@ -7069,6 +8371,8 @@
       "model_family": "*",
       "model_rev": null,
       "notes": "DERIVED (BLIS.md names no arch): BLIS.md documents building llama.cpp against the BLIS BLAS library with -DGGML_BLAS_VENDOR=BLIS (architecture-agnostic).",
+      "offload": null,
+      "parent": null,
       "pointer": "https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/BLIS.md",
       "pointer_alive": true,
       "provisional": false,
@@ -7077,12 +8381,13 @@
       "resolves_no_claim": false,
       "runtime": "llama.cpp",
       "runtime_rev": "b12633",
+      "runtime_version": null,
       "source_kind": "scraped",
       "sources": [
         "scraper:llama_cpp_backends"
       ],
       "status": "solved",
-      "updated": "2026-11-22",
+      "updated": "2026-11-23",
       "vocabulary": [],
       "want_first": null,
       "want_requesters": [],
@@ -7733,6 +9038,6 @@
     },
     "version": "1"
   },
-  "version": "2026-11-22.35",
+  "version": "2026-11-23.36",
   "wanted": []
 }

@@ -17,13 +17,13 @@
 
 const MISS_REASONS = Object.freeze([
   'no-claim',
-  'wanted-only',
+  'untested-only',
   'rejected-only',
   'partial-context',
   'no-match'
 ]);
 
-const STATUSES = Object.freeze(['solved', 'wanted', 'rejected']);
+const STATUSES = Object.freeze(['solved', 'untested', 'rejected']);
 const SOURCE_KINDS = Object.freeze(['scraped', 'derived', 'hand', 'author-claim']);
 
 const DEFAULT_LIMIT = 50;
@@ -116,7 +116,7 @@ function normalizeRow(row) {
   }
   if (r.hw_extra == null || typeof r.hw_extra !== 'object') r.hw_extra = {};
   if (r.pointer_alive === undefined) r.pointer_alive = true;
-  if (r.status === 'solved' && !r.pointer) r.status = 'wanted'; // never render a solved row with nowhere to go
+  if (r.status === 'solved' && !r.pointer) r.status = 'untested'; // never render a solved row with nowhere to go
   return r;
 }
 
@@ -179,12 +179,60 @@ function normToken(s) {
     .trim()
     .toLowerCase()
     .replace(/[._\s/]+/g, '-')
-    .replace(/-+/g, '-');
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
 }
 
-/** "sm_86", "nvidia", "nvid", "rtx 3090" -> which hw rows are in scope. CONTRACT §4. */
-function hwMatches(row, hw) {
-  if (!hw) return true;
+function compactToken(s) {
+  return String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function buildAliasIndex(taxonomy) {
+  if (taxonomy && taxonomy.hw instanceof Map && taxonomy.model instanceof Map) {
+    return taxonomy;
+  }
+  const hw = new Map();
+  const model = new Map();
+  if (taxonomy && taxonomy.hw_aliases && typeof taxonomy.hw_aliases === 'object') {
+    for (const [alias, arch] of Object.entries(taxonomy.hw_aliases)) {
+      if (!alias || !arch) continue;
+      const canon = String(arch);
+      const nk = normToken(alias);
+      const ck = compactToken(alias);
+      if (nk && !hw.has(nk)) hw.set(nk, canon);
+      if (ck && !hw.has(ck)) hw.set(ck, canon);
+    }
+  }
+  if (taxonomy && Array.isArray(taxonomy.models)) {
+    for (const m of taxonomy.models) {
+      if (!m || !m.family) continue;
+      const fam = String(m.family);
+      const aliases = Array.isArray(m.aliases) ? m.aliases : [];
+      for (const alias of aliases) {
+        if (!alias) continue;
+        const nk = normToken(alias);
+        const ck = compactToken(alias);
+        if (nk && !model.has(nk)) model.set(nk, fam);
+        if (ck && !model.has(ck)) model.set(ck, fam);
+      }
+    }
+  }
+  return { hw, model };
+}
+
+function resolveHwAlias(hw, aliases) {
+  if (!hw || !aliases) return null;
+  const idx = aliases.hw instanceof Map ? aliases : buildAliasIndex(aliases);
+  return idx.hw.get(normToken(hw)) || idx.hw.get(compactToken(hw)) || null;
+}
+
+function resolveModelAlias(model, aliases) {
+  if (!model || !aliases) return null;
+  const idx = aliases.model instanceof Map ? aliases : buildAliasIndex(aliases);
+  return idx.model.get(normToken(model)) || idx.model.get(compactToken(model)) || null;
+}
+
+function _hwMatchesSingle(row, hw) {
   const want = normToken(hw);
   const arch = normToken(row.hw_arch);
   const vendor = normToken(row.hw_vendor);
@@ -195,17 +243,33 @@ function hwMatches(row, hw) {
   return false;
 }
 
-/**
- * CONTRACT §4: model_family exactly, else contains. `*` rows are never an answer
- * to a model question (§3); callers keep them aside as context.
- */
-function modelMatchesExact(row, model) {
-  if (!model) return true;
-  if (row.model_family === '*') return false;
+/** "sm_86", "nvidia", "nvid", "rtx 3090" -> which hw rows are in scope. CONTRACT §4. */
+function hwMatches(row, hw, aliases) {
+  if (!hw) return true;
+  if (_hwMatchesSingle(row, hw)) return true;
+  const resolved = resolveHwAlias(hw, aliases);
+  if (resolved && _hwMatchesSingle(row, resolved)) return true;
+  return false;
+}
+
+function _modelMatchesSingle(row, model) {
   const want = normToken(model);
   const fam = normToken(row.model_family);
   if (fam === want) return true;
   if (want && fam && (want.includes(fam) || fam.includes(want))) return true;
+  return false;
+}
+
+/**
+ * CONTRACT §4: model_family exactly, else contains. `*` rows are never an answer
+ * to a model question (§3); callers keep them aside as context.
+ */
+function modelMatchesExact(row, model, aliases) {
+  if (!model) return true;
+  if (row.model_family === '*') return false;
+  if (_modelMatchesSingle(row, model)) return true;
+  const resolved = resolveModelAlias(model, aliases);
+  if (resolved && _modelMatchesSingle(row, resolved)) return true;
   return false;
 }
 
@@ -283,13 +347,24 @@ function missSentence(query) {
  * @param {object} [opts]            {now: Date, datasetSource: string}
  * @returns {object} CONTRACT §4 response
  */
-function lookup(rows, query, dataset, opts = {}) {
+function lookup(rows, query, dataset, taxonomyOrOpts, maybeOpts) {
+  let taxonomy = null;
+  let opts = {};
+  if (taxonomyOrOpts && (taxonomyOrOpts.hw_aliases || taxonomyOrOpts.models || taxonomyOrOpts.hw instanceof Map)) {
+    taxonomy = taxonomyOrOpts;
+    opts = maybeOpts || {};
+  } else {
+    opts = taxonomyOrOpts || {};
+    taxonomy = opts.taxonomy || (dataset && dataset.taxonomy) || null;
+  }
+  const aliases = taxonomy ? buildAliasIndex(taxonomy) : null;
+
   const all = (rows || []).map(normalizeRow);
   const q = query instanceof URLSearchParams ? buildQuery(query) : { ...buildQuery(query) };
   const askModel = Boolean(q.model);
 
   // Did this query name any lookup dimension at all? A filter-only query
-  // (status=wanted) is a browse, not a lookup, and never produces is_miss.
+  // (status=untested) is a browse, not a lookup, and never produces is_miss.
   const dimensioned = Boolean(q.hw || q.model || q.runtime);
 
   // Exactly api/store.py `matches(include_status=False)`: hw + runtime + model +
@@ -298,14 +373,14 @@ function lookup(rows, query, dataset, opts = {}) {
   // those matches — the hardware-level claims that the counters report.
   const onRecord = all.filter(
     (r) =>
-      hwMatches(r, q.hw) &&
+      hwMatches(r, q.hw, aliases) &&
       runtimeMatches(r, q.runtime) &&
-      (r.model_family === '*' || modelMatchesExact(r, q.model)) &&
+      (r.model_family === '*' || modelMatchesExact(r, q.model, aliases)) &&
       (!q.kind || r.source_kind === q.kind) &&
       (!q.q || freeTextMatches(r, q.q))
   );
   const stars = onRecord.filter((r) => r.model_family === '*');
-  const nonStars = onRecord.filter((r) => r.model_family !== '*' && modelMatchesExact(r, q.model));
+  const nonStars = onRecord.filter((r) => r.model_family !== '*' && modelMatchesExact(r, q.model, aliases));
 
   // A query with no model asked for: hardware-level (`*`) rows are legitimate
   // ANSWERS to "does this card work at all". With a model asked for they are
@@ -341,15 +416,21 @@ function lookup(rows, query, dataset, opts = {}) {
 }
 
 /**
- * Answer ordering — same rule as api/store.py `_sort_key`: wanted (votes desc)
- * first, then solved, then rejected; newest as_of first within a status.
+ * Answer ordering — same rule as api/store.py `_sort_key`: untested (with basis
+ * first, then without basis, then votes desc) first, then solved, then rejected;
+ * newest as_of first within a status.
  */
 function sortRows(rows) {
-  const rank = { wanted: 0, solved: 1, rejected: 2 };
+  const rank = { untested: 0, solved: 1, rejected: 2 };
   return [...rows].sort((a, b) => {
     const ra = rank[a.status] ?? 3;
     const rb = rank[b.status] ?? 3;
     if (ra !== rb) return ra - rb;
+    if (a.status === 'untested' && b.status === 'untested') {
+      const ba = a.basis ? 0 : 1;
+      const bb = b.basis ? 0 : 1;
+      if (ba !== bb) return ba - bb;
+    }
     const dv = (b.want_votes || 0) - (a.want_votes || 0);
     if (dv) return dv;
     const ad = String(a.as_of || '');
@@ -395,8 +476,8 @@ function buildMiss(onRecord, stars, q) {
   let reason;
   if (unfiltered.length === 0 && stars.length === 0) {
     reason = 'no-match';
-  } else if (unfiltered.length > 0 && statuses.size === 1 && statuses.has('wanted')) {
-    reason = 'wanted-only';
+  } else if (unfiltered.length > 0 && statuses.size === 1 && statuses.has('untested')) {
+    reason = 'untested-only';
   } else if (unfiltered.length > 0 && statuses.size === 1 && statuses.has('rejected')) {
     reason = 'rejected-only';
   } else if (unfiltered.length === 0 && stars.length > 0) {
@@ -406,14 +487,15 @@ function buildMiss(onRecord, stars, q) {
   }
   if (!MISS_REASONS.includes(reason)) reason = 'no-claim';
 
-  const wanted = unfiltered.filter((r) => r.status === 'wanted');
+  const untested = unfiltered.filter((r) => r.status === 'untested');
   const rejected = unfiltered.filter((r) => r.status === 'rejected');
 
   const partial = stars.length > 0;
-  const knownWanted = wanted.length > 0;
-  const wantedVotes = wanted.reduce((n, r) => Math.max(n, r.want_votes || 0), 0);
-  const neighbourWanted = unfiltered.filter((r) => r.status === 'wanted');
-  const neighbourVotes = neighbourWanted.reduce((n, r) => Math.max(n, r.want_votes || 0), 0);
+  const knownUntested = untested.length > 0;
+  const wantedVotes = untested.reduce((n, r) => Math.max(n, r.want_votes || 0), 0);
+  const untestedBasis = [...new Set(untested.map((r) => r.basis).filter(Boolean))].sort();
+  const neighbourUntested = unfiltered.filter((r) => r.status === 'untested');
+  const neighbourVotes = neighbourUntested.reduce((n, r) => Math.max(n, r.want_votes || 0), 0);
   const lastChecked =
     [...(unfiltered.length ? unfiltered : stars)]
       .map((r) => r.as_of)
@@ -427,15 +509,18 @@ function buildMiss(onRecord, stars, q) {
     partial,
     hint: hintFor(reason, q, {
       stars,
-      wanted,
+      untested,
       rejected,
-      knownWanted,
+      knownUntested,
       wantedVotes,
-      neighbourWanted,
+      untestedBasis,
+      neighbourUntested,
       neighbourVotes
     }),
-    known_wanted: knownWanted,
+    known_untested: knownUntested,
+    known_wanted: knownUntested,
     wanted_votes: wantedVotes,
+    untested_basis: untestedBasis,
     last_checked: lastChecked,
     counts: { exact: 0, context: stars.length }
   };
@@ -452,8 +537,8 @@ function hintFor(reason, q, ctx) {
   const combo = `${hw}${runtime ? ` × ${runtime}` : ''}`;
   const runtimes = [...new Set(ctx.stars.map((r) => r.runtime))];
   const neighbour =
-    reason === 'no-match' && ctx.neighbourWanted.length > 0
-      ? ` Elsewhere for this card: ${ctx.neighbourVotes} vote${ctx.neighbourVotes === 1 ? '' : 's'} exist, but for ${ctx.neighbourWanted
+    reason === 'no-match' && ctx.neighbourUntested && ctx.neighbourUntested.length > 0
+      ? ` Elsewhere for this card: ${ctx.neighbourVotes} vote${ctx.neighbourVotes === 1 ? '' : 's'} exist, but for ${ctx.neighbourUntested
           .map((r) => r.model_family)
           .join(', ')} — different models, not an answer here.`
       : '';
@@ -476,11 +561,17 @@ function hintFor(reason, q, ctx) {
         `A hardware-level row says the backend builds on this card; it does not say ${model} runs on it.${coveredNote}`
       );
     }
-    case 'wanted-only':
+    case 'untested-only': {
+      const basisNote =
+        ctx.untestedBasis && ctx.untestedBasis.length
+          ? ` Basis: ${ctx.untestedBasis.join(', ')}.`
+          : '';
+      const voteNote = ` Demand: ${ctx.wantedVotes} vote${ctx.wantedVotes === 1 ? '' : 's'}.`;
       return (
-        `${combo} × ${model} is wanted: ${ctx.wantedVotes} vote${ctx.wantedVotes === 1 ? '' : 's'} on record. ` +
-        `Nobody has recorded a working path, so this is what to build or find.`
+        `Proposed, unverified: ${combo} × ${model} has no confirmed run on record.${basisNote}${voteNote} ` +
+        `Treat as unverified until someone records a working pointer.`
       );
+    }
     case 'rejected-only':
       return (
         `${combo} × ${model} was tried and is recorded as rejected. Read the notes before trying it yourself — ` +
@@ -565,5 +656,37 @@ function facets(rows) {
   };
 }
 
-  Object.assign(SR, { MISS_REASONS, STATUSES, SOURCE_KINDS, keyify, hash8, normalizeData, normalizeRow, datasetFromRows, buildQuery, normToken, hwMatches, modelMatchesExact, runtimeMatches, freeTextMatches, missSentence, lookup, sortRows, rowsForCombo, sortWanted, facets });
+/**
+ * Partition a flat list of rows into parent groups and orphan variants.
+ * Variants with `row.parent` are attached under their parent row (and tagged
+ * `parent_untested: true` if parent has `status === 'untested'`).
+ */
+function groupVariants(rows) {
+  const list = rows || [];
+  const byId = new Map();
+  const parents = [];
+  const orphans = [];
+
+  for (const r of list) {
+    if (!r.parent) {
+      const entry = { row: r, variants: [] };
+      byId.set(r.id, entry);
+      parents.push(entry);
+    }
+  }
+  for (const r of list) {
+    if (r.parent) {
+      const p = byId.get(r.parent);
+      if (p) {
+        const v = p.row.status === 'untested' ? { ...r, parent_untested: true } : r;
+        p.variants.push(v);
+      } else {
+        orphans.push(r);
+      }
+    }
+  }
+  return { parents, orphans };
+}
+
+  Object.assign(SR, { MISS_REASONS, STATUSES, SOURCE_KINDS, keyify, hash8, normalizeData, normalizeRow, datasetFromRows, buildQuery, normToken, compactToken, buildAliasIndex, resolveHwAlias, resolveModelAlias, hwMatches, modelMatchesExact, runtimeMatches, freeTextMatches, missSentence, missHint: hintFor, lookup, sortRows, groupVariants, rowsForCombo, sortWanted, facets });
 })(window.__SR = window.__SR || {});

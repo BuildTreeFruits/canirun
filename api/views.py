@@ -37,55 +37,58 @@ def lookup_payload(store: Store, query: dict) -> dict:
 
 
 def _enrich_miss(store: Store, ds: Dataset, query: dict, miss: dict) -> None:
-    """A miss on a combination that is already wanted should say so (known_wanted).
+    """A miss on a combination that is already untested should say so (known_untested / known_wanted).
 
     The export may not have folded a fresh vote yet, so votes that exist only in
     data/votes.json are counted here too.
     """
-    matching_wanted = [r for r in ds.rows
-                       if r.get("status") == "wanted"
-                       and ds.matches(r, query, include_status=False)]
+    matching_untested = [r for r in ds.rows
+                         if r.get("status") == "untested"
+                         and ds.matches(r, query, include_status=False)]
     override = {k: v for k, v in (ds.wanted_override or {}).items()
                 if _override_matches(k, query, ds)}
 
-    votes = [int(r.get("want_votes") or 0) for r in matching_wanted]
+    votes = [int(r.get("want_votes") or 0) for r in matching_untested]
     votes += [int(v.get("count") or 0) for v in override.values()]
-    if not votes:
+    if not votes and not matching_untested:
         return
 
+    untested_basis = sorted({str(r["basis"]) for r in matching_untested if r.get("basis")})
+    miss["known_untested"] = True
     miss["known_wanted"] = True
-    miss["wanted_votes"] = max(votes)
-    firsts = [r.get("want_first") for r in matching_wanted if r.get("want_first")]
+    miss["wanted_votes"] = max(votes) if votes else 0
+    miss["untested_basis"] = untested_basis
+    firsts = [r.get("want_first") for r in matching_untested if r.get("want_first")]
     firsts += [v.get("first") for v in override.values() if v.get("first")]
     if firsts and not miss.get("last_checked"):
         miss["last_checked"] = max(firsts)
     if miss["reason"] == "no-match":
-        miss["reason"] = "wanted-only"
-        miss["hint"] = ds._hint(query, "wanted-only", [], miss["wanted_votes"])
+        miss["reason"] = "untested-only"
+        miss["hint"] = ds._hint(query, "untested-only", [], miss["wanted_votes"], untested_basis)
 
 
 def _override_matches(row_id: str, query: dict, ds: Dataset) -> bool:
     """Can a vote-only id (no export row yet) satisfy this query? Match id segments."""
     parts = row_id.split("/")
-    if len(parts) != 4:
+    if len(parts) not in (4, 5):
         return False
-    vendor, arch, family, runtime = parts
+    vendor, arch, family, runtime = parts[:4]
     pseudo = {"hw_vendor": vendor, "hw_arch": arch, "model_family": family,
-              "runtime": runtime, "status": "wanted", "source_kind": "vote"}
+              "runtime": runtime, "status": "untested", "source_kind": "vote"}
     if query.get("hw") and not ds.match_hw(pseudo, query["hw"]):
         return False
     if query.get("model") and not ds.match_model(pseudo, query["model"]):
         return False
     if query.get("runtime") and not ds.match_runtime(pseudo, query["runtime"]):
         return False
-    if query.get("status") and query["status"] != "wanted":
+    if query.get("status") and query["status"] not in ("untested", "wanted"):
         return False
     if query.get("kind") and query["kind"] != "vote":
         return False
     if query.get("q"):
         # A free-text filter must apply to vote-only rows too. Without this, one vote
-        # made every text query "known_wanted" -- a q that matched nothing reported
-        # wanted-only with votes>0, which is a lie about what matched.
+        # made every text query "known_untested" -- a q that matched nothing reported
+        # untested-only with votes>0, which is a lie about what matched.
         needle = str(query["q"]).lower()
         hay = " ".join(str(pseudo.get(k) or "") for k in
                        ("hw_vendor", "hw_arch", "model_family", "runtime", "status",
@@ -96,11 +99,11 @@ def _override_matches(row_id: str, query: dict, ds: Dataset) -> bool:
 
 
 # --------------------------------------------------------------------------
-# wanted / browse
+# untested / wanted / browse
 # --------------------------------------------------------------------------
 
 def synthetic_wanted_row(row_id: str, rec: dict) -> dict:
-    """A wanted row for a vote whose id the pipeline has not exported yet.
+    """An untested row for a vote whose id the pipeline has not exported yet.
 
     Marked `unknown_to_export` so a UI can say so rather than pretend it is a
     pipeline-built row.
@@ -108,7 +111,8 @@ def synthetic_wanted_row(row_id: str, rec: dict) -> dict:
     parts = (row_id.split("/") + ["", "", "", ""])[:4]
     vendor, arch, family, runtime = parts
     return {
-        "id": row_id, "status": "wanted", "source_kind": "vote", "provisional": True,
+        "id": row_id, "status": "untested", "source_kind": "vote", "provisional": True,
+        "basis": None, "basis_note": None, "parent": None,
         "hw_vendor": vendor, "hw_arch": arch, "hw_name": None, "hw_extra": {},
         "model_family": family, "model_rev": None, "quant": None,
         "runtime": runtime, "runtime_rev": None, "pointer": None,
@@ -124,9 +128,9 @@ def synthetic_wanted_row(row_id: str, rec: dict) -> dict:
 
 
 def wanted_rows(store: Store, query: dict | None = None) -> list[dict]:
-    """CONTRACT: wanted rows sorted want_votes desc, then want_first asc."""
+    """CONTRACT: untested / wanted rows sorted want_votes desc, then want_first asc."""
     ds = store.dataset()
-    rows = [dict(r) for r in ds.rows if r.get("status") == "wanted"]
+    rows = [dict(r) for r in ds.rows if r.get("status") == "untested" or (r.get("want_votes") or 0) > 0]
     for row_id, rec in (ds.wanted_override or {}).items():
         rows.append(synthetic_wanted_row(row_id, rec))
     if query:

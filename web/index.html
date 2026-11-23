@@ -9,7 +9,7 @@
   <meta name="theme-color" content="#f7f6f3" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#111110" media="(prefers-color-scheme: dark)">
   <meta property="og:title" content="solve.run — the combination index">
-  <meta property="og:description" content="Check the combination before you build it. Solved, wanted, rejected, or not searched — plainly, with a date.">
+  <meta property="og:description" content="Check the combination before you build it. Solved, untested, rejected, or not searched — plainly, with a date.">
   <meta property="og:type" content="website">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a4fd6'/%3E%3Ctext x='16' y='23' font-family='sans-serif' font-size='19' font-weight='700' fill='%23fff' text-anchor='middle'%3E%C3%97%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="css/app.css">
@@ -58,7 +58,7 @@
           combination lives — and, when there isn’t one, says that plainly with the date it was checked.</p>
           <ul class="axiom">
             <li><b>Solved</b> — a pointer, dated</li>
-            <li><b>Wanted</b> — people asking, counted</li>
+            <li><b>Untested</b> — proposed or requested, unverified</li>
             <li><b>Rejected</b> — tried, does not work here</li>
             <li><b>Not searched</b> — no claim, recorded as a gap</li>
           </ul>
@@ -93,7 +93,7 @@
                        placeholder="qwen3, llama-4, gemma-3…" spellcheck="false" autocapitalize="off">
                 <button type="button" class="clear-btn" data-clear="model" aria-label="Clear model" hidden>×</button>
               </div>
-              <span class="hint" id="model-hint">A model family — not a specific checkpoint.</span>
+              <span class="hint" id="model-hint">Indexed by model family — check Notes, Quant, and VRAM for tested parameter sizes.</span>
               <div class="combo-list" id="model-list" role="listbox" aria-label="Model family options" hidden></div>
             </div>
 
@@ -124,6 +124,11 @@
 
         <div id="results" class="results" aria-live="polite" aria-atomic="false"></div>
 
+        <section class="hw-jump-section" id="hw-jump" hidden>
+          <div class="section-label">Jump by hardware</div>
+          <div class="hw-jump-chips" id="hw-jump-list"></div>
+        </section>
+
         <section class="starters-section" id="starters" hidden>
           <div class="results-head"><h2>Try one</h2><span class="count">each demonstrates one of the four states</span></div>
           <div class="starters" id="starters-list"></div>
@@ -135,12 +140,12 @@
         <div class="hero" style="padding-bottom:14px">
           <h1 id="browse-title">Everything on record.</h1>
           <p class="lede">Every row is one claim about one combination. Filter, sort, and open any row as a
-          lookup. Wanted rows sort by votes, then by how long they have been waiting.</p>
+          lookup. Untested rows sort by votes, then by how long they have been waiting.</p>
         </div>
         <div class="browse-toolbar" id="browse-toolbar">
           <button type="button" class="chip" data-filter-status="" aria-pressed="true">All <span class="n" data-count="all"></span></button>
           <button type="button" class="chip" data-filter-status="solved" aria-pressed="false">Solved <span class="n" data-count="solved"></span></button>
-          <button type="button" class="chip" data-filter-status="wanted" aria-pressed="false">Wanted <span class="n" data-count="wanted"></span></button>
+          <button type="button" class="chip" data-filter-status="untested" aria-pressed="false">Untested <span class="n" data-count="untested"></span></button>
           <button type="button" class="chip" data-filter-status="rejected" aria-pressed="false">Rejected <span class="n" data-count="rejected"></span></button>
           <button type="button" class="chip" data-filter-status="context" aria-pressed="false">Hardware-level <span class="n" data-count="context"></span></button>
           <span class="chip-sep" aria-hidden="true"></span>
@@ -163,12 +168,13 @@
             </select>
           </div>
         </div>
+        <div id="browse-coverage" class="browse-coverage" hidden></div>
         <div id="browse-meta" class="legend"></div>
         <div id="browse-results"></div>
         <div class="legend">
           <span>Legend:</span>
           <span class="state-chip" style="--st:var(--st-solved);--st-bg:var(--st-solved-bg);--st-line:var(--st-solved-line)"><span aria-hidden="true">✓</span>Solved</span>
-          <span class="state-chip" style="--st:var(--st-wanted);--st-bg:var(--st-wanted-bg);--st-line:var(--st-wanted-line)"><span aria-hidden="true">↑</span>Wanted</span>
+          <span class="state-chip" style="--st:var(--st-wanted);--st-bg:var(--st-wanted-bg);--st-line:var(--st-wanted-line)"><span aria-hidden="true">?</span>Untested</span>
           <span class="state-chip" style="--st:var(--st-rejected);--st-bg:var(--st-rejected-bg);--st-line:var(--st-rejected-line)"><span aria-hidden="true">✕</span>Rejected</span>
           <span class="state-chip" style="--st:var(--st-miss);--st-bg:var(--st-miss-bg);--st-line:var(--st-miss-line)"><span aria-hidden="true">＊</span>Hardware-level</span>
           <span>“＊” rows claim the backend supports the card — they do not answer for any model.</span>
@@ -190,8 +196,8 @@
             <li><a href="api/export.jsonl" data-href-api="export.jsonl">export.jsonl</a> — full dump, JSONL</li>
             <li><a href="api/combos.json" data-href-api="combos.json">combos.json</a> — the merged export</li>
             <li><a href="api/lookup" data-href-api="lookup">/api/lookup docs</a> · <a href="api/docs" data-href-api="docs">API docs</a></li>
-            <li><a href="api/health" data-href-api="health">health</a> · <a href="api/wanted" data-href-api="wanted">wanted list</a></li>
-            <li><a href="?data=sample" data-sample-link>View the sample dataset</a> — every state, including wanted &amp; rejected</li>
+            <li><a href="api/health" data-href-api="health">health</a> · <a href="api/untested" data-href-api="wanted">untested list</a></li>
+            <li><a href="?data=sample" data-sample-link>View the sample dataset</a> — every state, including untested &amp; rejected</li>
           </ul>
         </div>
         <div>

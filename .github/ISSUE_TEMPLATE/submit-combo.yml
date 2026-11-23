@@ -1,0 +1,134 @@
+name: Submit Combo
+description: Propose a solved, untested, or rejected hardware × model × runtime combination (or variant)
+title: "[combo] "
+labels: ["combo"]
+body:
+  - type: input
+    id: combo_id
+    attributes:
+      label: Combo ID (optional)
+      description: Canonical 4-segment or 5-segment variant ID, if known (auto-filled from UI links).
+      placeholder: nvidia/sm_86/qwen3/llama_cpp
+    validations:
+      required: false
+
+  - type: dropdown
+    id: hw_vendor
+    attributes:
+      label: Hardware Vendor
+      options:
+        - nvidia
+        - amd
+        - intel
+        - apple
+        - qualcomm
+        - arm-cpu
+        - x86-cpu
+        - other
+    validations:
+      required: true
+
+  - type: input
+    id: hw_arch
+    attributes:
+      label: Hardware Architecture
+      description: Architecture slug from data/taxonomy.json (e.g. sm_89, gfx1100, m4-max).
+      placeholder: sm_89
+    validations:
+      required: true
+
+  - type: input
+    id: model_family
+    attributes:
+      label: Model Family
+      description: Model family slug (e.g. qwen3, llama-3), or * for hardware-only backend support.
+      placeholder: qwen3
+    validations:
+      required: true
+
+  - type: dropdown
+    id: runtime
+    attributes:
+      label: Runtime
+      options:
+        - llama.cpp
+        - vllm
+        - mlx
+        - mlx-lm
+        - vllm-metal
+        - sglang
+        - exllamav2
+        - exllamav3
+        - lmstudio
+        - ollama
+        - mllama
+        - mlc-llm
+        - bitnet.cpp
+        - vllm-xpu-kernels
+        - custom-kernel
+        - unknown
+    validations:
+      required: true
+
+  - type: dropdown
+    id: status
+    attributes:
+      label: Status
+      options:
+        - solved
+        - untested
+        - rejected
+    validations:
+      required: true
+
+  - type: dropdown
+    id: basis
+    attributes:
+      label: Basis (required if status is untested)
+      description: Why do you believe this untested combo works? Select n/a for solved or rejected.
+      options:
+        - n/a
+        - docs-claim
+        - analogy
+        - author-says
+        - mine
+    validations:
+      required: false
+
+  - type: textarea
+    id: parent_and_knobs
+    attributes:
+      label: Parent & Variant Knobs (optional)
+      description: If submitting a variant, provide parent ID and at least one knob (quant, context_length, offload, runtime_version, driver_version, flags, fits).
+      placeholder: |
+        parent: nvidia/sm_86/qwen3/llama_cpp
+        quant: Q4_K_M
+        offload: ngl=99
+        context_length: 8192
+    validations:
+      required: false
+
+  - type: input
+    id: pointer
+    attributes:
+      label: Pointer URL
+      description: Upstream documentation, release note, or issue URL supporting this claim.
+      placeholder: https://github.com/...
+    validations:
+      required: false
+
+  - type: textarea
+    id: evidence_quote
+    attributes:
+      label: Evidence Quote
+      description: Verbatim quote from the pointer URL.
+    validations:
+      required: false
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: Explanation (required if status is rejected; optional context otherwise).
+    validations:
+      required: false

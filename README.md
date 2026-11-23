@@ -9,7 +9,7 @@ Every combination in the index falls into one of four states:
 | State | Meaning | Stored? |
 |---|---|---|
 | `solved` | A working path exists and is pointed to | Yes, with `as_of` date |
-| `wanted` | Someone looked, nothing found, ≥ 1 person wants it | Yes, with `want_votes` + `want_first` |
+| `untested` | Proposed, unverified — someone believes it works (`basis`) or requested it (`want_votes`) | Yes, with `basis` (separate from `want_votes`) |
 | `rejected` | Tried, does not work on this hardware | Yes, with `notes` explaining why |
 | `not-searched` | Nobody has claimed anything | **No** — absence of a row *is* the state |
 
@@ -29,10 +29,13 @@ Query combinations directly over HTTP:
 
 ```bash
 curl -s "http://127.0.0.1:8787/api/lookup?hw=sm_86&model=qwen3"
+curl -s "http://127.0.0.1:8787/api/untested"
+curl -s "http://127.0.0.1:8787/api/wanted"
+curl -s "http://127.0.0.1:8787/llms.txt"
 curl -s -X POST "http://127.0.0.1:8787/api/want/nvidia%2Fsm_86%2Fqwen3%2Fllama_cpp" -H "X-Voter: agent:my-tool"
 ```
 
-See `/api/docs` (served by `scripts/serve.py`) or `api/AGENT.md` for the full endpoint reference and paste-ready agent prompt snippet.
+See `/api/docs` (served by `scripts/serve.py`) or `api/AGENT.md` for the full endpoint reference and paste-ready agent prompt snippet. Variants use a `parent` base row ID plus distinguishing knobs (`quant`, `context_length`, `offload`, `runtime_version`, `driver_version`, `flags`, `fits`).
 
 ## Data honesty model
 

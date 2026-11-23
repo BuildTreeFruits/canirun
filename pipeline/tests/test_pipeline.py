@@ -266,11 +266,10 @@ def test_invariant_3_derived_states_gap():
 
 
 def test_invariant_4_wanted_needs_votes():
-    row = shape(base_row(status="wanted", pointer_alive=True))
+    row = shape(base_row(status="untested", basis="docs-claim", want_votes=1, pointer_alive=True))
     got = errs(row)
-    assert any("invariant 4" in e and "want_votes" in e for e in got), got
-    assert any("want_first" in e for e in got)
-    ok = shape(base_row(status="wanted", want_votes=2, want_first=TODAY))
+    assert any("want_first" in e for e in got), got
+    ok = shape(base_row(status="untested", basis="docs-claim", want_votes=2, want_first=TODAY))
     assert not errs(ok), errs(ok)
 
 
@@ -533,39 +532,39 @@ def test_votes_never_downgrade_solved():
 
 
 def test_votes_promote_unpointed_row():
-    # a derived row carrying a pointer is 'solved'; the vote rule only promotes
-    # rows with no solved pointer.
-    wantedish = shape(derived_row(status="rejected", notes="no support yet", pointer=None))
+    # a derived row with resolves_no_claim=True and a lead pointer flips to
+    # untested (basis='docs-claim') on votes.
+    wantedish = shape(derived_row(status="rejected", notes="no support yet",
+                                  pointer="https://example.com/lead", resolves_no_claim=True))
     rows, events = votes.apply_votes([wantedish], {wantedish["id"]: {"count": 2,
                                         "requesters": ["u1", "u2"], "first": TODAY}},
                                      run_date=TODAY)
     row = rows[0]
-    assert row["status"] == "wanted", row["status"]
+    assert row["status"] == "untested", row["status"]
+    assert row["basis"] == "docs-claim", row["basis"]
     assert not errs(row), errs(row)
     assert row["want_votes"] == 2 and row["want_first"] == TODAY
 
 
 def test_votes_promote_scraped_row_keeps_contract_valid():
-    # a scraper row that carries no pointer claim (e.g. a backend whose only
-    # evidence is a lead): the vote rule may promote it, and the promoted row
-    # must still satisfy the contract (a scraped row cannot be 'wanted').
+    # a scraper row that carries a lead pointer: the vote rule may promote it
+    # to untested, and the promoted row must still satisfy the contract.
     row = shape(base_row())
     row["status"] = "rejected"
-    row["pointer"] = None
+    row["pointer"] = "https://example.com/lead"
     row["notes"] = "mentioned upstream without a supported matrix"
     row["resolves_no_claim"] = True   # the absence-claim flag is a row property
     rows, _ = votes.apply_votes([row], {row["id"]: {"count": 3, "requesters": ["a", "b", "c"],
                                                     "first": TODAY}}, run_date=TODAY)
-    assert rows[0]["status"] == "wanted", rows[0]["status"]
+    assert rows[0]["status"] == "untested", rows[0]["status"]
     assert rows[0]["source_kind"] == "hand", rows[0]["source_kind"]
     assert rows[0]["pointer"] is None
     assert not errs(rows[0]), errs(rows[0])
 
 
 def test_votes_apply_and_cap_requesters():
-    row = shape(base_row(status="rejected", notes="fails"))
-    row["pointer"] = None
-    row["resolves_no_claim"] = True   # an absence claim may flip to wanted
+    row = shape(base_row(status="rejected", notes="fails", pointer="https://example.com/lead"))
+    row["resolves_no_claim"] = True
     v = {"count": 12, "requesters": [f"u{i}" for i in range(14)], "first": "2026-11-01"}
     rows, _ = votes.apply_votes([row], {row["id"]: v}, run_date=TODAY)
     assert rows[0]["want_requesters"] == [f"u{i}" for i in range(10)]
@@ -590,7 +589,7 @@ def test_vote_on_unknown_id_materialises_a_wanted_row():
     rows, events = votes.apply_votes([], {rid: entry}, run_date=TODAY)
     assert len(rows) == 1, rows
     row = rows[0]
-    assert row["id"] == rid and row["status"] == "wanted"
+    assert row["id"] == rid and row["status"] == "untested"
     assert row["source_kind"] == "hand" and row["created_by"] == "vote"
     assert row["provisional"] is True
     assert row["hw_vendor"] == "nvidia" and row["hw_arch"] == "sm_120"
@@ -997,6 +996,78 @@ def test_upstream_doc_solved_beats_community_issue_rejected_on_merge():
     ev_urls = [e["url"] for e in merged["evidence"]]
     assert "https://example.com/docs/cuda" in ev_urls
     assert "https://github.com/org/repo/issues/123" in ev_urls
+
+
+def test_invariant_4_untested_requires_basis_and_optional_votes():
+    # want_votes == 0 with basis="docs-claim" passes
+    ok0 = shape(base_row(status="untested", basis="docs-claim", want_votes=0))
+    assert not errs(ok0), errs(ok0)
+    # missing basis on hand row fails
+    no_basis = shape(base_row(status="untested", want_votes=0))
+    assert any("invariant 4" in e and "basis" in e for e in errs(no_basis)), errs(no_basis)
+    # want_votes >= 1 without want_first fails
+    no_first = shape(base_row(status="untested", basis="mine", want_votes=1, want_first=None))
+    assert any("invariant 4" in e and "want_first" in e for e in errs(no_first)), errs(no_first)
+    # created_by="vote" with basis=None passes
+    vote_row = shape(base_row(status="untested", created_by="vote", basis=None,
+                              want_votes=1, want_first=TODAY))
+    assert not errs(vote_row), errs(vote_row)
+
+
+def test_variant_slug_determinism_and_id_derivation():
+    parent_id = "nvidia/sm_86/qwen3/llama_cpp"
+    raw = base_row(
+        hw_vendor="nvidia", hw_arch="sm_86", model_family="qwen3", runtime="llama.cpp",
+        parent=parent_id, quant="Q4_K_M", offload="ngl=99", context_length=8192,
+    )
+    raw.pop("id", None)
+    v = shape(raw)
+    assert v["id"] == "nvidia/sm_86/qwen3/llama_cpp/@q4km-ngl99-c8192", v["id"]
+    assert not errs(v), errs(v)
+    parsed = schema.parse_id(v["id"])
+    assert parsed["parent"] == parent_id
+    assert parsed["variant"] == "@q4km-ngl99-c8192"
+
+
+def test_variant_requires_at_least_one_knob():
+    v = shape(base_row(parent="nvidia/sm_86/qwen3/llama_cpp", quant=None,
+                       id="nvidia/sm_86/qwen3/llama_cpp/@empty"))
+    got = errs(v)
+    assert any("invariant 10" in e for e in got), got
+
+
+def test_variant_fits_enum_validation():
+    bad_raw = base_row(parent="nvidia/sm_86/qwen3/llama_cpp", fits="invalid-fit")
+    bad_raw.pop("id", None)
+    bad = shape(bad_raw)
+    assert any("fits" in e for e in errs(bad)), errs(bad)
+    good_raw = base_row(parent="nvidia/sm_86/qwen3/llama_cpp", fits="coding")
+    good_raw.pop("id", None)
+    good = shape(good_raw)
+    assert not errs(good), errs(good)
+
+
+def test_variant_orphan_parent_detected_in_build():
+    orphan = shape(base_row(
+        hw_vendor="nvidia", hw_arch="sm_86", model_family="qwen3", runtime="llama.cpp",
+        parent="nvidia/sm_86/qwen3/llama_cpp", quant="Q4_K_M",
+    ))
+    by_id = {}
+    errors = []
+    if orphan.get("parent") is not None and orphan["parent"] not in by_id:
+        errors.append(f"variant: orphan parent {orphan['parent']!r} not found in dataset")
+    assert len(errors) == 1 and "orphan parent" in errors[0]
+
+
+def test_absence_rejection_without_pointer_does_not_flip_to_untested():
+    row = shape(base_row(status="rejected", notes="not found in docs", pointer=None))
+    row["resolves_no_claim"] = True
+    rows, events = votes.apply_votes(
+        [row], {row["id"]: {"count": 5, "requesters": ["u1"], "first": TODAY}}, run_date=TODAY
+    )
+    assert rows[0]["status"] == "rejected", rows[0]["status"]
+    assert rows[0]["want_votes"] == 5
+    assert not any(e["event"] == "promoted" for e in events)
 
 
 # ---------------------------------------------------------------------------

@@ -40,9 +40,9 @@ if not os.path.isdir(FIXTURES):  # self-heal on a fresh checkout
 # CONTRACT §4, frozen. A contract drift fails a test rather than silently shipping.
 RESPONSE_KEYS = {"query", "rows", "context", "miss", "query_id", "generated_at", "dataset"}
 QUERY_KEYS = {"hw", "model", "runtime", "status", "kind", "q", "limit"}
-MISS_KEYS = {"is_miss", "reason", "partial", "hint", "known_wanted", "wanted_votes",
-             "last_checked", "counts"}
-MISS_REASONS = {"no-claim", "wanted-only", "rejected-only", "partial-context", "no-match"}
+MISS_KEYS = {"is_miss", "reason", "partial", "hint", "known_untested", "known_wanted",
+             "wanted_votes", "untested_basis", "last_checked", "counts"}
+MISS_REASONS = {"no-claim", "untested-only", "rejected-only", "partial-context", "no-match"}
 
 
 def free_port() -> int:
@@ -216,7 +216,7 @@ class TestLookupShape(APITestCase):
         # leaves nothing but the wanted row, which must be named as the reason
         body = self.getjson("/api/lookup?hw=sm_120&model=deepseek-v4&status=solved")
         self.assertEqual(body["rows"], [])
-        self.assertEqual(body["miss"]["reason"], "wanted-only")
+        self.assertEqual(body["miss"]["reason"], "untested-only")
         self.assertTrue(body["miss"]["known_wanted"])
         self.assertGreaterEqual(body["miss"]["wanted_votes"], 1)
 
@@ -467,7 +467,7 @@ class TestMiss(APITestCase):
             # and the lookup that used to miss now answers
             body = self.getjson("/api/lookup?hw=gfx1200&model=brand-new-model")
             self.assertFalse(body["miss"]["is_miss"])
-            self.assertEqual(body["rows"][0]["status"], "wanted")
+            self.assertEqual(body["rows"][0]["status"], "untested")
         finally:
             self.srv.store.sync_rebuild = False
 
@@ -753,6 +753,98 @@ class TestRebuildCoalescing(unittest.TestCase):
             self.assertFalse(r_sync["scheduled"])
             self.assertTrue(r_sync["ok"])
             self.assertEqual(calls, 3)
+
+
+class TestW1BAliasesAndUntested(APITestCase):
+    def test_hw_aliases_resolution(self):
+        import store as store_mod
+        with open(os.path.join(os.path.dirname(__file__), "fixtures", "taxonomy.json"), encoding="utf-8") as fh:
+            taxonomy = json.load(fh)
+        rows = [
+            {"id": "nvidia/sm_89/qwen3/llama_cpp", "hw_vendor": "nvidia", "hw_arch": "sm_89",
+             "model_family": "qwen3", "runtime": "llama.cpp", "status": "solved", "want_votes": 0},
+            {"id": "amd/gfx942/qwen3/vllm", "hw_vendor": "amd", "hw_arch": "gfx942",
+             "model_family": "qwen3", "runtime": "vllm", "status": "solved", "want_votes": 0},
+            {"id": "amd/gfx1100/qwen3/llama_cpp", "hw_vendor": "amd", "hw_arch": "gfx1100",
+             "model_family": "qwen3", "runtime": "llama.cpp", "status": "solved", "want_votes": 0},
+            {"id": "intel/arc-b580/qwen3/llama_cpp", "hw_vendor": "intel", "hw_arch": "arc-b580",
+             "model_family": "qwen3", "runtime": "llama.cpp", "status": "solved", "want_votes": 0},
+        ]
+        ds = store_mod.Dataset(rows, taxonomy=taxonomy)
+        for q_hw, expected_arch in [
+            ("rtx4090", "sm_89"),
+            ("rtx 4090", "sm_89"),
+            ("mi300x", "gfx942"),
+            ("rdna3", "gfx1100"),
+            ("arc b580", "arc-b580"),
+        ]:
+            res = ds.search({"hw": q_hw})
+            self.assertTrue(any(r["hw_arch"] == expected_arch for r in res["rows"]),
+                            f"hw={q_hw!r} did not resolve to {expected_arch}")
+
+    def test_model_aliases_resolution(self):
+        import store as store_mod
+        with open(os.path.join(os.path.dirname(__file__), "fixtures", "taxonomy.json"), encoding="utf-8") as fh:
+            taxonomy = json.load(fh)
+        rows = [
+            {"id": f"nvidia/sm_86/{fam}/llama_cpp", "hw_vendor": "nvidia", "hw_arch": "sm_86",
+             "model_family": fam, "runtime": "llama.cpp", "status": "solved", "want_votes": 0}
+            for fam in ("llama-3", "qwen3", "deepseek", "phi")
+        ]
+        ds = store_mod.Dataset(rows, taxonomy=taxonomy)
+        for q_model, expected_fam in [
+            ("llama3", "llama-3"),
+            ("qwen-3", "qwen3"),
+            ("deepseek-r1", "deepseek"),
+            ("phi-4", "phi"),
+        ]:
+            res = ds.search({"model": q_model})
+            self.assertTrue(any(r["model_family"] == expected_fam for r in res["rows"]),
+                            f"model={q_model!r} did not resolve to {expected_fam}")
+
+    def test_untested_only_hint_says_proposed_unverified_and_splits_basis_from_votes(self):
+        body = self.getjson("/api/lookup?hw=sm_120&model=deepseek-v4&status=solved")
+        miss = body["miss"]
+        self.assertTrue(miss["is_miss"])
+        self.assertEqual(miss["reason"], "untested-only")
+        self.assertTrue(miss["known_untested"])
+        self.assertTrue(miss["known_wanted"])
+        self.assertEqual(miss["untested_basis"], ["docs-claim"])
+        self.assertEqual(miss["wanted_votes"], 3)
+        self.assertIn("proposed, unverified", miss["hint"].lower())
+        self.assertIn("docs-claim", miss["hint"])
+        self.assertIn("3 want vote", miss["hint"])
+
+    def test_variant_id_vote_accepted_and_invalid_5th_segment_rejected(self):
+        code, body = self.postjson(
+            "/api/want/nvidia/sm_86/qwen3/llama_cpp/@q4km-ngl99-c8192",
+            {"voter": "gh:tester"},
+        )
+        self.assertIn(code, (200, 201))
+        self.assertEqual(body["status"], "untested")
+        self.assertEqual(body["want_votes"], 1)
+
+        code_bad, body_bad = self.postjson(
+            "/api/want/nvidia/sm_86/qwen3/llama_cpp/not-a-slug",
+            {"voter": "gh:tester"},
+        )
+        self.assertEqual(code_bad, 400)
+        self.assertEqual(body_bad["error"]["code"], "bad-id")
+
+    def test_llms_txt_returns_200_text_plain(self):
+        llms_path = os.path.join(self.srv.static_dir, "llms.txt")
+        created = False
+        if not os.path.exists(llms_path):
+            with open(llms_path, "w", encoding="utf-8") as fh:
+                fh.write("# solve.run\n")
+            created = True
+        try:
+            code, headers, _raw = self.get("/llms.txt")
+            self.assertEqual(code, 200)
+            self.assertEqual(headers.get("content-type"), "text/plain; charset=utf-8")
+        finally:
+            if created and os.path.exists(llms_path):
+                os.remove(llms_path)
 
 
 if __name__ == "__main__":

@@ -32,7 +32,7 @@ const state = {
   forceFixture: false,
   taxonomy: null,
   view: 'lookup',
-  browse: { status: '', q: '', sort: 'status', dir: 'desc' }
+  browse: { status: '', vendor: '', q: '', sort: 'status', dir: 'desc' }
 };
 
 const $ = (sel, root = document) => root.querySelector(sel);
@@ -51,8 +51,11 @@ const el = {
   status: $('#search-status'),
   starters: $('#starters'),
   startersList: $('#starters-list'),
+  hwJump: $('#hw-jump'),
+  hwJumpList: $('#hw-jump-list'),
   datasetLine: $('#dataset-line'),
   footerVersion: $('#footer-version'),
+  browseCoverage: $('#browse-coverage'),
   browseResults: $('#browse-results'),
   browseMeta: $('#browse-meta'),
   browseQ: $('#browse-q'),
@@ -134,15 +137,95 @@ function voterKey() {
  * `unknown` slug rather than an invented one, so the id stays the shape the
  * pipeline would create once the miss log promotes it to a row.
  */
+function normIdToken(s) {
+  return String(s || '')
+    .trim()
+    .toLowerCase()
+    .replace(/[._\s/]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function compactIdToken(s) {
+  return String(s || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+function slugSegment(v, fallback) {
+  const s = String(v || '')
+    .trim()
+    .toLowerCase()
+    .replace(/\./g, '_')
+    .replace(/[^a-z0-9_-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  return s || fallback;
+}
+
+function resolveVendorForArch(arch) {
+  const tax = state.taxonomy;
+  const normArch = normIdToken(arch);
+  if (tax && tax.hw_archs) {
+    for (const [vendor, arches] of Object.entries(tax.hw_archs)) {
+      if (Array.isArray(arches) && arches.some((a) => a === arch || normIdToken(a) === normArch)) {
+        return vendor;
+      }
+    }
+  }
+  const rowMatch = state.rows.find((r) => r.hw_arch === arch || normIdToken(r.hw_arch) === normArch);
+  if (rowMatch && rowMatch.hw_vendor) return rowMatch.hw_vendor;
+
+  const a = String(arch || '').toLowerCase();
+  if (/^sm_/.test(a)) return 'nvidia';
+  if (/^gfx/.test(a)) return 'amd';
+  if (/^(arc-|data-center-max|flex-)/.test(a)) return 'intel';
+  if (/^m[1-5]($|[-_])/.test(a)) return 'apple';
+  if (/^(snapdragon|hexagon)/.test(a)) return 'qualcomm';
+  if (/^(aarch64|arm64)/.test(a)) return 'arm-cpu';
+  if (/^x86/.test(a)) return 'x86-cpu';
+  return 'other';
+}
+
 function idFor(q) {
-  const slug = (v, fallback) =>
-    String(v || fallback)
-      .trim()
-      .toLowerCase()
-      .replace(/[^a-z0-9._-]+/g, '-')
-      .replace(/\./g, '-')
-      .replace(/^-+|-+$/g, '') || fallback;
-  return `${slug(q.hw, 'other')}/${slug(q.model, 'unknown')}/${slug(q.runtime, 'unknown')}`;
+  const tax = state.taxonomy;
+  let arch = '';
+  if (q && q.hw) {
+    if (SR.resolveHwAlias) {
+      arch = SR.resolveHwAlias(q.hw, tax) || q.hw;
+    } else if (tax && tax.hw_aliases) {
+      const n = normIdToken(q.hw);
+      const c = compactIdToken(q.hw);
+      for (const [alias, target] of Object.entries(tax.hw_aliases)) {
+        if (normIdToken(alias) === n || compactIdToken(alias) === c) {
+          arch = target;
+          break;
+        }
+      }
+      if (!arch) arch = q.hw;
+    } else {
+      arch = q.hw;
+    }
+  }
+  const archSlug = slugSegment(arch, 'unknown');
+  const vendorSlug = q && q.hw ? slugSegment(resolveVendorForArch(archSlug), 'other') : 'other';
+
+  let model = q && q.model ? q.model : '';
+  if (model) {
+    if (SR.resolveModelAlias) {
+      model = SR.resolveModelAlias(model, tax) || model;
+    } else if (tax && Array.isArray(tax.models)) {
+      const n = normIdToken(model);
+      const c = compactIdToken(model);
+      for (const m of tax.models) {
+        const aliases = Array.isArray(m.aliases) ? m.aliases : [];
+        if (aliases.some((al) => normIdToken(al) === n || compactIdToken(al) === c)) {
+          model = m.family;
+          break;
+        }
+      }
+    }
+  }
+  const modelSlug = slugSegment(model, 'unknown');
+  const runtimeSlug = slugSegment(q && q.runtime, 'unknown');
+  return `${vendorSlug}/${archSlug}/${modelSlug}/${runtimeSlug}`;
 }
 
 /* ------------------------------------------------------------------- data */
@@ -180,7 +263,11 @@ async function loadData() {
     state.dataset = data.dataset;
     state.source = data.source;
     state.facets = facets(data.rows);
-    if (!state.taxonomy) state.taxonomy = await loadTaxonomy().catch(() => null);
+    if (state.source === 'snapshot' && window.SOLVE_RUN_SNAPSHOT && window.SOLVE_RUN_SNAPSHOT.taxonomy) {
+      state.taxonomy = window.SOLVE_RUN_SNAPSHOT.taxonomy;
+    } else if (!state.taxonomy) {
+      state.taxonomy = await loadTaxonomy().catch(() => null);
+    }
     renderChrome();
     return true;
   } catch (err) {
@@ -219,7 +306,7 @@ function renderChrome() {
     el.bannerText.innerHTML =
       `<strong>Offline snapshot.</strong> Opened from a local file, so the page is showing a saved copy of the dataset` +
       `${ds.as_of ? ` as of <strong>${R.esc(ds.as_of)}</strong>` : ''} (${R.esc(ds.rows)} rows) instead of the live index. ` +
-      `Run <code>python3 scripts/serve.py</code> and open http://127.0.0.1:8087/ for live data and working votes.`;
+      `Run <code>python3 scripts/serve.py</code> and open http://127.0.0.1:8787/ for live data and working votes.`;
   } else if (empty) {
     el.bannerText.innerHTML = `<strong>No rows loaded.</strong> The index is up but the dataset is empty — that is different from a miss.`;
   }
@@ -253,9 +340,10 @@ function renderChrome() {
   });
 
   // Browse counts
-  const counts = { all: state.rows.filter((r) => r.model_family !== '*').length, solved: 0, wanted: 0, rejected: 0, context: 0 };
+  const counts = { all: state.rows.filter((r) => r.model_family !== '*').length, solved: 0, untested: 0, rejected: 0, context: 0 };
   for (const r of state.rows) {
     if (r.model_family === '*') counts.context++;
+    else if (r.status === 'wanted' || r.status === 'untested') counts.untested++;
     else if (counts[r.status] !== undefined) counts[r.status]++;
   }
   $$('[data-count]').forEach((n) => {
@@ -267,6 +355,7 @@ function renderChrome() {
     navCount.hidden = false;
   }
 
+  renderHwJump();
   renderStarters();
 }
 
@@ -278,6 +367,33 @@ function renderChrome() {
  * Every starter is checked with the same `lookup()` the page uses, which is why
  * this runs after data load and never hits the network.
  */
+function renderHwJump() {
+  if (!el.hwJump || !el.hwJumpList) return;
+  const counts = new Map();
+  for (const r of state.rows) {
+    if (!r.hw_arch) continue;
+    counts.set(r.hw_arch, (counts.get(r.hw_arch) || 0) + 1);
+  }
+  const top = [...counts.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .slice(0, 10);
+  if (!top.length) {
+    el.hwJump.hidden = true;
+    return;
+  }
+  el.hwJump.hidden = false;
+  el.hwJumpList.innerHTML = top
+    .map(([arch, count]) =>
+      `<button type="button" class="chip" data-jump-hw="${R.esc(arch)}">${R.esc(arch)} <span class="n">${R.esc(count)}</span></button>`
+    )
+    .join('');
+  el.hwJumpList.querySelectorAll('[data-jump-hw]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      performLookup({ hw: btn.dataset.jumpHw, model: null, runtime: null }, { push: true });
+    });
+  });
+}
+
 function renderStarters() {
   const starters = [];
   const rows = state.rows;
@@ -290,7 +406,7 @@ function renderStarters() {
     runtime: r.runtime || null
   });
   const shows = (q, pred) => {
-    const res = lookup(rows, q, ds);
+    const res = lookup(rows, q, ds, state.taxonomy);
     return pred(res);
   };
 
@@ -305,7 +421,7 @@ function renderStarters() {
     starters.push({
       tone: 'solved',
       label: 'A solved combination',
-      q: asQuery(solved, false),
+      q: asQuery(solved, true),
       d: `${solved.hw_arch} × ${solved.model_family} — a pointer, pinned and dated`,
       expect: 'solved'
     });
@@ -320,23 +436,23 @@ function renderStarters() {
     starters.push({
       tone: 'rejected',
       label: 'A rejected combination',
-      q: asQuery(rejected, false),
+      q: asQuery(rejected, true),
       d: `${rejected.hw_arch} × ${rejected.model_family} — tried, does not work here`,
       expect: 'rejected'
     });
   }
 
-  // 3. wanted — most wanted first (CONTRACT: votes desc, then oldest)
-  const wanted = sortWanted(rows.filter((r) => r.status === 'wanted' && r.model_family !== '*')).find((r) =>
+  // 3. untested — most wanted first (CONTRACT: votes desc, then oldest)
+  const wanted = sortWanted(rows.filter((r) => (r.status === 'untested' || r.status === 'wanted') && r.model_family !== '*')).find((r) =>
     shows(asQuery(r), (res) => res.rows.some((x) => x.id === r.id))
   );
   if (wanted) {
     starters.push({
-      tone: 'wanted',
-      label: 'Something wanted',
-      q: asQuery(wanted, false),
+      tone: 'untested',
+      label: 'Something untested',
+      q: asQuery(wanted, true),
       d: `${wanted.hw_arch} × ${wanted.model_family} — ${wanted.want_votes || 0} ${(wanted.want_votes || 0) === 1 ? 'vote' : 'votes'}, nobody has solved it`,
-      expect: 'wanted'
+      expect: 'untested'
     });
   }
 
@@ -382,14 +498,14 @@ function findGuaranteedMiss(rows, faceted, ds) {
   if (!model) return null;
 
   const isMiss = (q) => {
-    const res = lookup(rows, q, ds);
+    const res = lookup(rows, q, ds, state.taxonomy);
     return res.miss && res.miss.is_miss && res.miss.reason !== 'no-match' ? true : res.miss && res.miss.is_miss ? true : false;
   };
 
   const starRows = rows.filter((r) => r.model_family === '*' && r.status === 'solved');
   for (const r of starRows) {
     const q = { hw: r.hw_arch, model, runtime: null };
-    const res = lookup(rows, q, ds);
+    const res = lookup(rows, q, ds, state.taxonomy);
     if (res.miss && res.miss.is_miss) return { q, reason: res.miss.reason };
   }
 
@@ -397,7 +513,7 @@ function findGuaranteedMiss(rows, faceted, ds) {
   for (const a of faceted.arches) {
     if (starRows.some((r) => r.hw_arch === a.value)) continue;
     const q = { hw: a.value, model, runtime: null };
-    const res = lookup(rows, q, ds);
+    const res = lookup(rows, q, ds, state.taxonomy);
     if (res.miss && res.miss.is_miss) return { q, reason: res.miss.reason };
   }
 
@@ -542,7 +658,13 @@ function renderResponse(res) {
     }
     parts.push(R.neighbouringNote(relatedRows(res), q));
   } else {
-    parts.push(`<div class="cards">${answers.map((r) => R.cardFor(r, { now, voted })).join('')}</div>`);
+    const groups = SR.groupVariants
+      ? SR.groupVariants(answers)
+      : answers.map((r) => ({ parent: r, variants: [] }));
+    const cardsHtml = R.cardGroup
+      ? groups.map((g) => R.cardGroup(g, { now, voted })).join('')
+      : answers.map((r) => R.cardFor(r, { now, voted })).join('');
+    parts.push(`<div class="cards">${cardsHtml}</div>`);
     // Hardware-level rows always render in their own clearly-labelled section,
     // never mixed in with model answers. One list, deduped by id: with no model
     // asked they arrive in `rows`; with a model asked they arrive in `context`.
@@ -591,7 +713,7 @@ function relatedRows(res) {
   for (const r of res.context || []) list.set(r.id, normalizeRow(r));
   // 2) anything the same card answers for a different model (the qwen3-style rows)
   if (q.hw) {
-    const siblings = lookup(state.rows, { hw: q.hw, limit: 50 }, state.dataset);
+    const siblings = lookup(state.rows, { hw: q.hw, limit: 50 }, state.dataset, state.taxonomy);
     for (const r of siblings.rows || []) if (r.model_family !== '*') list.set(r.id, r);
     for (const r of siblings.context || []) list.set(r.id, r);
   }
@@ -734,8 +856,39 @@ async function renderBrowse() {
   const all = state.rows;
   let rows = all;
 
+  // Coverage at a glance: vendor x count strip
+  if (el.browseCoverage) {
+    const vCounts = new Map();
+    for (const r of all) {
+      if (!r.hw_vendor) continue;
+      vCounts.set(r.hw_vendor, (vCounts.get(r.hw_vendor) || 0) + 1);
+    }
+    const vendors = [...vCounts.entries()].sort((a, b2) => b2[1] - a[1] || a[0].localeCompare(b2[0]));
+    if (vendors.length) {
+      el.browseCoverage.hidden = false;
+      el.browseCoverage.innerHTML = `<span class="coverage-label">Coverage:</span>` +
+        vendors.map(([v, c]) =>
+          `<button type="button" class="chip" data-filter-vendor="${R.esc(v)}" aria-pressed="${b.vendor === v ? 'true' : 'false'}">${R.esc(v)} <span class="n">${R.esc(c)}</span></button>`
+        ).join('');
+      el.browseCoverage.querySelectorAll('[data-filter-vendor]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          b.vendor = b.vendor === btn.dataset.filterVendor ? '' : btn.dataset.filterVendor;
+          renderBrowse();
+        });
+      });
+    } else {
+      el.browseCoverage.hidden = true;
+    }
+  }
+
   if (b.status === 'context') rows = rows.filter((r) => r.model_family === '*');
-  else if (b.status) rows = rows.filter((r) => r.model_family !== '*' && r.status === b.status);
+  else if (b.status === 'untested' || b.status === 'wanted') {
+    rows = rows.filter((r) => r.model_family !== '*' && (r.status === 'untested' || r.status === 'wanted'));
+  } else if (b.status) rows = rows.filter((r) => r.model_family !== '*' && r.status === b.status);
+
+  if (b.vendor) {
+    rows = rows.filter((r) => r.hw_vendor === b.vendor);
+  }
 
   if (b.q) {
     const needle = b.q.toLowerCase();
@@ -751,18 +904,26 @@ async function renderBrowse() {
   rows = sortBrowse(rows, b.sort, b.dir);
 
   el.browseMeta.innerHTML = `<span><strong>${rows.length}</strong> of ${all.length} rows</span>` +
-    (b.status || b.q ? ` <button type="button" class="chip" data-filter-status="" style="min-height:26px;padding:2px 10px">clear filters</button>` : '');
+    (b.status || b.vendor || b.q ? ` <button type="button" class="chip" data-filter-status="" style="min-height:26px;padding:2px 10px">clear filters</button>` : '');
   el.browseResults.innerHTML = R.browseTable(rows, {
     sort: b.sort,
     dir: b.dir,
     now: new Date(),
     voted: state.votes,
-    total: all.length
+    total: all.length,
+    statusFilter: b.status
   });
+  const goLookup = el.browseResults.querySelector('[data-go-lookup]');
+  if (goLookup) {
+    goLookup.addEventListener('click', () => {
+      setView('lookup');
+      if (el.hw) el.hw.focus();
+    });
+  }
 }
 
 function sortBrowse(rows, key, dir) {
-  const rank = { wanted: 0, solved: 1, rejected: 2 };
+  const rank = { untested: 0, wanted: 0, solved: 1, rejected: 2 };
   const val = (r) => {
     switch (key) {
       case 'status':
@@ -925,21 +1086,44 @@ function setupCombobox(input, list, optionsFor) {
 function hwOptions(fieldText) {
   if (!state.facets) return [];
   const needle = fieldText.toLowerCase();
+  const compactNeedle = compactIdToken(fieldText);
   const out = [];
+  const seen = new Set();
   let i = 0;
+
+  // Match hardware aliases from taxonomy when typing
+  const aliasMatches = new Map();
+  if (needle && state.taxonomy && state.taxonomy.hw_aliases) {
+    for (const [alias, target] of Object.entries(state.taxonomy.hw_aliases)) {
+      if (alias.toLowerCase().includes(needle) || (compactNeedle && compactIdToken(alias).includes(compactNeedle))) {
+        if (!aliasMatches.has(target)) aliasMatches.set(target, alias);
+      }
+    }
+  }
+
   for (const v of state.facets.vendors) {
     if (needle) {
       const vendorHit = v.value.includes(needle) || v.label.toLowerCase().includes(needle);
       for (const a of v.arches) {
-        if (vendorHit || a.value.includes(needle) || a.label.toLowerCase().includes(needle)) {
-          out.push({ i: i++, group: v.label, value: a.value, label: a.value, sub: a.label, count: a.count });
+        const aliasHit = aliasMatches.get(a.value);
+        if (vendorHit || a.value.includes(needle) || a.label.toLowerCase().includes(needle) || aliasHit) {
+          seen.add(a.value);
+          const sub = aliasHit ? `${a.label} (alias: ${aliasHit})` : a.label;
+          out.push({ i: i++, group: v.label, value: a.value, label: a.value, sub, count: a.count });
         }
       }
     } else {
       // grouped by vendor (task: hardware is grouped by vendor, shows hw_name)
       for (const a of v.arches) {
+        seen.add(a.value);
         out.push({ i: i++, group: v.label, value: a.value, label: a.value, sub: a.label, count: a.count });
       }
+    }
+  }
+  for (const [target, alias] of aliasMatches.entries()) {
+    if (!seen.has(target)) {
+      seen.add(target);
+      out.push({ i: i++, group: 'Alias match', value: target, label: target, sub: `alias: ${alias}`, count: 0 });
     }
   }
   // Also offer the vendor itself as an option (a wider query).
@@ -954,10 +1138,32 @@ function hwOptions(fieldText) {
 function modelOptions(fieldText) {
   if (!state.facets) return [];
   const needle = fieldText.toLowerCase();
-  return state.facets.models
-    .filter((m) => !needle || m.value.toLowerCase().includes(needle))
-    .map((m, i) => ({ i, value: m.value, label: m.value, sub: '', count: m.count }))
-    .slice(0, 40);
+  const compactNeedle = compactIdToken(fieldText);
+  const aliasMatches = new Map();
+  if (needle && state.taxonomy && Array.isArray(state.taxonomy.models)) {
+    for (const m of state.taxonomy.models) {
+      const aliases = Array.isArray(m.aliases) ? m.aliases : [];
+      const hit = aliases.find((al) => al.toLowerCase().includes(needle) || (compactNeedle && compactIdToken(al).includes(compactNeedle)));
+      if (hit && !aliasMatches.has(m.family)) aliasMatches.set(m.family, hit);
+    }
+  }
+  const seen = new Set();
+  const out = [];
+  let i = 0;
+  for (const m of state.facets.models) {
+    const aliasHit = aliasMatches.get(m.value);
+    if (!needle || m.value.toLowerCase().includes(needle) || aliasHit) {
+      seen.add(m.value);
+      out.push({ i: i++, value: m.value, label: m.value, sub: aliasHit ? `alias: ${aliasHit}` : '', count: m.count });
+    }
+  }
+  for (const [family, alias] of aliasMatches.entries()) {
+    if (!seen.has(family)) {
+      seen.add(family);
+      out.push({ i: i++, value: family, label: family, sub: `alias: ${alias}`, count: 0 });
+    }
+  }
+  return out.slice(0, 40);
 }
 
 /* --------------------------------------------------------------- events */

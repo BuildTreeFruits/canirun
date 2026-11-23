@@ -78,9 +78,10 @@ of MCP server, transport, and capability negotiation buy nothing here.
 |---|---|
 | `solved` + `pointer` | Read the pointer before writing code. It is the existing answer. |
 | `solved` but `source_kind: derived` | Treat as a lead, not a fact: it is a join and may be wrong. Verify by opening the pointer. |
-| `wanted` | Nobody has solved it. Check `want_first` — if it is years old, the gap is real and unclaimed. |
+| `untested` | **Proposed, unverified** — never treat as a verified fact. Check `basis` / `basis_note` separately from `want_votes`. |
 | `rejected` | Read `notes` **first**. It is why the thing fails on this card. Do not retry it. |
-| `miss` (`reason: no-claim` / `no-match`) | Nothing is known. Proceed, and report the miss. |
+| `miss` (`reason: no-claim` / `no-match`) | Nothing is known (`not-searched`). Proceed, and report the miss. |
+| `miss` (`reason: untested-only`) | Only `untested` (proposed, unverified) rows matched. Check `untested_basis` and `want_votes` separately. |
 | `miss` (`reason: partial-context`, `partial: true`) | The *card* is supported but no model-specific claim exists. The context rows are hardware facts, not a "yes". |
 | `miss` (`reason: rejected-only`) | Someone tried and it fails. Read the rejection row before proceeding. |
 
@@ -90,15 +91,19 @@ old `as_of` means "nobody has looked recently", not "impossible".
 ## 5. The ids
 
 `id = <hw_vendor>/<hw_arch>/<model_family>/<runtime_slug>` with dots flattened to `_` inside
-id segments — `nvidia/sm_86/qwen3/llama_cpp`. To vote for a combination that does not exist yet,
-construct the id the same way and `POST /api/want/<id>`; the pipeline folds it into a wanted row.
+id segments — `nvidia/sm_86/qwen3/llama_cpp`. Variants add a 5th segment: `<parent_id>/@<variant_slug>`
+(from `parent` + knobs `quant`, `offload`, `context_length`, `runtime_version`, `driver_version`, `flags`, `fits`).
+To vote for a combination that does not exist yet, construct the id the same way and `POST /api/want/<id>`;
+the pipeline folds it into an `untested` row.
 
 ## 6. Cheat sheet
 
 ```bash
 curl -s "$BASE/api/lookup?hw=sm_86&model=qwen3"        # the tool
 curl -s "$BASE/api/lookup?hw=sm_86&model=qwen3&log=1"  # ...and log the miss if it is one
-curl -s "$BASE/api/wanted"                              # what the world is asking for
+curl -s "$BASE/api/untested"                            # proposed, unverified & wanted combos
+curl -s "$BASE/api/wanted"                              # alias for /api/untested
+curl -s "$BASE/llms.txt"                                # concise agent/LLM index
 curl -s "$BASE/api/export.jsonl"                        # full dump, ETag/304, mirror it
 curl -s "$BASE/api/docs"                                # the human version of this file
 ```

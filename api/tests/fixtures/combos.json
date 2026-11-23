@@ -4,7 +4,7 @@
   "by_status": {
    "rejected": 1,
    "solved": 6,
-   "wanted": 1
+   "untested": 1
   }
  },
  "generated_at": "2026-11-20T00:00:00Z",
@@ -163,6 +163,8 @@
   },
   {
    "as_of": "2026-11-20",
+   "basis": "docs-claim",
+   "basis_note": "issue mentions sm_120 support",
    "created_by": "hand",
    "evidence": [
     {
@@ -194,7 +196,7 @@
    "runtime": "llama.cpp",
    "runtime_rev": null,
    "source_kind": "hand",
-   "status": "wanted",
+   "status": "untested",
    "updated": "2026-11-20",
    "want_first": "2026-10-01",
    "want_requesters": [
@@ -1011,6 +1013,8 @@
  "wanted": [
   {
    "as_of": "2026-11-20",
+   "basis": "docs-claim",
+   "basis_note": "issue mentions sm_120 support",
    "created_by": "hand",
    "evidence": [
     {
@@ -1042,7 +1046,7 @@
    "runtime": "llama.cpp",
    "runtime_rev": null,
    "source_kind": "hand",
-   "status": "wanted",
+   "status": "untested",
    "updated": "2026-11-20",
    "want_first": "2026-10-01",
    "want_requesters": [

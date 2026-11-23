@@ -30,7 +30,11 @@ ROWS_CONTRACT_VERSION = "1"
 # Enumerations (CONTRACT §1)
 # ---------------------------------------------------------------------------
 
-STATUSES = ("solved", "wanted", "rejected")
+STATUSES = ("solved", "untested", "rejected")
+BASIS_VALUES = ("docs-claim", "analogy", "author-says", "mine")
+FITS_VALUES = ("writing", "coding", "tools", "long-context", "multimodal", "speed")
+VARIANT_KNOBS = ("quant", "context_length", "offload", "runtime_version", "driver_version", "flags", "fits")
+VARIANT_SLUG_RE = re.compile(r"^@[a-z0-9][a-z0-9_-]*$")
 SOURCE_KINDS = ("scraped", "derived", "hand", "author-claim")
 CREATED_BY = ("scraper", "derived", "hand", "vote", "miss")
 EVIDENCE_KINDS = ("upstream-doc", "package-table", "model-repo", "release", "issue", "community")
@@ -231,12 +235,91 @@ def derive_id(hw_vendor: Any, hw_arch: Any, model_family: Any, runtime: Any) -> 
     return "/".join(segs)
 
 
-def parse_id(row_id: Any) -> Dict[str, str]:
-    """Inverse of derive_id (approximate: dotted segments are not recoverable)."""
-    if not isinstance(row_id, str) or row_id.count("/") != 3:
-        raise IdError([f"id: {row_id!r} is not of the form vendor/arch/model/runtime"])
-    vendor, arch, model, runtime = row_id.split("/")
-    return {"hw_vendor": vendor, "hw_arch": arch, "model_family": model, "runtime": runtime}
+def derive_variant_slug(row: Mapping[str, Any]) -> Optional[str]:
+    """Derive deterministic variant slug (without '@') in fixed knob order."""
+    parts: List[str] = []
+
+    quant = row.get("quant")
+    if quant is not None and str(quant).strip():
+        q = re.sub(r"[^a-z0-9]", "", str(quant).strip().lower())
+        if q:
+            parts.append(q)
+
+    offload = row.get("offload")
+    if offload is not None and str(offload).strip():
+        off = re.sub(r"[^a-z0-9]", "", str(offload).strip().lower())
+        if off:
+            parts.append(off)
+
+    cl = row.get("context_length")
+    if cl is not None and not isinstance(cl, bool):
+        try:
+            cl_int = int(cl)
+            if cl_int > 0:
+                parts.append(f"c{cl_int}")
+        except (TypeError, ValueError):
+            pass
+
+    rv = row.get("runtime_version")
+    if rv is not None and str(rv).strip():
+        rv_slug = re.sub(r"[^a-z0-9_-]", "", str(rv).strip().lower().replace(".", "_"))
+        if rv_slug:
+            parts.append(f"rv-{rv_slug}")
+
+    drv = row.get("driver_version")
+    if drv is not None and str(drv).strip():
+        drv_slug = re.sub(r"[^a-z0-9_-]", "", str(drv).strip().lower().replace(".", "_"))
+        if drv_slug:
+            parts.append(f"drv-{drv_slug}")
+
+    flags = row.get("flags")
+    if flags is not None and str(flags).strip():
+        fl_slug = re.sub(r"[^a-z0-9]+", "-", str(flags).strip().lower()).strip("-")
+        if fl_slug:
+            parts.append(f"f-{fl_slug}")
+
+    fits = row.get("fits")
+    if fits is not None and str(fits).strip():
+        parts.append(f"fit-{str(fits).strip().lower()}")
+
+    return "-".join(parts) if parts else None
+
+
+def derive_variant_id(parent_id: str, variant_slug: str) -> str:
+    """Return canonical 5-segment variant id `{parent_id}/@{slug}`."""
+    slug = variant_slug.lstrip("@")
+    return f"{parent_id}/@{slug}"
+
+
+def parse_id(row_id: Any) -> Dict[str, Any]:
+    """Inverse of derive_id (approximate: dotted segments are not recoverable).
+
+    Accepts both 4-segment base IDs (`vendor/arch/model/runtime`) and
+    5-segment variant IDs (`vendor/arch/model/runtime/@slug`).
+    """
+    if not isinstance(row_id, str):
+        raise IdError([f"id: {row_id!r} is not a string"])
+    segs = row_id.split("/")
+    if len(segs) == 4:
+        vendor, arch, model, runtime = segs
+        return {
+            "hw_vendor": vendor,
+            "hw_arch": arch,
+            "model_family": model,
+            "runtime": runtime,
+            "variant": None,
+        }
+    if len(segs) == 5 and VARIANT_SLUG_RE.match(segs[4]):
+        vendor, arch, model, runtime, variant = segs
+        return {
+            "hw_vendor": vendor,
+            "hw_arch": arch,
+            "model_family": model,
+            "runtime": runtime,
+            "parent": "/".join(segs[:4]),
+            "variant": variant,
+        }
+    raise IdError([f"id: {row_id!r} is not of the form vendor/arch/model/runtime[/@slug]"])
 
 
 # ---------------------------------------------------------------------------
@@ -264,6 +347,8 @@ _KNOWN_FIELDS = (
     "pointer", "notes", "measurement", "pointer_alive",
     "as_of", "reported_by", "first_seen", "updated",
     "want_votes", "want_first", "want_requesters",
+    "basis", "basis_note", "parent",
+    "context_length", "offload", "runtime_version", "driver_version", "flags", "fits",
     "evidence", "missing", "created_by", "sources", "vocabulary", "missing_fixed",
     "resolves_no_claim", "miss_reports", "markers_complete",
 )
@@ -612,16 +697,44 @@ def canonicalize(
     vocab = src.get("vocabulary")
     row["vocabulary"] = vocab if isinstance(vocab, list) else []
 
+    # --- untested / variant fields ----------------------------------------
+    basis = _clean_str(src.get("basis"))
+    row["basis"] = basis.lower() if basis else None
+    row["basis_note"] = _clean_str(src.get("basis_note"))
+    row["parent"] = _clean_str(src.get("parent"))
+
+    cl_raw = src.get("context_length")
+    if cl_raw is None or cl_raw == "":
+        row["context_length"] = None
+    elif isinstance(cl_raw, bool):
+        row["context_length"] = cl_raw
+    else:
+        try:
+            row["context_length"] = int(str(cl_raw).strip())
+        except (TypeError, ValueError):
+            row["context_length"] = cl_raw
+
+    row["offload"] = _clean_str(src.get("offload"))
+    row["runtime_version"] = _clean_str(src.get("runtime_version"))
+    row["driver_version"] = _clean_str(src.get("driver_version"))
+    row["flags"] = _clean_str(src.get("flags"))
+    fits = _clean_str(src.get("fits"))
+    row["fits"] = fits.lower() if fits else None
+
     # --- id ---------------------------------------------------------------
     given_id = _clean_str(src.get("id"))
     if given_id:
         row["id"] = given_id
     elif assign_id:
-        try:
-            row["id"] = derive_id(row["hw_vendor"], row["hw_arch"],
-                                  row["model_family"], row["runtime"])
-        except IdError:
-            row["id"] = None
+        if row["parent"] is not None:
+            slug = derive_variant_slug(row)
+            row["id"] = derive_variant_id(row["parent"], slug) if slug else None
+        else:
+            try:
+                row["id"] = derive_id(row["hw_vendor"], row["hw_arch"],
+                                      row["model_family"], row["runtime"])
+            except IdError:
+                row["id"] = None
     else:
         row["id"] = None
 
@@ -794,23 +907,67 @@ def validate(
             and model_family != "*":
         errs.append("invariant 3: source_kind 'derived' requires missing to be non-empty")
 
-    # -- invariant 4: wanted rows are voted ------------------------------
-    if status == "wanted":
-        if not (_is_int(want_votes) and want_votes >= 1):
-            errs.append("invariant 4: status 'wanted' requires want_votes >= 1")
-        if not want_first:
-            errs.append("invariant 4: status 'wanted' requires a non-null want_first")
+    # -- invariant 4: untested rows (basis + optional votes) ---------------
+    basis = row.get("basis")
+    created_by = row.get("created_by")
+    if status == "untested":
+        if created_by not in ("vote", "miss") and basis not in BASIS_VALUES:
+            errs.append(
+                f"invariant 4: status 'untested' requires basis in {BASIS_VALUES} "
+                f"when created_by={created_by!r}"
+            )
+        if basis is not None and basis not in BASIS_VALUES:
+            errs.append(f"invariant 4: basis {basis!r} not in {BASIS_VALUES}")
+        if not (_is_int(want_votes) and want_votes >= 0):
+            errs.append("invariant 4: status 'untested' requires want_votes >= 0")
+        if _is_int(want_votes) and want_votes >= 1 and not want_first:
+            errs.append("invariant 4: status 'untested' with want_votes >= 1 requires a non-null want_first")
 
     # -- invariant 5: rejected rows explain themselves -------------------
     if status == "rejected" and not notes:
         errs.append("invariant 5: status 'rejected' requires notes explaining why")
 
-    # -- invariant 6: runtime_rev is never a floating ref -----------------
+    # -- invariant 6: runtime_rev / runtime_version never floating refs ----
     rev = row.get("runtime_rev")
     if rev == "":
         errs.append("invariant 6: runtime_rev is empty (must be null or a pinned ref)")
     elif isinstance(rev, str) and rev.lower() in BANNED_RUNTIME_REVS:
         errs.append(f"invariant 6: runtime_rev {rev!r} is a floating ref (latest/master/main/HEAD/empty)")
+    rver = row.get("runtime_version")
+    if rver == "":
+        errs.append("invariant 6: runtime_version is empty (must be null or a pinned ref)")
+    elif isinstance(rver, str) and rver.lower() in BANNED_RUNTIME_REVS:
+        errs.append(f"invariant 6: runtime_version {rver!r} is a floating ref (latest/master/main/HEAD/empty)")
+
+    # -- variant invariants ------------------------------------------------
+    fits = row.get("fits")
+    if fits is not None and fits not in FITS_VALUES:
+        errs.append(f"variant: fits {fits!r} not in {FITS_VALUES}")
+
+    cl = row.get("context_length")
+    if cl is not None and (not _is_int(cl) or cl <= 0):
+        errs.append(f"variant: context_length {cl!r} must be a positive integer")
+
+    parent = row.get("parent")
+    if parent is not None:
+        if not isinstance(parent, str):
+            errs.append("variant: parent must be a string")
+        else:
+            if parent == row_id:
+                errs.append("variant: parent cannot equal row id (self-reference)")
+            try:
+                p_parts = parse_id(parent)
+                if p_parts.get("variant") is not None:
+                    errs.append(f"variant: parent {parent!r} must be a 4-segment base id")
+            except IdError as exc:
+                errs.extend(f"variant: {e}" for e in exc.errors)
+
+        has_knob = any(
+            row.get(k) is not None and str(row.get(k)).strip() != ""
+            for k in VARIANT_KNOBS
+        )
+        if not has_knob:
+            errs.append("invariant 10: variant row requires at least one distinguishing knob")
 
     # -- invariant 9: a "*" row always declares the model gap --------------
     if model_family == "*" and "model" not in (missing or []):
@@ -829,6 +986,12 @@ def validate(
     if row_id is not None:
         if not isinstance(row_id, str):
             errs.append("id must be a string")
+        elif parent is not None:
+            slug = derive_variant_slug(row)
+            if isinstance(parent, str) and slug:
+                expected_var_id = derive_variant_id(parent, slug)
+                if row_id != expected_var_id:
+                    errs.append(f"invariant 8: variant id {row_id!r} != derived {expected_var_id!r}")
         elif all(v is not None for v in (hw_vendor, hw_arch, model_family, runtime)):
             try:
                 expected = derive_id(hw_vendor, hw_arch, model_family, runtime)
@@ -882,10 +1045,12 @@ def base_score(row: Mapping[str, Any]) -> int:
 
 
 __all__ = [
-    "ROWS_CONTRACT_VERSION", "STATUSES", "SOURCE_KINDS", "SOURCE_KIND_RANK",
+    "ROWS_CONTRACT_VERSION", "STATUSES", "BASIS_VALUES", "FITS_VALUES",
+    "VARIANT_KNOBS", "VARIANT_SLUG_RE", "SOURCE_KINDS", "SOURCE_KIND_RANK",
     "CREATED_BY", "EVIDENCE_KINDS", "HW_VENDORS", "BANNED_RUNTIME_REVS",
     "RowError", "IdError", "now", "today", "parse_date",
-    "derive_id", "parse_id", "slugify_vendor", "slugify_arch", "slugify_model",
+    "derive_id", "derive_variant_slug", "derive_variant_id", "parse_id",
+    "slugify_vendor", "slugify_arch", "slugify_model",
     "model_id_segment", "slugify_runtime", "runtime_id_segment",
     "canonicalize", "enumerate_missing", "validate", "validate_errors",
     "is_valid", "base_score",

@@ -81,9 +81,10 @@ ROWS = [
         pointer="https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/SYCL.md",
         evidence=[EV("https://github.com/ggml-org/llama.cpp/blob/master/docs/backend/SYCL.md",
                      "Intel Arc B580", "upstream-doc")]),
-    # --- wanted row -------------------------------------------------------
-    row(status="wanted", source_kind="hand", hw_vendor="nvidia", hw_arch="sm_120",
+    # --- untested row -----------------------------------------------------
+    row(status="untested", source_kind="hand", hw_vendor="nvidia", hw_arch="sm_120",
         hw_name="RTX 5090", model_family="deepseek-v4", runtime="llama.cpp", runtime_rev=None,
+        basis="docs-claim", basis_note="issue mentions sm_120 support",
         want_votes=3, want_first="2026-10-01", want_requesters=["gh:alice", "gh:bob", "gh:carol"],
         missing=["hw"], notes=None,
         evidence=[EV("https://github.com/ggml-org/llama.cpp/issues/1", "anyone got sm_120 working?",
@@ -133,7 +134,7 @@ def main():
         "counts": {"by_status": counts},
         "taxonomy": taxonomy,
         "rows": sorted(ROWS, key=lambda r: r["id"]),
-        "wanted": [r for r in ROWS if r["status"] == "wanted"],
+        "wanted": [r for r in ROWS if r["status"] == "untested"],
     }
     with open(os.path.join(FIX, "combos.json"), "w", encoding="utf-8") as fh:
         json.dump(combos, fh, ensure_ascii=True, indent=1, sort_keys=True)

@@ -103,7 +103,7 @@ def wanted_rows(rows: Iterable[Mapping[str, Any]]) -> List[Dict[str, Any]]:
     attracted demand -- CONTRACT: a solved row is never downgraded, but the
     interest in it is real and belongs on the wanted board)."""
     out = [dict(r) for r in rows
-           if r.get("status") == "wanted" or (r.get("want_votes") or 0) > 0]
+           if r.get("status") == "untested" or (r.get("want_votes") or 0) > 0]
     out.sort(key=wanted_sort_key)
     return out
 

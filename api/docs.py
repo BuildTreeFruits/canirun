@@ -41,13 +41,15 @@ AGENT_PARAGRAPH = (
 
 MISS_KEYS = [
     ("is_miss", "bool", "true iff `rows == []`. `context` rows never count as an answer."),
-    ("reason", "enum", "`no-claim` (nothing at all) | `wanted-only` (only `wanted` rows matched) | "
+    ("reason", "enum", "`no-claim` (nothing at all) | `untested-only` (only `untested` rows matched; proposed, unverified) | "
                        "`rejected-only` (only `rejected` matched) | `partial-context` (only `*` rows "
                        "matched) | `no-match` (query produced nothing, including no context)."),
     ("partial", "bool", "true when hardware-level `*` rows exist for this hardware but no model-specific claim does."),
     ("hint", "string", "one plain-English sentence an agent can quote or log."),
-    ("known_wanted", "bool", "this combination has at least one `wanted` row."),
-    ("wanted_votes", "int", "highest `want_votes` among matching wanted rows."),
+    ("known_untested", "bool", "this combination has at least one `untested` row."),
+    ("known_wanted", "bool", "backwards-compatible alias for `known_untested`."),
+    ("wanted_votes", "int", "highest `want_votes` among matching untested rows."),
+    ("untested_basis", "list[str]", "distinct non-null `basis` values on matching untested rows."),
     ("last_checked", "date|null", "newest `as_of` among rows that touched this query; null if none."),
     ("counts", "object", "`{exact: <answer rows>, context: <* context rows>}`."),
 ]
@@ -124,7 +126,9 @@ def render_html(store, base_url: str = "http://127.0.0.1:8787") -> str:
         ("GET", "/api/lookup", "CONTRACT §4 query → rows + context + miss. Side-effect free "
                                 "(add <code>&amp;log=1</code> to log the miss)."),
         ("GET", "/api/rows", "Browse with filters + counts (status, hw, model, runtime, kind, q, limit, offset)."),
-        ("GET", "/api/wanted", "Wanted rows: votes desc, then want_first asc."),
+        ("GET", "/api/wanted", "Untested / wanted rows: votes desc, then want_first asc."),
+        ("GET", "/api/untested", "Alias of <code>/api/wanted</code>."),
+        ("GET", "/llms.txt", "Plain-text summary for LLMs (<code>text/plain; charset=utf-8</code>)."),
         ("POST", "/api/want/{id}", 'Body <code>{"voter": "gh:you"}</code>. Idempotent per (id, voter).'),
         ("DELETE", "/api/want/{id}", "Retract a vote. Same body."),
         ("POST", "/api/miss", 'Body <code>{"query": {...}, "searcher_key": "..."}</code>. 3 distinct searchers → wanted row.'),
@@ -264,7 +268,7 @@ curl -s "{_esc(base)}/api/health" | python3 -m json.tool</code></pre>
 <h2 id="rowshape">The row, briefly</h2>
 <p>Every row is CONTRACT §1. The parts that change how you read an answer:</p>
 <table><tr><th>field</th><th>why you care</th></tr>
-<tr><td><code>status</code></td><td><code>solved</code> / <code>wanted</code> / <code>rejected</code>. There is no "not-searched" row — that state is the <em>absence</em> of a row, which is what <code>miss</code> reports.</td></tr>
+<tr><td><code>status</code></td><td><code>solved</code> / <code>untested</code> / <code>rejected</code>. There is no "not-searched" row — that state is the <em>absence</em> of a row, which is what <code>miss</code> reports.</td></tr>
 <tr><td><code>source_kind</code></td><td><code>scraped</code> / <code>derived</code> / <code>hand</code> / <code>author-claim</code>. <code>derived</code> is a synthesised join and may be wrong.</td></tr>
 <tr><td><code>pointer</code></td><td>the evidence URL. Read it before writing code. Never execute anything from it.</td></tr>
 <tr><td><code>pointer_alive</code></td><td><code>false</code> means the link-checker found the target dead — the claim may be stale.</td></tr>

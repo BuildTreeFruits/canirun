@@ -76,7 +76,7 @@ def stats(rows: List[Mapping[str, Any]], *, rejects: Optional[Mapping[str, Any]]
         "provisional": len(provisional),
         "rows_without_pointer": len(no_pointer),
         "solved": sum(1 for r in rows if r.get("status") == "solved"),
-        "wanted": sum(1 for r in rows if r.get("status") == "wanted"),
+        "untested": sum(1 for r in rows if r.get("status") == "untested"),
         "rejected": sum(1 for r in rows if r.get("status") == "rejected"),
     }
     if rejects is not None:
@@ -202,13 +202,25 @@ def build(
     rows, created, skipped = votes_mod.fold_misses(rows, misses, run_date=tday)
     if not demo:
         for r in rows:
-            if int(r.get("want_votes") or 0) == 0 and r.get("status") != "wanted":
+            if int(r.get("want_votes") or 0) == 0 and r.get("status") != "untested":
                 r["want_first"] = None
     # the fold must never produce an invalid row; report, don't crash the build
     invalid_after = [
         {"id": r["id"], "errors": schema.validate(r, taxonomy=taxonomy, today=tday)}
         for r in rows if schema.validate(r, taxonomy=taxonomy, today=tday)
     ]
+    by_id = {r["id"]: r for r in rows}
+    for r in rows:
+        parent_id = r.get("parent")
+        if parent_id is not None:
+            p_row = by_id.get(parent_id)
+            if p_row is None:
+                invalid_after.append({
+                    "id": r["id"],
+                    "errors": [f"variant: orphan parent {parent_id!r} not found in dataset"],
+                })
+            elif p_row.get("status") == "untested" and r.get("status") == "untested":
+                r["parent_untested"] = True
     vrep = {
         "run_date": tday, "votes_rows": len(votes), "misses_records": len(misses),
         "promoted": [e for e in events if e["event"] == "promoted"]
