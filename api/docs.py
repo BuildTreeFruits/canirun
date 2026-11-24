@@ -205,10 +205,10 @@ returns <code>reason: "partial-context"</code>, <code>partial: true</code> and t
 
 <h2 id="write">Votes and miss reports</h2>
 <h3>POST /api/want/{{id}} — idempotent per voter</h3>
-<pre><code>curl -s -X POST {_esc(base)}/api/want/nvidia/sm_120/deepseek-v4/llama.cpp \\
+<pre><code>curl -s -X POST {_esc(base)}/api/want/nvidia/sm_120/deepseek-v4/llama_cpp \\
   -H 'Content-Type: application/json' \\
   -d '{{"voter": "gh:yourhandle"}}'
-# → {{"id": "nvidia/sm_120/deepseek-v4/llama.cpp", "want_votes": 1, "want_first": "2026-11-22", "voted": true}}
+# → {{"id": "nvidia/sm_120/deepseek-v4/llama_cpp", "want_votes": 1, "want_first": "2026-11-22", "voted": true}}
 # repeat the same call → same want_votes. Different voter → +1. DELETE retracts.</code></pre>
 <p class="note">Rate limit: 20 writes/min per IP. The count is the size of the requester set, so a
 double-click cannot inflate a row. A vote works even for an id the pipeline has not exported yet —

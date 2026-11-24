@@ -308,14 +308,21 @@ function renderChrome() {
   });
   if (!apiOk && state.browse.sort === 'want_votes') {
     state.browse.sort = 'status';
-    if (el.browseSort) el.browseSort.value = 'status';
+    const browseSort = $('#browse-sort');
+    if (browseSort) browseSort.value = 'status';
   }
   $$('[data-href-api]').forEach((a) => {
     if (!apiOk) {
-      const key = a.dataset.hrefApi;
-      a.setAttribute('aria-disabled', 'true');
-      a.title = 'The API is not available in this hosting mode (static export).';
-      if (key === 'lookup' || key === 'docs') a.href = '#';
+      const staticHref = a.dataset.hrefStatic;
+      if (staticHref && state.source === 'static') {
+        a.href = staticHref;
+        a.removeAttribute('aria-disabled');
+        a.removeAttribute('title');
+      } else {
+        a.setAttribute('aria-disabled', 'true');
+        a.title = 'Not available in offline snapshot mode.';
+        a.href = '#';
+      }
     }
   });
 
@@ -586,7 +593,7 @@ async function performLookup(q, { push = true } = {}) {
   el.results.innerHTML = R.loading('Looking…');
   let response;
   try {
-    response = await getLookup(clean);
+    response = await getLookup(clean, { taxonomy: state.taxonomy });
   } catch (err) {
     el.results.innerHTML = R.loadError({ message: err.message });
     return;
@@ -618,9 +625,9 @@ function renderResponse(res) {
   const hlCount = hardwareLevel.length + context.length;
   const countText = res.miss
     ? `no model claims${hlCount ? ` · ${hlCount} hardware-level` : ''}`
-    : askedModel
+    : answers.length
       ? `${answers.length} ${answers.length === 1 ? 'claim' : 'claims'}${hlCount ? ` · ${hlCount} hardware-level` : ''}`
-      : `${answers.length + hlCount} hardware-level ${answers.length + hlCount === 1 ? 'claim' : 'claims'}`;
+      : `${hlCount} hardware-level ${hlCount === 1 ? 'claim' : 'claims'}`;
   parts.push(`<div class="results-head">
     <h2>${R.esc(headline)}</h2>
     <span class="count">${R.esc(countText)}</span>
@@ -639,13 +646,18 @@ function renderResponse(res) {
     }
     parts.push(R.neighbouringNote(relatedRows(res), q));
   } else {
-    const groups = SR.groupVariants
-      ? SR.groupVariants(answers)
-      : answers.map((r) => ({ parent: r, variants: [] }));
-    const cardsHtml = R.cardGroup
-      ? groups.map((g) => R.cardGroup(g, { now, voted, apiMode })).join('')
-      : answers.map((r) => R.cardFor(r, { now, voted, apiMode })).join('');
-    parts.push(`<div class="cards">${cardsHtml}</div>`);
+    let cardsHtml;
+    if (SR.groupVariants && R.cardGroup) {
+      const grouped = SR.groupVariants(answers);
+      const parentCards = (grouped.parents || []).map((g) =>
+        R.cardGroup({ parent: g.row, variants: g.variants }, { now, voted, apiMode })
+      );
+      const orphanCards = (grouped.orphans || []).map((r) => R.cardFor(r, { now, voted, apiMode }));
+      cardsHtml = [...parentCards, ...orphanCards].join('');
+    } else {
+      cardsHtml = answers.map((r) => R.cardFor(r, { now, voted, apiMode })).join('');
+    }
+    if (cardsHtml) parts.push(`<div class="cards">${cardsHtml}</div>`);
     // Hardware-level rows always render in their own clearly-labelled section,
     // never mixed in with model answers. One list, deduped by id: with no model
     // asked they arrive in `rows`; with a model asked they arrive in `context`.
@@ -673,7 +685,7 @@ function renderResponse(res) {
 
   el.results.innerHTML = parts.join('');
   el.results.querySelector('.miss')?.focus({ preventScroll: true });
-  announce(res.miss ? `Miss: ${res.miss.reason}. ${R.esc('')}` : `${answers.length} claims found`);
+  announce(res.miss ? `Miss: ${res.miss.reason}.` : `${answers.length + hlCount} claims found`);
 }
 
 /** Rows for the "related" hint under a miss: same hw, any model. */
@@ -879,7 +891,7 @@ async function renderBrowse() {
   rows = sortBrowse(rows, b.sort, b.dir);
 
   el.browseMeta.innerHTML = `<span><strong>${rows.length}</strong> of ${all.length} rows</span>` +
-    (b.status || b.vendor || b.q ? ` <button type="button" class="chip" data-filter-status="" style="min-height:26px;padding:2px 10px">clear filters</button>` : '');
+    (b.status || b.vendor || b.q ? ` <button type="button" class="chip" data-clear-browse style="min-height:26px;padding:2px 10px">clear filters</button>` : '');
   el.browseResults.innerHTML = R.browseTable(rows, {
     sort: b.sort,
     dir: b.dir,
@@ -933,8 +945,10 @@ function sortBrowse(rows, key, dir) {
     if (numeric) c = va - vb;
     else c = String(va).localeCompare(String(vb));
     if (c) return c * sign;
-    // Wanted: votes desc then want_first asc (CONTRACT), inside any sort.
-    if (a.status === 'wanted' && b.status === 'wanted') {
+    // Wanted / untested: votes desc then want_first asc (CONTRACT), inside any sort.
+    const aUntested = a.status === 'wanted' || a.status === 'untested';
+    const bUntested = b.status === 'wanted' || b.status === 'untested';
+    if (aUntested && bUntested) {
       const dv = (b.want_votes || 0) - (a.want_votes || 0);
       if (dv) return dv;
       return String(a.want_first || '').localeCompare(String(b.want_first || ''));
@@ -1217,6 +1231,18 @@ function bindEvents() {
 
   // browse controls
   document.addEventListener('click', (e) => {
+    if (e.target.closest('[data-clear-browse]')) {
+      state.browse.status = '';
+      state.browse.vendor = '';
+      state.browse.q = '';
+      if (el.browseQ) el.browseQ.value = '';
+      $$('[data-filter-status]', $('#browse-toolbar')).forEach((c) =>
+        c.setAttribute('aria-pressed', String((c.dataset.filterStatus || '') === ''))
+      );
+      writeBrowseHash();
+      renderBrowse();
+      return;
+    }
     const chip = e.target.closest('[data-filter-status]');
     if (chip && $('#browse-toolbar').contains(chip)) {
       state.browse.status = chip.dataset.filterStatus || '';
@@ -1396,9 +1422,9 @@ function bindEvents() {
       if (next >= 0 && next < cards.length) cards[next].focus();
     }
 
-    // "w" votes on the focused wanted card.
+    // "w" votes on the focused wanted / untested card.
     if ((e.key === 'w' || e.key === 'W') && !typing && !e.metaKey && !e.ctrlKey) {
-      const card = document.activeElement?.closest?.('.card[data-state="wanted"]');
+      const card = document.activeElement?.closest?.('.card[data-state="wanted"], .card[data-state="untested"]');
       if (card) {
         const btn = card.querySelector('[data-vote]');
         if (btn) {

@@ -114,7 +114,8 @@ async function getLookup(query, opts = {}) {
   }
 
   const data = await loadRowsWithSnapshotFallback(prefer, opts);
-  const res = lookup(data.rows, q, data.dataset, { datasetSource: data.source });
+  const tax = opts.taxonomy || data.taxonomy || (await loadTaxonomy(opts).catch(() => null));
+  const res = lookup(data.rows, q, data.dataset, tax, { datasetSource: data.source });
   res.dataset = { ...res.dataset, source: data.source, source_url: data.dataset.source_url };
   res.all_rows = data.rows;
   return res;
@@ -175,6 +176,7 @@ function loadSnapshot() {
   const { rows, dataset } = normalizeData(raw);
   return {
     rows,
+    taxonomy: raw.taxonomy || null,
     dataset: {
       ...datasetFromRows(rows),
       ...dataset,
@@ -185,8 +187,11 @@ function loadSnapshot() {
   };
 }
 
+let taxonomyCache = null;
+
 function clearStaticCache() {
   staticCache = null;
+  taxonomyCache = null;
 }
 
 /**
@@ -257,7 +262,8 @@ async function reportMiss({ query, searcher_key }, { signal } = {}) {
  */
 const TAXONOMY_URLS = ['api/taxonomy', '../data/taxonomy.json', 'data/taxonomy.json'];
 
-async function loadTaxonomy({ signal } = {}) {
+async function loadTaxonomy({ signal, force = false } = {}) {
+  if (taxonomyCache && !force) return taxonomyCache;
   for (const url of TAXONOMY_URLS) {
     try {
       const res = await fetch(url, { cache: 'no-store', signal });
@@ -265,7 +271,10 @@ async function loadTaxonomy({ signal } = {}) {
       const json = await res.json();
       // /api/taxonomy may wrap the file; accept either shape.
       const tax = json && json.hw_archs ? json : json && json.taxonomy && json.taxonomy.hw_archs ? json.taxonomy : null;
-      if (tax) return tax;
+      if (tax) {
+        taxonomyCache = tax;
+        return tax;
+      }
     } catch {
       /* try next */
     }

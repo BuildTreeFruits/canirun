@@ -84,7 +84,8 @@ const REASON_META = {
 
 function stateChip(state, { small = false } = {}) {
   const m = STATE_META[state] || STATE_META.miss;
-  return `<span class="state-chip"${small ? ' style="font-size:0.72rem"' : ''}>
+  const st = STATE_META[state] ? state : 'miss';
+  return `<span class="state-chip" data-state="${attr(st)}"${small ? ' style="font-size:0.72rem"' : ''}>
     <span class="glyph" aria-hidden="true">${m.glyph}</span>${esc(m.label)}</span>`;
 }
 
@@ -547,7 +548,7 @@ function missPanel(response, { now = new Date(), payload, apiMode = false }) {
   // attached, trust the rows. A counter that contradicts the sentence is worse
   // than no counter at all — this product's whole claim is that it doesn't lie.
   const attached = Array.isArray(response.context) ? response.context.length
-    : Array.isArray(response.hardware_level) ? response.hardware_level : 0;
+    : Array.isArray(response.hardware_level) ? response.hardware_level.length : 0;
   const counts = {
     exact: Math.max(0, (miss.counts && miss.counts.exact) || 0),
     context: Math.max((miss.counts && miss.counts.context) || 0, attached)
@@ -694,7 +695,7 @@ function browseTable(rows, { sort, dir, now, voted = new Set(), total = rows.len
   const body = rows
     .map((r) => {
       const state = r.model_family === '*' ? 'context' : r.status;
-      const isWanted = state === 'wanted';
+      const isWanted = state === 'wanted' || state === 'untested';
       const age = isWanted ? ageOf(r.want_first, now) : null;
       return `<tr data-status="${attr(r.status || '')}" class="${r.model_family === '*' ? 'is-context' : ''}">
         <td class="c-status">${stateChip(state)}</td>

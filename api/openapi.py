@@ -15,7 +15,7 @@ ROW_SCHEMA = {
     "required": ["id", "status", "source_kind", "hw_vendor", "hw_arch", "model_family",
                  "runtime", "as_of", "reported_by", "pointer_alive", "want_votes"],
     "properties": {
-        "id": {"type": "string", "example": "nvidia/sm_86/qwen3/llama.cpp",
+        "id": {"type": "string", "example": "nvidia/sm_86/qwen3/llama_cpp",
                "description": "canonical id: {hw_vendor}/{hw_arch}/{model_family}/{runtime} (CONTRACT §2)"},
         "status": {"type": "string", "enum": ["solved", "untested", "rejected"]},
         "basis": {"type": ["string", "null"], "enum": ["docs-claim", "analogy", "author-says", "mine", None]},
@@ -138,7 +138,7 @@ LOOKUP_PARAMS = [
     {"name": "runtime", "in": "query", "schema": {"type": "string"},
      "description": "runtime slug in either spelling -- llama.cpp or llama_cpp -- then display name"},
     {"name": "status", "in": "query", "schema": {"type": "string",
-                                                 "enum": ["solved", "wanted", "rejected"]}},
+                                                 "enum": ["solved", "untested", "rejected"]}},
     {"name": "kind", "in": "query", "schema": {"type": "string",
                                                "enum": ["scraped", "derived", "hand", "author-claim"]},
      "description": "source_kind filter"},

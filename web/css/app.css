@@ -583,9 +583,17 @@ main { padding-bottom: 70px; }
 }
 .card:focus-visible { outline-offset: 3px; }
 .card[data-state="solved"] { --st: var(--st-solved); --st-bg: var(--st-solved-bg); --st-line: var(--st-solved-line); border-left-color: var(--st-solved); }
-.card[data-state="wanted"] { --st: var(--st-wanted); --st-bg: var(--st-wanted-bg); --st-line: var(--st-wanted-line); border-left-color: var(--st-wanted); }
+.card[data-state="wanted"],
+.card[data-state="untested"] { --st: var(--st-wanted); --st-bg: var(--st-wanted-bg); --st-line: var(--st-wanted-line); border-left-color: var(--st-wanted); }
 .card[data-state="rejected"] { --st: var(--st-rejected); --st-bg: var(--st-rejected-bg); --st-line: var(--st-rejected-line); border-left-color: var(--st-rejected); }
 .card[data-state="context"] { --st: var(--st-miss); --st-bg: var(--st-miss-bg); --st-line: var(--st-miss-line); border-left-color: var(--st-miss); border-style: dashed; border-left-style: solid; }
+
+.state-chip[data-state="solved"] { --st: var(--st-solved); --st-bg: var(--st-solved-bg); --st-line: var(--st-solved-line); }
+.state-chip[data-state="wanted"],
+.state-chip[data-state="untested"] { --st: var(--st-wanted); --st-bg: var(--st-wanted-bg); --st-line: var(--st-wanted-line); }
+.state-chip[data-state="rejected"] { --st: var(--st-rejected); --st-bg: var(--st-rejected-bg); --st-line: var(--st-rejected-line); }
+.state-chip[data-state="context"],
+.state-chip[data-state="miss"] { --st: var(--st-miss); --st-bg: var(--st-miss-bg); --st-line: var(--st-miss-line); }
 
 .card-head {
   display: flex; align-items: flex-start; gap: 10px; flex-wrap: wrap;
@@ -911,7 +919,8 @@ td.c-runtime { font-family: var(--font-mono); font-size: 0.88em; }
 td.c-asof { font-variant-numeric: tabular-nums; white-space: nowrap; }
 td.c-asof .a { color: var(--ink-3); font-size: 0.86em; }
 td.c-votes { font-variant-numeric: tabular-nums; text-align: right; font-weight: 700; }
-tr[data-status="wanted"] td.c-votes .age { font-size: 0.86em; font-weight: 600; }
+tr[data-status="wanted"] td.c-votes .age,
+tr[data-status="untested"] td.c-votes .age { font-size: 0.86em; font-weight: 600; }
 td.c-kind { white-space: nowrap; }
 .row-open {
   background: none; border: 1px solid var(--line-strong); border-radius: var(--r-sm);
@@ -965,8 +974,10 @@ td.c-kind { white-space: nowrap; }
 .starter:hover { border-color: var(--accent); transform: translateY(-1px); }
 .starter .t { font-weight: 680; display: flex; align-items: center; gap: 7px; }
 .starter .d { color: var(--ink-3); font-size: var(--step--1); margin-top: 2px; }
+.starter[data-tone="solved"] .t { color: var(--st-solved); }
 .starter[data-tone="miss"] .t { color: var(--st-miss); }
-.starter[data-tone="wanted"] .t { color: var(--st-wanted); }
+.starter[data-tone="wanted"] .t,
+.starter[data-tone="untested"] .t { color: var(--st-wanted); }
 .starter[data-tone="rejected"] .t { color: var(--st-rejected); }
 
 /* ---------------------------------------------------------------- footer */
@@ -1090,9 +1101,9 @@ td.c-kind { white-space: nowrap; }
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
-  margin-bottom: 12px;
+  margin: 12px 0;
   padding: 8px 10px;
-  background: var(--bg-2);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: var(--r-md, 8px);
 }
@@ -1109,7 +1120,7 @@ td.c-kind { white-space: nowrap; }
   border-radius: var(--r-sm, 6px);
   background: var(--st-wanted-bg);
   border: 1px solid var(--st-wanted-line);
-  color: var(--ink-1);
+  color: var(--ink);
   font-size: var(--step--1);
 }
 
@@ -1121,7 +1132,7 @@ td.c-kind { white-space: nowrap; }
   padding: 8px 12px;
   margin-bottom: 10px;
   border-radius: var(--r-sm, 6px);
-  background: var(--bg-2);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   font-size: var(--step--1);
 }
@@ -1148,7 +1159,7 @@ td.c-kind { white-space: nowrap; }
   margin: -4px 0 8px 16px;
   padding: 8px 12px;
   border-left: 2px solid var(--line);
-  background: var(--bg-2);
+  background: var(--surface-2);
   border-radius: 0 0 var(--r-md, 8px) var(--r-md, 8px);
 }
 
@@ -1168,7 +1179,7 @@ td.c-kind { white-space: nowrap; }
 
 .variant-item {
   padding: 8px 10px;
-  background: var(--bg-1);
+  background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--r-sm, 6px);
 }
@@ -1187,11 +1198,11 @@ td.c-kind { white-space: nowrap; }
 }
 
 .variant-knob {
-  font-family: var(--mono);
+  font-family: var(--font-mono);
   font-size: 0.78rem;
   padding: 2px 6px;
   border-radius: 4px;
-  background: var(--bg-2);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   color: var(--ink-2);
 }

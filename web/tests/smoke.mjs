@@ -234,3 +234,27 @@ test('groupVariants() nests variant rows under their parent card and Untested (0
     assert.ok(emptyUntested.includes('0') || emptyUntested.toLowerCase().includes('no '), 'Untested (0) empty state should render cleanly');
   }
 });
+
+test('pre-launch regressions: branding, stateChip data-state, groupVariants wiring, and static alias lookup', async () => {
+  const html = fs.readFileSync(path.join(webDir, 'index.html'), 'utf8');
+  assert.ok(!/solve\.run|solve<span/i.test(html), 'index.html must not contain old solve.run branding');
+  assert.ok(html.includes('cani<span class="brand-domain">run</span>'), 'index.html should show canirun brand');
+
+  const appSrc = fs.readFileSync(path.join(webDir, 'js/app.js'), 'utf8');
+  assert.ok(!appSrc.includes('groups.map('), 'app.js must iterate grouped.parents, not groups.map()');
+  assert.ok(appSrc.includes('grouped.parents'), 'app.js should unpack groupVariants().parents');
+  assert.ok(appSrc.includes('getLookup(clean, { taxonomy: state.taxonomy })'), 'app.js should pass taxonomy to getLookup');
+
+  const { ctx } = loadWebScripts();
+  const SR = ctx.__SR;
+  assert.ok(SR.stateChip('solved').includes('data-state="solved"'), 'stateChip should set data-state for CSS styling');
+  assert.ok(SR.stateChip('untested').includes('data-state="untested"'), 'stateChip(untested) should set data-state');
+
+  // Load api.js into the same VM context with file:// location to verify snapshot alias resolution in getLookup()
+  ctx.location = { protocol: 'file:' };
+  vm.runInContext(fs.readFileSync(path.join(webDir, 'js/api.js'), 'utf8'), ctx, { filename: 'js/api.js' });
+  const res = await SR.getLookup({ hw: 'rtx 4090', model: 'qwen-3' });
+  assert.ok(res.rows.length > 0, 'getLookup() in snapshot/static mode should resolve hw and model aliases');
+  assert.ok(res.rows.every((r) => r.hw_arch === 'sm_89'), 'rtx 4090 should resolve to sm_89');
+  assert.ok(res.rows.some((r) => r.model_family === 'qwen3'), 'qwen-3 should resolve to qwen3');
+});
