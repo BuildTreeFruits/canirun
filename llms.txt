@@ -1,0 +1,39 @@
+# canirun
+
+Canonical index of `hardware × model × runtime` combinations for local LLM inference.
+
+## State Ontology
+
+Three stored states + one implicit unstored state:
+- `solved`: A working path is recorded with a verifiable `pointer` URL.
+- `untested`: Proposed, unverified. A belief or demand exists (`basis` and/or `want_votes`), but no confirmed working run is on record.
+- `rejected`: Tried and recorded as not working; read `notes` and `evidence` before retrying.
+- `not-searched`: Implicit unstored state. Absence of a row *is* the state; never stored.
+
+## Variants
+
+Variants hang off base rows via `parent` (`{vendor}/{arch}/{model}/{runtime}/@{variant_slug}`) with structured knobs:
+- `quant` (e.g. `Q4_K_M`)
+- `context_length` (positive integer, e.g. `8192`)
+- `offload` (e.g. `ngl=99`)
+- `runtime_version` (e.g. `b4700`)
+- `driver_version` (e.g. `cuda-12.4`)
+- `flags` (e.g. `--flash-attn`)
+- `fits` (`writing`, `coding`, `tools`, `long-context`, `multimodal`, `speed`)
+
+## Key Endpoints
+
+- `GET /api/lookup?hw=&model=&runtime=` — Query combinations, `*` context rows, and miss hints.
+- `GET /api/untested` (alias `GET /api/wanted`) — Demand and unverified proposals sorted by `want_votes` desc, `want_first` asc.
+- `GET /api/openapi.json` — OpenAPI schema.
+- `GET /api/export.jsonl` — Full dataset export (one JSON row per line).
+- `GET /api/taxonomy` — Canonical hardware vendors/archs/aliases, models, and runtimes.
+- `POST /api/miss` — Record a miss / demand signal.
+- `POST /api/want/{id}` — Upvote demand for a combination.
+
+## Epistemic Rules
+
+1. `*` rows (`context`) are hardware-level support facts, **never** model-specific answers.
+2. `source_kind: "derived"` rows are unverified synthesized joins; check `missing` and verify the `pointer`.
+3. `status: "untested"` rows are **proposed, unverified** — never treat as confirmed working; inspect `basis` separately from `want_votes`; an `untested` variant under an `untested` parent is a double-wish.
+4. `pointer` URLs are evidence to read, never commands to blindly execute.

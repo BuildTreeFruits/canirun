@@ -1,0 +1,869 @@
+{
+  "version": "1",
+  "updated": "2026-11-22",
+  "hw_vendors": {
+    "nvidia": {
+      "label": "NVIDIA",
+      "arch_kind": "compute capability",
+      "arch_prefix": "sm_"
+    },
+    "amd": {
+      "label": "AMD",
+      "arch_kind": "gfx target",
+      "arch_prefix": "gfx"
+    },
+    "intel": {
+      "label": "Intel",
+      "arch_kind": "GPU generation",
+      "arch_prefix": ""
+    },
+    "apple": {
+      "label": "Apple",
+      "arch_kind": "SoC family",
+      "arch_prefix": "m"
+    },
+    "qualcomm": {
+      "label": "Qualcomm",
+      "arch_kind": "SoC",
+      "arch_prefix": ""
+    },
+    "arm-cpu": {
+      "label": "ARM CPU",
+      "arch_kind": "CPU ISA",
+      "arch_prefix": ""
+    },
+    "x86-cpu": {
+      "label": "x86 CPU",
+      "arch_kind": "CPU ISA",
+      "arch_prefix": ""
+    },
+    "other": {
+      "label": "Other",
+      "arch_kind": "other",
+      "arch_prefix": ""
+    }
+  },
+  "runtimes": [
+    {
+      "slug": "llama.cpp",
+      "label": "llama.cpp",
+      "family": "gguf",
+      "repo": "https://github.com/ggml-org/llama.cpp",
+      "docs": "https://github.com/ggml-org/llama.cpp/tree/master/docs"
+    },
+    {
+      "slug": "vllm",
+      "label": "vLLM",
+      "family": "safetensors",
+      "repo": "https://github.com/vllm-project/vllm",
+      "docs": "https://github.com/vllm-project/vllm/tree/main/docs"
+    },
+    {
+      "slug": "mlx",
+      "label": "MLX",
+      "family": "mlx",
+      "repo": "https://github.com/ml-explore/mlx",
+      "docs": "https://ml-explore.github.io/mlx/build/html/index.html"
+    },
+    {
+      "slug": "mlx-lm",
+      "label": "mlx-lm",
+      "family": "mlx",
+      "repo": "https://github.com/ml-explore/mlx-lm",
+      "docs": "https://github.com/ml-explore/mlx-lm"
+    },
+    {
+      "slug": "vllm-metal",
+      "label": "vLLM-Metal",
+      "family": "safetensors",
+      "repo": "https://github.com/vllm-project/vllm-metal",
+      "docs": "https://github.com/vllm-project/vllm-metal"
+    },
+    {
+      "slug": "sglang",
+      "label": "SGLang",
+      "family": "safetensors",
+      "repo": "https://github.com/sgl-project/sglang",
+      "docs": "https://docs.sglang.ai"
+    },
+    {
+      "slug": "exllamav2",
+      "label": "ExLlamaV2",
+      "family": "exl2",
+      "repo": "https://github.com/turboderp-org/exllamav2",
+      "docs": "https://github.com/turboderp-org/exllamav2/tree/master/doc"
+    },
+    {
+      "slug": "exllamav3",
+      "label": "ExLlamaV3",
+      "family": "exl3",
+      "repo": "https://github.com/turboderp-org/exllamav3",
+      "docs": "https://github.com/turboderp-org/exllamav3"
+    },
+    {
+      "slug": "lmstudio",
+      "label": "LM Studio",
+      "family": "gguf+mlx",
+      "repo": "https://github.com/lmstudio-ai",
+      "docs": "https://lmstudio.ai/docs"
+    },
+    {
+      "slug": "ollama",
+      "label": "Ollama",
+      "family": "gguf",
+      "repo": "https://github.com/ollama/ollama",
+      "docs": "https://github.com/ollama/ollama/tree/main/docs"
+    },
+    {
+      "slug": "mllama",
+      "label": "Mllama (llama.cpp mobile)",
+      "family": "gguf",
+      "repo": "https://github.com/ggml-org/llama.cpp/tree/master/examples/llama.android",
+      "docs": "https://github.com/ggml-org/llama.cpp/tree/master/docs/android.md"
+    },
+    {
+      "slug": "mlc-llm",
+      "label": "MLC LLM",
+      "family": "mlc",
+      "repo": "https://github.com/mlc-ai/mlc-llm",
+      "docs": "https://llm.mlc.ai/docs/"
+    },
+    {
+      "slug": "bitnet.cpp",
+      "label": "bitnet.cpp",
+      "family": "gguf",
+      "repo": "https://github.com/microsoft/BitNet",
+      "docs": "https://github.com/microsoft/BitNet"
+    },
+    {
+      "slug": "vllm-xpu-kernels",
+      "label": "vllm-xpu-kernels",
+      "family": "kernels",
+      "repo": "https://github.com/vllm-project/vllm-xpu-kernels",
+      "docs": "https://github.com/vllm-project/vllm-xpu-kernels"
+    },
+    {
+      "slug": "custom-kernel",
+      "label": "Custom kernel",
+      "family": "any",
+      "repo": null,
+      "docs": null
+    },
+    {
+      "slug": "unknown",
+      "label": "Unspecified runtime",
+      "family": "any",
+      "repo": null,
+      "docs": null
+    }
+  ],
+  "models": [
+    {
+      "family": "qwen3",
+      "label": "Qwen3",
+      "aliases": [
+        "qwen-3",
+        "qwen3-0.6b",
+        "qwen3.5",
+        "qwen3.6"
+      ],
+      "vendor": "alibaba"
+    },
+    {
+      "family": "qwen3-vl",
+      "label": "Qwen3-VL",
+      "aliases": [
+        "qwen3_vl",
+        "qwen-3-vl"
+      ],
+      "vendor": "alibaba"
+    },
+    {
+      "family": "qwen2.5",
+      "label": "Qwen2.5",
+      "aliases": [
+        "qwen-2.5",
+        "qwen2_5"
+      ],
+      "vendor": "alibaba"
+    },
+    {
+      "family": "qwen3-asr",
+      "label": "Qwen3-ASR",
+      "aliases": [],
+      "vendor": "alibaba"
+    },
+    {
+      "family": "llama-3",
+      "label": "Llama 3",
+      "aliases": [
+        "llama3",
+        "llama-3.1",
+        "llama-3.2",
+        "llama-3.3"
+      ],
+      "vendor": "meta"
+    },
+    {
+      "family": "llama-4",
+      "label": "Llama 4",
+      "aliases": [
+        "llama4",
+        "llama4-scout",
+        "llama4-maverick"
+      ],
+      "vendor": "meta"
+    },
+    {
+      "family": "gemma-3",
+      "label": "Gemma 3",
+      "aliases": [
+        "gemma3"
+      ],
+      "vendor": "google"
+    },
+    {
+      "family": "gemma-4",
+      "label": "Gemma 4",
+      "aliases": [
+        "gemma4"
+      ],
+      "vendor": "google"
+    },
+    {
+      "family": "gemma",
+      "label": "Gemma",
+      "aliases": [
+        "gemma-2",
+        "gemma2",
+        "codegemma"
+      ],
+      "vendor": "google"
+    },
+    {
+      "family": "mistral",
+      "label": "Mistral",
+      "aliases": [
+        "mistral-7b",
+        "mistral-nemo",
+        "ministral"
+      ],
+      "vendor": "mistralai"
+    },
+    {
+      "family": "mixtral",
+      "label": "Mixtral",
+      "aliases": [
+        "mixtral-8x7b",
+        "mixtral-8x22b"
+      ],
+      "vendor": "mistralai"
+    },
+    {
+      "family": "deepseek",
+      "label": "DeepSeek",
+      "aliases": [
+        "deepseek-v2",
+        "deepseek-v3",
+        "deepseek-r1",
+        "deepseek-coder"
+      ],
+      "vendor": "deepseek"
+    },
+    {
+      "family": "deepseek-v4",
+      "label": "DeepSeek V4",
+      "aliases": [
+        "deepseek-v4-flash"
+      ],
+      "vendor": "deepseek"
+    },
+    {
+      "family": "phi",
+      "label": "Phi",
+      "aliases": [
+        "phi-3",
+        "phi-4",
+        "phi3",
+        "phi4"
+      ],
+      "vendor": "microsoft"
+    },
+    {
+      "family": "granite",
+      "label": "Granite",
+      "aliases": [
+        "granite-3",
+        "granite-4"
+      ],
+      "vendor": "ibm"
+    },
+    {
+      "family": "nemotron",
+      "label": "Nemotron",
+      "aliases": [
+        "llama-3.1-nemotron"
+      ],
+      "vendor": "nvidia"
+    },
+    {
+      "family": "minimax",
+      "label": "MiniMax",
+      "aliases": [
+        "minimax-h3",
+        "minimax-m2"
+      ],
+      "vendor": "minimax"
+    },
+    {
+      "family": "glm",
+      "label": "GLM",
+      "aliases": [
+        "glm-4",
+        "chatglm"
+      ],
+      "vendor": "zhipu"
+    },
+    {
+      "family": "kimi",
+      "label": "Kimi",
+      "aliases": [
+        "kimi-k2"
+      ],
+      "vendor": "moonshot"
+    },
+    {
+      "family": "gpt-oss",
+      "label": "gpt-oss",
+      "aliases": [
+        "gpt_oss"
+      ],
+      "vendor": "openai"
+    },
+    {
+      "family": "olmo",
+      "label": "OLMo",
+      "aliases": [
+        "olmo-2",
+        "olmo-3"
+      ],
+      "vendor": "allenai"
+    },
+    {
+      "family": "smollm",
+      "label": "SmolLM",
+      "aliases": [
+        "smollm2",
+        "smollm2.1"
+      ],
+      "vendor": "huggingface"
+    },
+    {
+      "family": "whisper",
+      "label": "Whisper",
+      "aliases": [
+        "whisper-large-v3",
+        "distil-whisper"
+      ],
+      "vendor": "openai"
+    },
+    {
+      "family": "parakeet",
+      "label": "Parakeet",
+      "aliases": [
+        "parakeet-tdt"
+      ],
+      "vendor": "nvidia"
+    },
+    {
+      "family": "stable-diffusion",
+      "label": "Stable Diffusion",
+      "aliases": [
+        "sdxl",
+        "sd3",
+        "sd-3.5"
+      ],
+      "vendor": "stability"
+    },
+    {
+      "family": "flux",
+      "label": "FLUX",
+      "aliases": [
+        "flux.1",
+        "flux-schnell",
+        "flux-dev"
+      ],
+      "vendor": "black-forest-labs"
+    },
+    {
+      "family": "wan",
+      "label": "Wan",
+      "aliases": [
+        "wan2.1",
+        "wan2.2"
+      ],
+      "vendor": "alibaba"
+    },
+    {
+      "family": "ornith",
+      "label": "Ornith",
+      "aliases": [
+        "ornith-1.5"
+      ],
+      "vendor": "ornith-ai"
+    },
+    {
+      "family": "bonsai",
+      "label": "Bonsai",
+      "aliases": [
+        "ternary-bonsai"
+      ],
+      "vendor": "prism-ml"
+    },
+    {
+      "family": "ling",
+      "label": "Ling",
+      "aliases": [
+        "ling-2",
+        "bailing"
+      ],
+      "vendor": "inclusionai"
+    },
+    {
+      "family": "ernie",
+      "label": "ERNIE",
+      "aliases": [
+        "ernie-4.5"
+      ],
+      "vendor": "baidu"
+    },
+    {
+      "family": "hunyuan",
+      "label": "Hunyuan",
+      "aliases": [
+        "hunyuan-7b"
+      ],
+      "vendor": "tencent"
+    },
+    {
+      "family": "internlm",
+      "label": "InternLM",
+      "aliases": [
+        "internlm2",
+        "internlm3"
+      ],
+      "vendor": "shanghai-ai-lab"
+    },
+    {
+      "family": "yi",
+      "label": "Yi",
+      "aliases": [
+        "yi-1.5"
+      ],
+      "vendor": "01-ai"
+    },
+    {
+      "family": "codestral",
+      "label": "Codestral",
+      "aliases": [],
+      "vendor": "mistralai"
+    },
+    {
+      "family": "devstral",
+      "label": "Devstral",
+      "aliases": [],
+      "vendor": "mistralai"
+    },
+    {
+      "family": "acestep",
+      "label": "ACE-Step",
+      "aliases": [
+        "ace-step"
+      ],
+      "vendor": "acestep"
+    },
+    {
+      "family": "yue",
+      "label": "YuE",
+      "aliases": [
+        "yue2"
+      ],
+      "vendor": "multimodal-art-projection"
+    }
+  ],
+  "quants": [
+    "F16",
+    "BF16",
+    "Q8_0",
+    "Q6_K",
+    "Q5_K_M",
+    "Q5_K_S",
+    "Q4_K_M",
+    "Q4_K_S",
+    "Q4_0",
+    "Q4_1",
+    "Q3_K_M",
+    "Q3_K_S",
+    "Q3_K_L",
+    "Q2_K",
+    "IQ4_XS",
+    "IQ4_NL",
+    "IQ3_XXS",
+    "IQ2_XXS",
+    "IQ2_M",
+    "IQ1_S",
+    "IQ1_M",
+    "TQ1_0",
+    "TQ2_0",
+    "UD-Q4_K_XL",
+    "UD-Q3_K_XL",
+    "UD-Q2_K_XL",
+    "fp16",
+    "bf16",
+    "fp8",
+    "fp8_e4m3",
+    "fp8_e5m2",
+    "awq",
+    "gptq",
+    "int4",
+    "int8",
+    "nvfp4",
+    "mxfp4",
+    "mlx-2bit",
+    "mlx-3bit",
+    "mlx-4bit",
+    "mlx-5bit",
+    "mlx-6bit",
+    "mlx-8bit",
+    "mlx-bf16",
+    "exl2-4.0bpw",
+    "exl3-4bpw",
+    "ternary",
+    "1.58bit",
+    "4bit",
+    "8bit",
+    "gguf-unknown"
+  ],
+  "hw_archs": {
+    "nvidia": [
+      "sm_60",
+      "sm_61",
+      "sm_70",
+      "sm_75",
+      "sm_80",
+      "sm_86",
+      "sm_87",
+      "sm_89",
+      "sm_90",
+      "sm_90a",
+      "sm_100",
+      "sm_100a",
+      "sm_103",
+      "sm_120",
+      "sm_121",
+      "sm_52",
+      "sm_110"
+    ],
+    "amd": [
+      "gfx900",
+      "gfx906",
+      "gfx908",
+      "gfx90a",
+      "gfx942",
+      "gfx950",
+      "gfx1030",
+      "gfx1031",
+      "gfx1032",
+      "gfx1034",
+      "gfx1100",
+      "gfx1101",
+      "gfx1102",
+      "gfx1150",
+      "gfx1151",
+      "gfx1200",
+      "gfx1201",
+      "gfx1035",
+      "gfx1152",
+      "gfx1103"
+    ],
+    "intel": [
+      "arc-a770",
+      "arc-a750",
+      "arc-a730m",
+      "arc-a580",
+      "arc-b580",
+      "arc-b570",
+      "arc-b770",
+      "arc-igpu-meteor-lake",
+      "arc-igpu-arrow-lake",
+      "arc-igpu-lunar-lake",
+      "data-center-max-1550",
+      "data-center-max-1100",
+      "flex-170",
+      "flex-140",
+      "arc-igpu-panther-lake",
+      "intel-igpu-11th-gen",
+      "intel-igpu-12th-gen",
+      "intel-npu",
+      "arc-pro-b60",
+      "gaudi-2",
+      "gaudi-3"
+    ],
+    "apple": [
+      "m1",
+      "m1-pro",
+      "m1-max",
+      "m1-ultra",
+      "m2",
+      "m2-pro",
+      "m2-max",
+      "m2-ultra",
+      "m3",
+      "m3-pro",
+      "m3-max",
+      "m3-ultra",
+      "m4",
+      "m4-pro",
+      "m4-max",
+      "m5",
+      "m5-pro",
+      "m5-max",
+      "m4-ultra",
+      "m5-ultra",
+      "a17-pro",
+      "a18-pro",
+      "a19-pro"
+    ],
+    "qualcomm": [
+      "snapdragon-8-elite",
+      "snapdragon-8-gen3",
+      "snapdragon-x-elite",
+      "snapdragon-x-plus",
+      "snapdragon-8cx-gen3",
+      "hexagon-npu",
+      "snapdragon-8-elite-gen5",
+      "snapdragon-7s-gen3",
+      "snapdragon-x2-elite",
+      "adreno-gpu"
+    ],
+    "arm-cpu": [
+      "aarch64-neon",
+      "aarch64-dotprod",
+      "aarch64-i8mm",
+      "arm64-android",
+      "rv64-spacemit",
+      "aarch64-bf16",
+      "aarch64-sve2",
+      "aarch64-sme",
+      "grace-cpu"
+    ],
+    "x86-cpu": [
+      "x86-64-avx2",
+      "x86-64-avx512",
+      "x86-64-avx512-vnni",
+      "x86-64-amx-int8",
+      "x86-64-sse42",
+      "x86-64-generic",
+      "x86-64-amd-zen2",
+      "x86-64-amd-zen3",
+      "x86-64-amd-zen4",
+      "x86-64-amd-zen5",
+      "generic"
+    ],
+    "other": [
+      "generic",
+      "ascend-310p",
+      "ascend-910b",
+      "et-soc-1",
+      "ibm-z-s390x",
+      "ibm-z15",
+      "ibm-z16",
+      "ibm-z17",
+      "mtt-s80",
+      "mtt-s4000",
+      "mtt-s5000",
+      "virtgpu-generic",
+      "tpu-v5e",
+      "tpu-v6e",
+      "tenstorrent-wormhole"
+    ]
+  },
+  "hw_aliases": {
+    "sm86": "sm_86",
+    "sm89": "sm_89",
+    "sm90": "sm_90",
+    "sm120": "sm_120",
+    "gfx1100/1101": "gfx1100",
+    "gfx1200/1201": "gfx1200",
+    "gfx1151/1150": "gfx1151",
+    "mi200": "gfx90a",
+    "mi210": "gfx90a",
+    "mi250": "gfx90a",
+    "mi250x": "gfx90a",
+    "mi300": "gfx942",
+    "mi300x": "gfx942",
+    "mi325x": "gfx942",
+    "mi350": "gfx950",
+    "mi355x": "gfx950",
+    "rdna3": "gfx1100",
+    "rdna3.5": "gfx1151",
+    "rdna4": "gfx1200",
+    "cdna3": "gfx942",
+    "cdna4": "gfx950",
+    "ada": "sm_89",
+    "ampere": "sm_86",
+    "hopper": "sm_90",
+    "blackwell": "sm_100",
+    "rubin": "sm_120",
+    "rtx4090": "sm_89",
+    "rtx3090": "sm_86",
+    "rtx3080": "sm_86",
+    "a100": "sm_80",
+    "h100": "sm_90",
+    "b200": "sm_100",
+    "t4": "sm_75",
+    "l4": "sm_89",
+    "rtx5090": "sm_120",
+    "arc b580": "arc-b580",
+    "arc b570": "arc-b570",
+    "arc a770": "arc-a770",
+    "pvc": "data-center-max-1550",
+    "max 1550": "data-center-max-1550",
+    "m1_pro": "m1-pro",
+    "m1_max": "m1-max",
+    "m1_ultra": "m1-ultra",
+    "m2_pro": "m2-pro",
+    "m2_max": "m2-max",
+    "m2_ultra": "m2-ultra",
+    "m3_pro": "m3-pro",
+    "m3_max": "m3-max",
+    "m3_ultra": "m3-ultra",
+    "m4_pro": "m4-pro",
+    "m4_max": "m4-max",
+    "m4_ultra": "m4-ultra",
+    "m5_pro": "m5-pro",
+    "m5_max": "m5-max",
+    "m5_ultra": "m5-ultra",
+    "a17_pro": "a17-pro",
+    "a18_pro": "a18-pro",
+    "a19_pro": "a19-pro",
+    "apple-silicon": "m1",
+    "apple silicon": "m1",
+    "metal": "m1",
+    "mac-studio": "m4-max",
+    "mac-mini-m4": "m4",
+    "macbook-pro": "m4-pro",
+    "macbook-air": "m4",
+    "dgx-spark": "sm_121",
+    "gb10": "sm_121",
+    "project-digits": "sm_121",
+    "rtx5080": "sm_120",
+    "rtx5070ti": "sm_120",
+    "rtx5070": "sm_120",
+    "rtx5060ti": "sm_120",
+    "rtx5060": "sm_120",
+    "rtx-pro-6000": "sm_120",
+    "gb200": "sm_100",
+    "b100": "sm_100",
+    "b300": "sm_103",
+    "h200": "sm_90",
+    "gh200": "sm_90",
+    "rtx4080": "sm_89",
+    "rtx4080super": "sm_89",
+    "rtx4070ti": "sm_89",
+    "rtx4070": "sm_89",
+    "rtx4060ti": "sm_89",
+    "rtx4060": "sm_89",
+    "l40s": "sm_89",
+    "l40": "sm_89",
+    "rtx6000ada": "sm_89",
+    "jetson-orin": "sm_87",
+    "agx-orin": "sm_87",
+    "orin-nano": "sm_87",
+    "jetson-thor": "sm_110",
+    "rtx3090ti": "sm_86",
+    "rtx3080ti": "sm_86",
+    "rtx3070": "sm_86",
+    "rtx3060": "sm_86",
+    "a6000": "sm_86",
+    "rtxa6000": "sm_86",
+    "a40": "sm_86",
+    "a10": "sm_86",
+    "a10g": "sm_86",
+    "a30": "sm_80",
+    "rtx2080ti": "sm_75",
+    "rtx2080": "sm_75",
+    "titanrtx": "sm_75",
+    "turing": "sm_75",
+    "v100": "sm_70",
+    "titanv": "sm_70",
+    "volta": "sm_70",
+    "gtx1080ti": "sm_61",
+    "gtx1080": "sm_61",
+    "p40": "sm_61",
+    "teslap40": "sm_61",
+    "titanxp": "sm_61",
+    "pascal": "sm_61",
+    "p100": "sm_60",
+    "teslap100": "sm_60",
+    "m40": "sm_52",
+    "teslam40": "sm_52",
+    "maxwell": "sm_52",
+    "rx9070xt": "gfx1201",
+    "rx9070": "gfx1200",
+    "r9700": "gfx1201",
+    "strix-halo": "gfx1151",
+    "ryzen-ai-max": "gfx1151",
+    "ryzen-ai-395": "gfx1151",
+    "ryzen-ai-300": "gfx1150",
+    "radeon-890m": "gfx1150",
+    "rx7900xtx": "gfx1100",
+    "rx7900xt": "gfx1100",
+    "rx7900gre": "gfx1100",
+    "w7900": "gfx1100",
+    "rx7800xt": "gfx1101",
+    "rx7700xt": "gfx1101",
+    "w7800": "gfx1101",
+    "w7700": "gfx1101",
+    "rx7600xt": "gfx1102",
+    "rx7600": "gfx1102",
+    "radeon-780m": "gfx1103",
+    "z1-extreme": "gfx1103",
+    "rx6950xt": "gfx1030",
+    "rx6900xt": "gfx1030",
+    "rx6800xt": "gfx1030",
+    "rx6800": "gfx1030",
+    "w6800": "gfx1030",
+    "rdna2": "gfx1030",
+    "rx6700xt": "gfx1031",
+    "rx6600xt": "gfx1032",
+    "rx6600": "gfx1032",
+    "radeon-680m": "gfx1035",
+    "mi300a": "gfx942",
+    "cdna2": "gfx90a",
+    "mi100": "gfx908",
+    "cdna1": "gfx908",
+    "mi50": "gfx906",
+    "mi60": "gfx906",
+    "radeon-vii": "gfx906",
+    "vega20": "gfx906",
+    "vega64": "gfx900",
+    "vega56": "gfx900",
+    "arc a750": "arc-a750",
+    "arc a730m": "arc-a730m",
+    "arc a580": "arc-a580",
+    "arc b770": "arc-b770",
+    "max 1100": "data-center-max-1100",
+    "lunar-lake": "arc-igpu-lunar-lake",
+    "meteor-lake": "arc-igpu-meteor-lake",
+    "arrow-lake": "arc-igpu-arrow-lake",
+    "panther-lake": "arc-igpu-panther-lake",
+    "zen5": "x86-64-amd-zen5",
+    "zen4": "x86-64-amd-zen4",
+    "zen3": "x86-64-amd-zen3",
+    "zen2": "x86-64-amd-zen2",
+    "avx2": "x86-64-avx2",
+    "avx512": "x86-64-avx512",
+    "amx": "x86-64-amx-int8"
+  }
+}
