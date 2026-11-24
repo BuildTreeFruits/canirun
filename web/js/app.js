@@ -312,7 +312,12 @@ function renderChrome() {
     if (browseSort) browseSort.value = 'status';
   }
   $$('[data-href-api]').forEach((a) => {
-    if (!apiOk) {
+    const key = a.dataset.hrefApi;
+    if (apiOk) {
+      a.href = `api/${key}`;
+      a.removeAttribute('aria-disabled');
+      a.removeAttribute('title');
+    } else {
       const staticHref = a.dataset.hrefStatic;
       if (staticHref && state.source === 'static') {
         a.href = staticHref;

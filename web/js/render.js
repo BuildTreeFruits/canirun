@@ -606,7 +606,7 @@ function missPanel(response, { now = new Date(), payload, apiMode = false }) {
           <button type="button" class="btn btn-ghost btn-sm" data-download-payload>Download .json</button>
         </div>
       </details>
-      <div class="side-note"><span class="mono">GET /api/lookup?hw=…&amp;model=…&amp;runtime=…</span></div>
+      ${apiMode ? `<div class="side-note"><span class="mono">GET /api/lookup?hw=…&amp;model=…&amp;runtime=…</span></div>` : ''}
     </div>
   </section>`;
 }

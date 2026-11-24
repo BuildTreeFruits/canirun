@@ -191,13 +191,13 @@
             <span class="src">loading…</span>
           </div>
           <ul style="margin-top:8px">
-            <li><a href="api/export.jsonl" data-href-api="export.jsonl" data-href-static="data/export.jsonl">export.jsonl</a> · <a href="api/combos.json" data-href-api="combos.json" data-href-static="data/combos.json">combos.json</a></li>
-            <li><a href="api/taxonomy" data-href-api="taxonomy" data-href-static="data/taxonomy.json">taxonomy.json</a> · <a href="llms.txt">llms.txt</a></li>
-            <li data-api-only><a href="api/lookup" data-href-api="lookup">/api/lookup</a> · <a href="api/docs" data-href-api="docs">API docs</a></li>
-            <li data-api-only><a href="api/health" data-href-api="health">health</a> · <a href="api/untested" data-href-api="wanted">untested</a></li>
+            <li><a href="data/export.jsonl" data-href-api="export.jsonl" data-href-static="data/export.jsonl">export.jsonl</a> · <a href="data/combos.json" data-href-api="combos.json" data-href-static="data/combos.json">combos.json</a></li>
+            <li><a href="data/taxonomy.json" data-href-api="taxonomy" data-href-static="data/taxonomy.json">taxonomy.json</a> · <a href="llms.txt">llms.txt</a></li>
+            <li data-api-only hidden><a href="api/lookup" data-href-api="lookup">/api/lookup</a> · <a href="api/docs" data-href-api="docs">API docs</a></li>
+            <li data-api-only hidden><a href="api/health" data-href-api="health">health</a> · <a href="api/untested" data-href-api="wanted">untested</a></li>
           </ul>
         </div>
-        <div>
+        <div data-api-only hidden>
           <h4>API</h4>
           <p class="honesty" style="margin-bottom:8px">Query combinations programmatically:</p>
           <div class="agent-snippet" id="agent-snippet">GET /api/lookup?hw=&lt;arch&gt;&amp;model=&lt;family&gt;&amp;runtime=&lt;slug&gt;
@@ -225,7 +225,7 @@
     <div class="wrap" style="padding-top:24px">
       <div class="empty-state">
         <h2>JavaScript required</h2>
-        <p>Enable JavaScript to use the search interface, or query <code>/api/lookup?hw=…&amp;model=…&amp;runtime=…</code> directly.</p>
+        <p>Enable JavaScript to use the search interface, or download <a href="data/combos.json">data/combos.json</a> / <a href="data/export.jsonl">data/export.jsonl</a> directly.</p>
       </div>
     </div>
   </noscript>
