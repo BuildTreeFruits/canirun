@@ -165,14 +165,12 @@ def render_html(store, base_url: str = "http://127.0.0.1:8787") -> str:
 </nav>
 
 <h2 id="agent">For agents</h2>
-<p>This is the intervention the whole project exists for. Paste the one-line habit into a system
-prompt (CLAUDE.md / AGENTS.md / any harness with an HTTP tool):</p>
+<p>Add this snippet to a system prompt or agent config:</p>
 <div class="paste"><strong>Instruction snippet</strong><pre><code>{_esc(AGENT_SNIPPET)}</code></pre></div>
 
-<h3>The tool description (paste verbatim into an MCP tool or function schema)</h3>
+<h3>Tool description</h3>
 <div class="paste"><pre><code>{_esc(snippet_para)}</code></pre></div>
-<p class="note">v1 deliberately does not ship an MCP server: the HTTP endpoint above is the integration.
-If your agent needs a tool, wrap one GET and one POST — that is the whole surface.</p>
+<p class="note">Wrap <code>GET /api/lookup</code> and <code>POST /api/miss</code> if your agent needs a tool.</p>
 
 <h2 id="lookup">GET /api/lookup</h2>
 <p>All params optional, unknown params ignored. Matching: <code>hw</code> matches <code>hw_arch</code>
@@ -190,13 +188,10 @@ send the canonical form (<code>nvidia/sm_86/qwen3/llama_cpp</code>, not <code>..
 <table><tr><th>key</th><th>type</th><th>meaning</th></tr>
 {resp_rows}
 </table>
-<p><code>miss</code> is <strong>always present</strong>. On a hit it is <code>{{"is_miss": false}}</code>.
-An empty <code>rows</code> array with no <code>miss</code> object would be a bug — if you ever see that,
-your client is talking to something else.</p>
+<p><code>miss</code> is always present; on a hit it is <code>{{"is_miss": false}}</code>.</p>
 
-<h2 id="miss">The miss payload, key by key</h2>
-<p>A miss is the product. <code>rows: []</code> alone reads as "broken index"; this object is what makes
-an empty answer <em>information about the world</em>.</p>
+<h2 id="miss">The miss payload</h2>
+<p>Returned when no model-specific rows match.</p>
 <table><tr><th>key</th><th>type</th><th>meaning</th></tr>
 {miss_rows}
 </table>
@@ -280,7 +275,6 @@ curl -s "{_esc(base)}/api/health" | python3 -m json.tool</code></pre>
 
 <p class="note" style="margin-top:3rem">
 Schema: <a href="/api/openapi.json">/api/openapi.json</a> · Static fallback: <a href="/combos.json">/combos.json</a> ·
-Machine-readable row spec: CONTRACT.md §1–§4 in the project root.<br>
-Nothing on this index executes. A <code>pointer</code> is evidence to read, never code to run.</p>
+Spec: CONTRACT.md</p>
 </main></body></html>
 """

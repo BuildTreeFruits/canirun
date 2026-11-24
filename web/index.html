@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>canirun — does this hardware × model combination exist?</title>
-  <meta name="description" content="A single canonical index of hardware × model × runtime combinations for local inference. Look up a combination, see whether a working path exists, and when it doesn't, see that recorded plainly with a date.">
+  <title>canirun — hardware × model × runtime index</title>
+  <meta name="description" content="Index of hardware, model, and runtime compatibility for local LLM inference.">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#f7f6f3" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#111110" media="(prefers-color-scheme: dark)">
-  <meta property="og:title" content="canirun — the combination index">
-  <meta property="og:description" content="Check the combination before you build it. Solved, untested, rejected, or not searched — plainly, with a date.">
+  <meta property="og:title" content="canirun — combination index">
+  <meta property="og:description" content="Hardware, model, and runtime compatibility index for local inference.">
   <meta property="og:type" content="website">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a4fd6'/%3E%3Ctext x='16' y='23' font-family='sans-serif' font-size='19' font-weight='700' fill='%23fff' text-anchor='middle'%3E%C3%97%3C/text%3E%3C/svg%3E">
   <link rel="stylesheet" href="css/app.css">
@@ -53,14 +53,13 @@
       <!-- ============================================================ LOOKUP -->
       <section data-view="lookup" class="active" aria-labelledby="page-title">
         <div class="hero">
-          <h1 id="page-title">Check the combination before you build it.</h1>
-          <p class="lede">One place that says where a working solution for a hardware × model × runtime
-          combination lives — and, when there isn’t one, says that plainly with the date it was checked.</p>
+          <h1 id="page-title">Hardware × model × runtime</h1>
+          <p class="lede">Compatibility index for local inference. Each entry links to a source and date.</p>
           <ul class="axiom">
-            <li><b>Solved</b> — a pointer, dated</li>
-            <li><b>Untested</b> — proposed or requested, unverified</li>
-            <li><b>Rejected</b> — tried, does not work here</li>
-            <li><b>Not searched</b> — no claim, recorded as a gap</li>
+            <li><b>Solved</b> — working source</li>
+            <li><b>Untested</b> — unverified</li>
+            <li><b>Rejected</b> — known not to work</li>
+            <li><b>Not searched</b> — no record</li>
           </ul>
         </div>
 
@@ -78,7 +77,7 @@
                        placeholder="sm_86, gfx1100, m4, RTX 3090…" spellcheck="false" autocapitalize="off">
                 <button type="button" class="clear-btn" data-clear="hw" aria-label="Clear hardware" hidden>×</button>
               </div>
-              <span class="hint" id="hw-hint">Arch or vendor. Arrow keys to pick, Enter to accept.</span>
+              <span class="hint" id="hw-hint">Architecture, vendor, or GPU name</span>
               <div class="combo-list" id="hw-list" role="listbox" aria-label="Hardware options" hidden></div>
             </div>
 
@@ -93,7 +92,7 @@
                        placeholder="qwen3, llama-4, gemma-3…" spellcheck="false" autocapitalize="off">
                 <button type="button" class="clear-btn" data-clear="model" aria-label="Clear model" hidden>×</button>
               </div>
-              <span class="hint" id="model-hint">Indexed by model family — check Notes, Quant, and VRAM for tested parameter sizes.</span>
+              <span class="hint" id="model-hint">Model family (e.g. qwen3, llama-3)</span>
               <div class="combo-list" id="model-list" role="listbox" aria-label="Model family options" hidden></div>
             </div>
 
@@ -109,10 +108,10 @@
           <div class="search-actions">
             <button type="submit" class="btn btn-primary" id="search-btn">
               <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7" cy="7" r="4.5"/><path d="M10.5 10.5 14 14"/></svg>
-              Look it up
+              Search
             </button>
             <button type="button" class="btn btn-ghost" id="clear-all">Clear</button>
-            <button type="button" class="btn btn-ghost" id="copy-link" title="Copy a shareable link to this lookup">Copy link to this lookup</button>
+            <button type="button" class="btn btn-ghost" id="copy-link" title="Copy shareable link">Copy link</button>
             <p class="search-meta">
               <span><kbd>/</kbd> to search</span>
               <span><kbd>↑</kbd><kbd>↓</kbd> move</span>
@@ -130,7 +129,7 @@
         </section>
 
         <section class="starters-section" id="starters" hidden>
-          <div class="results-head"><h2>Try one</h2><span class="count">each demonstrates one of the four states</span></div>
+          <div class="results-head"><h2>Examples</h2></div>
           <div class="starters" id="starters-list"></div>
         </section>
       </section>
@@ -138,9 +137,8 @@
       <!-- ============================================================ BROWSE -->
       <section data-view="browse" aria-labelledby="browse-title">
         <div class="hero" style="padding-bottom:14px">
-          <h1 id="browse-title">Everything on record.</h1>
-          <p class="lede">Every row is one claim about one combination. Filter, sort, and open any row as a
-          lookup. Untested rows sort by votes, then by how long they have been waiting.</p>
+          <h1 id="browse-title">All entries</h1>
+          <p class="lede">Filter and sort all recorded combinations.</p>
         </div>
         <div class="browse-toolbar" id="browse-toolbar">
           <button type="button" class="chip" data-filter-status="" aria-pressed="true">All <span class="n" data-count="all"></span></button>
@@ -151,7 +149,7 @@
           <span class="chip-sep" aria-hidden="true"></span>
           <label class="visually-hidden" for="browse-q">Filter rows</label>
           <div class="browse-search">
-            <input id="browse-q" type="search" placeholder="Filter by any word — vendor, arch, model, runtime, id…" autocomplete="off">
+            <input id="browse-q" type="search" placeholder="Filter by vendor, arch, model, runtime…" autocomplete="off">
           </div>
           <div class="browse-sort">
             <label for="browse-sort">Sort</label>
@@ -177,7 +175,7 @@
           <span class="state-chip" style="--st:var(--st-wanted);--st-bg:var(--st-wanted-bg);--st-line:var(--st-wanted-line)"><span aria-hidden="true">?</span>Untested</span>
           <span class="state-chip" style="--st:var(--st-rejected);--st-bg:var(--st-rejected-bg);--st-line:var(--st-rejected-line)"><span aria-hidden="true">✕</span>Rejected</span>
           <span class="state-chip" style="--st:var(--st-miss);--st-bg:var(--st-miss-bg);--st-line:var(--st-miss-line)"><span aria-hidden="true">＊</span>Hardware-level</span>
-          <span>“＊” rows claim the backend supports the card — they do not answer for any model.</span>
+          <span>“＊” applies to the hardware and runtime, not a specific model.</span>
         </div>
       </section>
 
@@ -193,31 +191,27 @@
             <span class="src">loading…</span>
           </div>
           <ul style="margin-top:8px">
-            <li><a href="api/export.jsonl" data-href-api="export.jsonl">export.jsonl</a> — full dump, JSONL</li>
-            <li><a href="api/combos.json" data-href-api="combos.json">combos.json</a> — the merged export</li>
-            <li><a href="api/lookup" data-href-api="lookup">/api/lookup docs</a> · <a href="api/docs" data-href-api="docs">API docs</a></li>
-            <li><a href="api/health" data-href-api="health">health</a> · <a href="api/untested" data-href-api="wanted">untested list</a></li>
+            <li><a href="api/export.jsonl" data-href-api="export.jsonl">export.jsonl</a></li>
+            <li><a href="api/combos.json" data-href-api="combos.json">combos.json</a></li>
+            <li><a href="api/lookup" data-href-api="lookup">/api/lookup</a> · <a href="api/docs" data-href-api="docs">API docs</a></li>
+            <li><a href="api/health" data-href-api="health">health</a> · <a href="api/untested" data-href-api="wanted">untested</a></li>
           </ul>
         </div>
         <div>
-          <h4>For agents</h4>
-          <p class="honesty" style="margin-bottom:8px">Before building a hardware-specific kernel or runtime
-          workaround, check the combo. A miss is a contribution — report it.</p>
+          <h4>API</h4>
+          <p class="honesty" style="margin-bottom:8px">Query combinations programmatically:</p>
           <div class="agent-snippet" id="agent-snippet">GET /api/lookup?hw=&lt;arch&gt;&amp;model=&lt;family&gt;&amp;runtime=&lt;slug&gt;
-→ { rows, context, miss }
-If miss.is_miss: report the miss, don’t rebuild what exists.<button type="button" class="btn btn-ghost btn-sm" data-copy-snippet aria-label="Copy agent snippet">Copy</button></div>
+→ { rows, context, miss }<button type="button" class="btn btn-ghost btn-sm" data-copy-snippet aria-label="Copy API snippet">Copy</button></div>
         </div>
         <div>
-          <h4>What this is</h4>
-          <p class="honesty">Not a marketplace, not a bounty board, not a recommendation engine. A
-          <strong>single canonical pointer</strong>: one place to look, so checking is a habit instead of a
-          decision. Pointers, not promises — every claim carries the date it was checked.</p>
+          <h4>About</h4>
+          <p class="honesty">An index of local inference compatibility links, each with a source and date.</p>
         </div>
       </div>
       <div class="footer-bottom">
         <span id="footer-version">—</span>
         <span class="header-spacer"></span>
-        <span>No accounts. No tracking.<span data-api-only> Want votes are one click.</span></span>
+        <span>No accounts or tracking.</span>
       </div>
     </div>
   </footer>
@@ -227,9 +221,8 @@ If miss.is_miss: report the miss, don’t rebuild what exists.<button type="butt
   <noscript>
     <div class="wrap" style="padding-top:24px">
       <div class="empty-state">
-        <h2>This site needs JavaScript</h2>
-        <p>The lookup runs in your browser. If you need the data without a browser, every answer is also
-        available as JSON at <code>/api/lookup?hw=…&amp;model=…&amp;runtime=…</code>.</p>
+        <h2>JavaScript required</h2>
+        <p>Enable JavaScript to use the search interface, or query <code>/api/lookup?hw=…&amp;model=…&amp;runtime=…</code> directly.</p>
       </div>
     </div>
   </noscript>

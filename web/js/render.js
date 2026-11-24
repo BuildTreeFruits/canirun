@@ -47,36 +47,36 @@ const STATE_META = {
 };
 
 const KIND_META = {
-  scraped: { label: 'Scraped', note: 'pointing at someone else’s claim, as published upstream' },
-  derived: { label: 'Derived', note: 'synthesised join — may be wrong' },
-  hand: { label: 'Hand-entered', note: 'entered by a person' },
-  'author-claim': { label: 'Author claim', note: 'the upstream author says so' }
+  scraped: { label: 'Scraped', note: 'Scraped from upstream' },
+  derived: { label: 'Derived', note: 'Synthesised from multiple sources' },
+  hand: { label: 'Hand-entered', note: 'Entered manually' },
+  'author-claim': { label: 'Author claim', note: 'Upstream author claim' }
 };
 
 const REASON_META = {
   'no-claim': {
-    label: 'no claim on record',
-    lead: 'Nobody has recorded this combination.'
+    label: 'no record',
+    lead: 'No entry for this combination.'
   },
   'untested-only': {
-    label: 'untested only',
-    lead: 'Proposed or requested, but unverified — nobody has solved it yet.'
+    label: 'untested',
+    lead: 'Proposed or requested, not yet verified.'
   },
   'wanted-only': {
-    label: 'wanted only',
-    lead: 'People are asking for this combination. Nobody has recorded a working path yet.'
+    label: 'requested',
+    lead: 'Requested, no working path recorded yet.'
   },
   'rejected-only': {
-    label: 'rejected only',
-    lead: 'Someone tried this combination and it does not work on this card.'
+    label: 'rejected',
+    lead: 'Recorded as not working on this hardware.'
   },
   'partial-context': {
     label: 'hardware-level only',
-    lead: 'The backend claims support for this card, but no claim names this model.'
+    lead: 'Backend supports this hardware, but no entry covers this model.'
   },
   'no-match': {
-    label: 'nothing matches',
-    lead: 'Nothing in the dataset matches this query — not even a hardware-level claim.'
+    label: 'no match',
+    lead: 'No matching entries found.'
   }
 };
 
@@ -98,20 +98,20 @@ function kindBadge(kind) {
 /** The "derived is a guess wearing a fact's clothes" warning — must never be subtle. */
 function derivedNote(kind) {
   if (kind !== 'derived') return '';
-  return `<span class="badge badge-kind" data-kind="derived" title="This row was produced by joining two sources. Nobody has run this exact combination.">
-    <span aria-hidden="true">≈</span>Synthesised join — may be wrong</span>`;
+  return `<span class="badge badge-kind" data-kind="derived" title="Produced by joining two sources; not directly verified.">
+    <span aria-hidden="true">≈</span>Synthesised — unverified</span>`;
 }
 
 function provenanceBadges(row) {
   const out = [];
   if (row.pointer_alive === false) {
     out.push(
-      `<span class="badge badge-dead" title="The link checker could not reach this pointer. The claim is kept, not deleted.">
-        <span aria-hidden="true">●</span>Pointer may be dead</span>`
+      `<span class="badge badge-dead" title="Link checker could not reach this URL.">
+        <span aria-hidden="true">●</span>Dead link</span>`
     );
   }
   if (row.provisional) {
-    out.push(`<span class="badge badge-provisional" title="Created automatically from searches that found nothing. Nobody has confirmed it.">Provisional</span>`);
+    out.push(`<span class="badge badge-provisional" title="Created automatically from repeated searches.">Provisional</span>`);
   }
   return out.join('');
 }
@@ -134,7 +134,7 @@ function hwLine(row) {
 function missingFact(row) {
   const missing = Array.isArray(row.missing) ? row.missing : [];
   if (!missing.length) return '';
-  return `<div class="kv kv-missing"><dt>Stated as missing</dt><dd>${esc(missing.join(', '))}</dd></div>`;
+  return `<div class="kv kv-missing"><dt>Missing</dt><dd>${esc(missing.join(', '))}</dd></div>`;
 }
 
 function measurementFact(row) {
@@ -152,7 +152,7 @@ function quantFact(row) {
 
 function revFact(row) {
   if (!row.runtime_rev) return '';
-  return `<div class="kv"><dt>Runtime pinned</dt><dd><code>${esc(row.runtime_rev)}</code></dd></div>`;
+  return `<div class="kv"><dt>Runtime rev</dt><dd><code>${esc(row.runtime_rev)}</code></dd></div>`;
 }
 
 function modelRevFact(row) {
@@ -181,11 +181,11 @@ function pointerBlock(row) {
   const dom = domainOf(row.pointer);
   const path = pathOf(row.pointer);
   return `<div class="pointer${dead ? ' pointer-dead' : ''}">
-    <div class="pointer-label">${dead ? 'Pointer — the link checker could not reach it' : 'Where the work lives'}</div>
+    <div class="pointer-label">${dead ? 'Source (unreachable)' : 'Source'}</div>
     <div class="pointer-domain"><span class="lock" aria-hidden="true">${dead ? '○' : '▣'}</span>${esc(dom)}</div>
     <a class="pointer-link" href="${href}" target="_blank" rel="noopener noreferrer nofollow ugc"
        aria-label="Open ${attr(dom)}${attr(path)} in a new tab"><span aria-hidden="true">${esc(trimPath(path))} ↗</span></a>
-    ${dead ? `<div class="pointer-warn"><span aria-hidden="true">!</span><span>The link checker could not reach this. The claim is kept — verify before relying on it.</span></div>` : ''}
+    ${dead ? `<div class="pointer-warn"><span aria-hidden="true">!</span><span>Link checker could not reach this URL.</span></div>` : ''}
   </div>`;
 }
 
@@ -257,8 +257,8 @@ function hwExtraFact(row) {
 
 function factsBlock(row, { emphasis = 'as_of' } = {}) {
   const asOf = row.as_of
-    ? `<div class="kv kv-emphasis"><dt>Checked as of</dt><dd><time datetime="${attr(row.as_of)}">${esc(formatDate(row.as_of))}</time></dd></div>`
-    : `<div class="kv kv-missing"><dt>As of</dt><dd>no date — treat with suspicion</dd></div>`;
+    ? `<div class="kv kv-emphasis"><dt>Checked</dt><dd><time datetime="${attr(row.as_of)}">${esc(formatDate(row.as_of))}</time></dd></div>`
+    : `<div class="kv kv-missing"><dt>Checked</dt><dd>unknown</dd></div>`;
   const parts = [asOf];
   if (emphasis !== 'as_of') parts.unshift(parts.pop()); // keep dominant field first
   parts.push(revFact(row), quantFact(row), modelRevFact(row), measurementFact(row), hwExtraFact(row), missingFact(row));
@@ -294,11 +294,11 @@ function footBlock(row, { showId = true } = {}) {
       `<button type="button" class="btn btn-ghost btn-sm" data-copy-id="${attr(row.id)}">Copy id</button>`
     );
     actions.push(
-      `<button type="button" class="btn btn-ghost btn-sm" data-link-row="${attr(row.id)}">Link to this</button>`
+      `<button type="button" class="btn btn-ghost btn-sm" data-link-row="${attr(row.id)}">Link</button>`
     );
   }
   actions.push(
-    `<a class="btn btn-ghost btn-sm" href="${attr(issueUrlFor(row))}" target="_blank" rel="noopener noreferrer">Submit evidence / report issue</a>`
+    `<a class="btn btn-ghost btn-sm" href="${attr(issueUrlFor(row))}" target="_blank" rel="noopener noreferrer">Report issue</a>`
   );
   if (!actions.length && !bits.length) return '';
   return `<div class="card-foot">
@@ -313,7 +313,7 @@ function claimCard(row, { state }) {
   const rejected = state === 'rejected';
   const notes = row.notes
     ? rejected
-      ? `<div class="notes-rejected"><div class="notes-eyebrow">Why it does not work here</div>${esc(row.notes)}</div>`
+      ? `<div class="notes-rejected"><div class="notes-eyebrow">Rejection notes</div>${esc(row.notes)}</div>`
       : `<p class="notes">${esc(row.notes)}</p>`
     : '';
   const pointer = pointerBlock(row);
@@ -334,7 +334,7 @@ function claimCard(row, { state }) {
         <div>${factsBlock(row)}</div>
       </div>
       ${evidenceBlock(row)}
-      ${rejected && row.pointer ? `<details class="details-row"><summary>Pointer that was tried</summary><div class="details-body">${pointer}</div></details>` : ''}
+      ${rejected && row.pointer ? `<details class="details-row"><summary>Tested source</summary><div class="details-body">${pointer}</div></details>` : ''}
     </div>
     ${footBlock(row)}
   </article>`;
@@ -358,7 +358,7 @@ function untestedCard(row, { now = new Date(), voted = false, apiMode = false } 
   const meter = ageMeter(age.days);
   const notes = row.notes ? `<p class="notes">${esc(row.notes)}</p>` : '';
   const doubleWish = row.parent_untested
-    ? `<div class="double-wish-badge" role="note">Untested variant of an untested base — double-wish, not a lead</div>`
+    ? `<div class="double-wish-badge" role="note">Untested variant of an untested base (double-wish)</div>`
     : '';
   const basisBlock = (row.basis || row.basis_note)
     ? `<div class="untested-basis">
@@ -375,7 +375,7 @@ function untestedCard(row, { now = new Date(), voted = false, apiMode = false } 
     <h3 class="card-title" id="t-${attr(cssId(row.id))}">${comboTitle(row)}</h3>
     <div class="card-sub">${hwLine(row)}<span class="dot" aria-hidden="true">·</span>${esc(row.runtime)}</div>
     <div class="card-body">
-      <div class="untested-notice"><strong>Proposed, unverified</strong> — not yet confirmed to work or fail.</div>
+      <div class="untested-notice"><strong>Proposed, unverified</strong></div>
       ${doubleWish}
       ${basisBlock}
       <div class="wanted-block">
@@ -397,7 +397,7 @@ function untestedCard(row, { now = new Date(), voted = false, apiMode = false } 
               requesters.length
                 ? requesters.map((r) => `<span class="requester">${esc(r)}</span>`).join('') +
                   (hidden > 0 ? `<span class="requester more">+${esc(hidden)} more</span>` : '')
-                : `<span style="color:var(--ink-3)">vote list not shown (per-voter keys kept private)</span>`
+                : `<span style="color:var(--ink-3)">private</span>`
             }</span>
           </div>
           <div class="row"><span class="k">Last activity</span><span>${esc(row.updated ? formatDate(row.updated) : formatDate(row.as_of))}</span></div>
@@ -438,7 +438,7 @@ function contextCard(row) {
     <h3 class="card-title" id="t-${attr(cssId(row.id))}">
       ${esc(row.hw_arch)}<span class="sep" aria-hidden="true"> × </span><span class="part">all models</span><span class="sep" aria-hidden="true"> × </span><span class="part">${esc(row.runtime)}</span>
     </h3>
-    <div class="card-sub">${hwLine(row)}<span class="dot" aria-hidden="true">·</span>applies to every model on this card</div>
+    <div class="card-sub">${hwLine(row)}<span class="dot" aria-hidden="true">·</span>hardware-level support</div>
     <div class="card-body">
       ${notes}
       <div class="card-cols">
@@ -556,19 +556,19 @@ function missPanel(response, { now = new Date(), payload, apiMode = false }) {
   const facts = [
     asOf
       ? `<div class="fact fact-asof"><dt>Dataset as of</dt><dd><time datetime="${attr(asOf)}">${esc(formatDate(asOf))}</time></dd></div>`
-      : `<div class="fact fact-asof"><dt>Dataset as of</dt><dd>no date <small>— treat with suspicion</small></dd></div>`,
-    `<div class="fact"><dt>Model-specific claims</dt><dd>${esc(counts.exact || 0)}</dd></div>`,
-    `<div class="fact"><dt>Hardware-level claims</dt><dd>${esc(counts.context || 0)}</dd></div>`,
-    `<div class="fact"><dt>Rows in dataset</dt><dd>${esc(ds.rows ?? '—')}</dd></div>`,
+      : `<div class="fact fact-asof"><dt>Dataset as of</dt><dd>unknown</dd></div>`,
+    `<div class="fact"><dt>Model claims</dt><dd>${esc(counts.exact || 0)}</dd></div>`,
+    `<div class="fact"><dt>Hardware claims</dt><dd>${esc(counts.context || 0)}</dd></div>`,
+    `<div class="fact"><dt>Total rows</dt><dd>${esc(ds.rows ?? '—')}</dd></div>`,
     miss.wanted_votes
-      ? `<div class="fact"><dt>Votes on this</dt><dd>${esc(miss.wanted_votes)}</dd></div>`
+      ? `<div class="fact"><dt>Votes</dt><dd>${esc(miss.wanted_votes)}</dd></div>`
       : '',
     miss.known_wanted
-      ? `<div class="fact"><dt>Wanted</dt><dd>yes <small>on record</small></dd></div>`
-      : `<div class="fact"><dt>Wanted</dt><dd>not yet <small>0 votes</small></dd></div>`,
+      ? `<div class="fact"><dt>Wanted</dt><dd>yes</dd></div>`
+      : `<div class="fact"><dt>Wanted</dt><dd>no</dd></div>`,
     miss.last_checked
       ? `<div class="fact"><dt>Last check</dt><dd>${esc(formatDate(miss.last_checked))}</dd></div>`
-      : `<div class="fact"><dt>Last check</dt><dd>never <small>no record</small></dd></div>`
+      : `<div class="fact"><dt>Last check</dt><dd>never</dd></div>`
   ]
     .filter(Boolean)
     .join('');
@@ -577,17 +577,11 @@ function missPanel(response, { now = new Date(), payload, apiMode = false }) {
      aria-describedby="miss-hint">
     <div class="miss-main">
       <div class="miss-eyebrow">
-        <span aria-hidden="true">∅</span> Not searched — recorded gap
+        <span aria-hidden="true">∅</span> Not searched
         <span class="reason">${esc(meta.label)}</span>
       </div>
       <h2 class="miss-sentence" id="miss-title" aria-label="${attr(sentence)}">${sentenceHtml}</h2>
       <p class="miss-hint" id="miss-hint">${esc(miss.hint || meta.lead)}</p>
-      <div class="miss-means">
-        <span class="glyph" aria-hidden="true">ⓘ</span>
-        <span>This is a <b>recorded gap, not a broken page</b>. The index has been searched and has no claim for
-        this combination${asOf ? `, as of <time datetime="${attr(asOf)}">${esc(formatDate(asOf))}</time>` : ''}.
-        That is information: nothing is known to work here, and nothing is known to fail.</span>
-      </div>
       <dl class="miss-facts">${facts}</dl>
       <div class="miss-actions">
         ${apiMode ? `<button type="button" class="btn btn-want" data-want-miss
@@ -596,26 +590,22 @@ function missPanel(response, { now = new Date(), payload, apiMode = false }) {
         </button>` : ''}
         <a class="btn btn-primary" href="${attr(submitIssueUrlFor(q, payload, { status: 'solved' }))}" target="_blank" rel="noopener noreferrer">I got this working — submit pointer</a>
         ${!apiMode ? `<a class="btn btn-want" href="${attr(submitIssueUrlFor(q, payload, { status: 'untested' }))}" target="_blank" rel="noopener noreferrer">Propose / request this combination</a>` : ''}
-        <button type="button" class="btn btn-ghost" data-copy-payload>Copy miss report</button>
-        <button type="button" class="btn btn-ghost" data-copy-link>Copy link to this lookup</button>
+        <button type="button" class="btn btn-ghost" data-copy-payload>Copy JSON</button>
+        <button type="button" class="btn btn-ghost" data-copy-link>Copy link</button>
         <span class="feedback" data-miss-feedback role="status" aria-live="polite"></span>
       </div>
     </div>
     <div class="miss-side">
-      <div>
-        <div class="side-title">The machine-readable answer</div>
-        <p class="side-note">Paste this into an agent, an issue, or a message. A miss is a contribution: it
-        is how the wanted list fills itself.</p>
-      </div>
+      <div class="side-title">JSON response</div>
       <details class="payload">
-        <summary>miss payload (JSON)</summary>
+        <summary>Payload</summary>
         <pre tabindex="0" data-json="${attr(JSON.stringify(payload))}">${esc(prettyJson(payload))}</pre>
         <div class="payload-actions">
           <button type="button" class="btn btn-ghost btn-sm" data-copy-payload>Copy</button>
           <button type="button" class="btn btn-ghost btn-sm" data-download-payload>Download .json</button>
         </div>
       </details>
-      <div class="side-note">The same answer is at <span class="mono">GET /api/lookup?hw=…&amp;model=…&amp;runtime=…</span></div>
+      <div class="side-note"><span class="mono">GET /api/lookup?hw=…&amp;model=…&amp;runtime=…</span></div>
     </div>
   </section>`;
 }
@@ -624,12 +614,10 @@ function missPanel(response, { now = new Date(), payload, apiMode = false }) {
 
 function emptyDataset({ error, source, dataset, onRetryId = 'retry' } = {}) {
   return `<section class="empty-state" role="status">
-    <h2>No data yet</h2>
-    <p>The index is deployed but has no rows loaded. This is not a miss — a miss means the index was
-    searched and found nothing. Here, the index has nothing to search.</p>
+    <h2>No data loaded</h2>
     ${error ? `<p><code>${esc(error)}</code></p>` : ''}
-    <p>Build the export with <code>python3 pipeline/build.py</code> (or start the bundled server with
-    <code>python3 scripts/serve.py</code>), then reload.</p>
+    <p>Build the export with <code>python3 pipeline/build.py</code> or start the server with
+    <code>python3 scripts/serve.py</code>, then reload.</p>
     <button type="button" class="btn btn-primary" id="${attr(onRetryId)}">Reload</button>
   </section>`;
 }
@@ -649,15 +637,13 @@ function loading(label = 'Loading the index…') {
 
 /* ------------------------------------------------------------- sections */
 
-function contextSection(rows, { now, voted = new Set(), heading = 'Hardware-level support for this card' } = {}) {
+function contextSection(rows, { now, voted = new Set(), heading = 'Hardware-level support' } = {}) {
   if (!rows || !rows.length) return '';
   const cards = rows.map((r) => contextCard(r, { now, voted })).join('');
   return `<section class="context-section" aria-labelledby="ctx-heading">
     <div class="context-head">
-      <h3 id="ctx-heading">${esc(heading)} <span style="font-weight:500;color:var(--ink-3)">(applies to all models)</span></h3>
-      <p class="why">These rows are claims about the <em>card and runtime</em>, not about any model. They say the
-      backend builds on this hardware. They do not say a specific model runs here — so they are not counted as an
-      answer above.</p>
+      <h3 id="ctx-heading">${esc(heading)}</h3>
+      <p class="why">Backend support for this hardware — not specific to any model.</p>
     </div>
     <div class="cards-context">${cards}</div>
   </section>`;
@@ -674,7 +660,7 @@ function neighbouringNote(rows, q) {
     .join('');
   return `<section class="results-head" style="border:0;padding:0;margin-top:20px;display:block">
     <div style="font-size:var(--step--1);color:var(--ink-3);margin-bottom:8px">
-      Related rows${q && q.hw ? ` for ${esc(q.hw)}` : ''} — each opens as its own lookup:
+      Related${q && q.hw ? ` for ${esc(q.hw)}` : ''}:
     </div>
     <div style="display:flex;gap:6px;flex-wrap:wrap">${list}</div>
   </section>`;
@@ -728,8 +714,8 @@ function browseTable(rows, { sort, dir, now, voted = new Set(), total = rows.len
     if (statusFilter === 'untested' || statusFilter === 'wanted') {
       return `<div class="empty-state" style="margin-top:14px">
         <h3>Untested (0)</h3>
-        <p>No untested combinations yet. Untested rows appear when someone proposes an unverified combination or votes on a miss.</p>
-        <p><button type="button" class="btn btn-primary" data-go-lookup>Search a combination in Lookup</button></p>
+        <p>No untested combinations yet.</p>
+        <p><button type="button" class="btn btn-primary" data-go-lookup>Back to search</button></p>
       </div>`;
     }
     return `<div class="empty-state" style="margin-top:14px"><p>No rows match these filters.</p></div>`;

@@ -594,23 +594,18 @@ class Dataset:
 
         where = label()
         if reason == "no-match":
-            return f"No claim on record for {where}, and no hardware-level rows match either. This is a recorded gap, not a broken page."
+            return f"No entries match {where}."
         if reason == "partial-context":
             rts = sorted({str(s.get("runtime")) for s in stars if s.get("runtime")})
-            tail = f" Hardware-level support exists for {', '.join(rts)}; no model-specific claim." if rts else ""
-            return f"No claim on record for {where}.{tail}"
+            tail = f" Hardware-level support exists for {', '.join(rts)}." if rts else ""
+            return f"No model-specific entry for {where}.{tail}"
         if reason == "untested-only":
             if untested_basis:
-                return (f"Proposed, unverified claim on record for {where} "
-                        f"(basis: {', '.join(untested_basis)}; {wanted_votes} want vote(s)). "
-                        "Do not treat as verified fact — check the basis note or verify before relying on it.")
-            return (f"Proposed, unverified gap on record for {where} "
-                    f"({wanted_votes} want vote(s), no basis claim yet). "
-                    "Vote to raise it, or submit a verified pointer.")
+                return f"Proposed, unverified: {where} (basis: {', '.join(untested_basis)}; {wanted_votes} want vote(s))."
+            return f"Proposed, unverified: {where} ({wanted_votes} want vote(s))."
         if reason == "rejected-only":
-            return (f"No solved claim on record for {where}; what is on record is a rejection. "
-                    "Read the rejection notes before trying — that is why it fails on this card.")
-        return f"No claim on record for {where}."
+            return f"{where} is recorded as not working."
+        return f"No entry for {where}."
 
 
 def _sort_key(row: dict):

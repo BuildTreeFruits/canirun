@@ -280,11 +280,10 @@ function renderChrome() {
   el.banner.hidden = !(isSnapshot || empty);
   if (isSnapshot) {
     el.bannerText.innerHTML =
-      `<strong>Offline snapshot.</strong> Opened from a local file, so the page is showing a saved copy of the dataset` +
-      `${ds.as_of ? ` as of <strong>${R.esc(ds.as_of)}</strong>` : ''} (${R.esc(ds.rows)} rows) instead of the live index. ` +
-      `Run <code>python3 scripts/serve.py</code> and open http://127.0.0.1:8787/ for live data and working votes.`;
+      `<strong>Offline snapshot</strong> (${ds.as_of ? `${R.esc(ds.as_of)}, ` : ''}${R.esc(ds.rows)} rows). ` +
+      `Run <code>python3 scripts/serve.py</code> for live data.`;
   } else if (empty) {
-    el.bannerText.innerHTML = `<strong>No rows loaded.</strong> The index is up but the dataset is empty — that is different from a miss.`;
+    el.bannerText.innerHTML = `<strong>No rows loaded.</strong>`;
   }
 
   el.datasetLine.dataset.source = state.source || 'unknown';
@@ -401,9 +400,9 @@ function renderStarters() {
   if (solved) {
     starters.push({
       tone: 'solved',
-      label: 'A solved combination',
+      label: 'Solved',
       q: asQuery(solved, true),
-      d: `${solved.hw_arch} × ${solved.model_family} — a pointer, pinned and dated`,
+      d: `${solved.hw_arch} × ${solved.model_family}`,
       expect: 'solved'
     });
   }
@@ -416,9 +415,9 @@ function renderStarters() {
   if (rejected) {
     starters.push({
       tone: 'rejected',
-      label: 'A rejected combination',
+      label: 'Rejected',
       q: asQuery(rejected, true),
-      d: `${rejected.hw_arch} × ${rejected.model_family} — tried, does not work here`,
+      d: `${rejected.hw_arch} × ${rejected.model_family}`,
       expect: 'rejected'
     });
   }
@@ -430,9 +429,9 @@ function renderStarters() {
   if (wanted) {
     starters.push({
       tone: 'untested',
-      label: 'Something untested',
+      label: 'Untested',
       q: asQuery(wanted, true),
-      d: `${wanted.hw_arch} × ${wanted.model_family} — ${wanted.want_votes || 0} ${(wanted.want_votes || 0) === 1 ? 'vote' : 'votes'}, nobody has solved it`,
+      d: `${wanted.hw_arch} × ${wanted.model_family}`,
       expect: 'untested'
     });
   }
@@ -444,9 +443,9 @@ function renderStarters() {
   if (missQ) {
     starters.push({
       tone: 'miss',
-      label: 'A combination nobody recorded',
+      label: 'Not searched',
       q: missQ.q,
-      d: `${missQ.q.hw} × ${missQ.q.model} — a recorded gap, with a date`,
+      d: `${missQ.q.hw} × ${missQ.q.model}`,
       expect: 'miss'
     });
   }
@@ -525,7 +524,7 @@ function setView(view, { silent = false } = {}) {
     if (a.dataset.nav === view) a.setAttribute('aria-current', 'page');
     else a.removeAttribute('aria-current');
   });
-  if (!silent) document.title = view === 'browse' ? 'Browse all combinations — canirun' : 'canirun — does this combination exist?';
+  if (!silent) document.title = view === 'browse' ? 'Browse — canirun' : 'canirun';
 }
 
 /**
@@ -618,10 +617,10 @@ function renderResponse(res) {
   const headline = [q.hw, q.model, q.runtime].filter(Boolean).join(' × ') || 'all rows';
   const hlCount = hardwareLevel.length + context.length;
   const countText = res.miss
-    ? `no model-specific claim${hlCount ? ` · ${hlCount} hardware-level` : ''}`
+    ? `no model claims${hlCount ? ` · ${hlCount} hardware-level` : ''}`
     : askedModel
-      ? `${answers.length} model-specific ${answers.length === 1 ? 'claim' : 'claims'}${hlCount ? ` · ${hlCount} hardware-level` : ''}`
-      : `${answers.length + hlCount} hardware-level ${answers.length + hlCount === 1 ? 'claim' : 'claims'} — none for a specific model`;
+      ? `${answers.length} ${answers.length === 1 ? 'claim' : 'claims'}${hlCount ? ` · ${hlCount} hardware-level` : ''}`
+      : `${answers.length + hlCount} hardware-level ${answers.length + hlCount === 1 ? 'claim' : 'claims'}`;
   parts.push(`<div class="results-head">
     <h2>${R.esc(headline)}</h2>
     <span class="count">${R.esc(countText)}</span>
@@ -636,7 +635,7 @@ function renderResponse(res) {
     const payload = missPayload(res);
     parts.push(R.missPanel(res, { now, payload, apiMode }));
     if (context.length) {
-      parts.push(R.contextSection(context, { now, voted, apiMode, heading: 'Hardware-level support for this card' }));
+      parts.push(R.contextSection(context, { now, voted, apiMode, heading: 'Hardware-level support' }));
     }
     parts.push(R.neighbouringNote(relatedRows(res), q));
   } else {
@@ -658,17 +657,17 @@ function renderResponse(res) {
         R.contextSection(hlRows, {
           now,
           voted,
-          heading: askedModel ? 'Hardware-level support for this card' : 'Hardware-level support — what these rows claim'
+          heading: 'Hardware-level support'
         })
       );
     }
     if (!answers.length && !hlRows.length) {
-      parts.push(`<p class="section-note">No rows matched. Clear a field to widen the query.</p>`);
+      parts.push(`<p class="section-note">No matching rows.</p>`);
     }
   }
 
   parts.push(`<details class="details-row" data-json-details style="margin-top:18px">
-    <summary>Raw response JSON — same shape as GET /api/lookup</summary>
+    <summary>Raw JSON</summary>
     <div class="details-body"><pre tabindex="0" data-json class="json-pre" style="padding:11px;overflow:auto;max-height:320px">${R.esc(JSON.stringify(slim(res), null, 2))}</pre></div>
   </details>`);
 
@@ -741,15 +740,9 @@ function announce(msg) {
 
 function renderIdle() {
   const ds = state.dataset || {};
-  el.results.innerHTML = `<section class="empty-state" style="margin-top:18px">
-    <h2>Start with a combination</h2>
-    <p>Fill in any one of the three fields — none are required, and any subset works. Type an architecture,
-    a model family, or pick a runtime, then press <kbd>Enter</kbd>.</p>
-    <p style="color:var(--ink-3);font-size:var(--step--1)">
-      The index currently holds <strong>${R.esc(ds.rows ?? 0)}</strong> claims, as of
-      <strong>${R.esc(ds.as_of || 'an unknown date')}</strong>.
-    </p>
-  </section>`;
+  el.results.innerHTML = `<p style="color:var(--ink-3);font-size:var(--step--1);margin:14px 0 0">
+    <strong>${R.esc(ds.rows ?? 0)}</strong> entries${ds.as_of ? ` · updated <strong>${R.esc(ds.as_of)}</strong>` : ''}.
+  </p>`;
 }
 
 /* -------------------------------------------------------------- deep link */
@@ -970,7 +963,7 @@ function setupCombobox(input, list, optionsFor) {
   const open = () => {
     items = optionsFor(input.value.trim());
     if (!items.length) {
-      list.innerHTML = `<div class="combo-empty">No match. You can type a value and press Enter anyway — an unmatched value is how you find a gap.</div>`;
+      list.innerHTML = `<div class="combo-empty">No matches. Press Enter to search anyway.</div>`;
     } else {
       let html = '';
       let lastGroup = null;
@@ -1448,7 +1441,7 @@ function copyLink() {
   for (const k of ['hw', 'model', 'runtime']) if (q[k]) params.set(k, q[k]);
   const hash = params.toString() ? `lookup?${params}` : 'lookup';
   const url = `${location.origin}${location.pathname}#${hash}`;
-  copyText(url, 'Link copied — it opens this exact lookup');
+  copyText(url, 'Link copied');
 }
 
 function linkRow(id) {
@@ -1504,9 +1497,9 @@ async function handleVote(btn) {
     btn.setAttribute('aria-pressed', 'true');
     const label = btn.querySelector('.vote-label');
     if (label) label.textContent = 'Voted';
-    toast('Wanted — vote counted');
+    toast('Vote recorded');
   } else {
-    toast('The vote service is unreachable right now.');
+    toast('Vote service unavailable');
     const live = card && card.querySelector('.feedback');
     if (live) {
       live.dataset.tone = 'bad';
@@ -1533,16 +1526,13 @@ async function handleWantMiss(btn) {
     btn.querySelector('.vote-label').textContent = 'Wanted ✓';
     if (fb) {
       fb.dataset.tone = 'ok';
-      fb.textContent = reported
-        ? 'Thanks — the miss is logged. At 3 distinct searchers an auto-wanted row is created.'
-        : 'Vote recorded. (Miss log unavailable in this hosting mode.)';
+      fb.textContent = reported ? 'Miss logged.' : 'Vote recorded.';
     }
-    toast('Wanted it — this gap is on record now');
+    toast('Recorded');
   } else {
     if (fb) {
       fb.dataset.tone = 'bad';
-      fb.textContent =
-        'Not saved: this hosting mode is read-only, so the vote stays in this browser. Run the site with scripts/serve.py to record it.';
+      fb.textContent = 'Read-only mode — run scripts/serve.py to save votes.';
     }
   }
 }
@@ -1550,7 +1540,7 @@ async function handleWantMiss(btn) {
 function copyPayload(trigger) {
   const res = state.lastResponse;
   if (!res) return;
-  copyText(JSON.stringify(missPayload(res), null, 2), 'Miss report copied — paste it into the issue or agent');
+  copyText(JSON.stringify(missPayload(res), null, 2), 'JSON copied');
 }
 
 function downloadPayload() {

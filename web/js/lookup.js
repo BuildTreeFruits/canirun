@@ -538,50 +538,37 @@ function hintFor(reason, q, ctx) {
   const runtimes = [...new Set(ctx.stars.map((r) => r.runtime))];
   const neighbour =
     reason === 'no-match' && ctx.neighbourUntested && ctx.neighbourUntested.length > 0
-      ? ` Elsewhere for this card: ${ctx.neighbourVotes} vote${ctx.neighbourVotes === 1 ? '' : 's'} exist, but for ${ctx.neighbourUntested
-          .map((r) => r.model_family)
-          .join(', ')} — different models, not an answer here.`
+      ? ` Other untested models on this hardware: ${ctx.neighbourUntested.map((r) => r.model_family).join(', ')}.`
       : '';
 
   switch (reason) {
     case 'partial-context': {
       // Only name the runtimes when the query didn't already pin one.
       const rtNote = !runtime && runtimes.length ? ` (${runtimes.join(', ')})` : '';
-      // If other models DO have specific claims for this card, say so — that is
-      // the difference between "untracked everywhere" and "untracked for you".
       const modelled = ctx.stars
         .flatMap((r) => (Array.isArray(r.covers_models) ? r.covers_models : []))
         .filter(Boolean);
       const covered = [...new Set(modelled)].slice(0, 6);
       const coveredNote = covered.length
-        ? ` This card has model-specific claims for ${covered.join(', ')} — but not for ${model}.`
+        ? ` Other models recorded for this hardware: ${covered.join(', ')}.`
         : '';
-      return (
-        `The backend claims support for ${combo}${rtNote}, but no claim names ${model}. ` +
-        `A hardware-level row says the backend builds on this card; it does not say ${model} runs on it.${coveredNote}`
-      );
+      return `Hardware-level support exists for ${combo}${rtNote}, with no specific entry for ${model}.${coveredNote}`;
     }
     case 'untested-only': {
       const basisNote =
         ctx.untestedBasis && ctx.untestedBasis.length
           ? ` Basis: ${ctx.untestedBasis.join(', ')}.`
           : '';
-      const voteNote = ` Demand: ${ctx.wantedVotes} vote${ctx.wantedVotes === 1 ? '' : 's'}.`;
-      return (
-        `Proposed, unverified: ${combo} × ${model} has no confirmed run on record.${basisNote}${voteNote} ` +
-        `Treat as unverified until someone records a working pointer.`
-      );
+      const voteNote = ` ${ctx.wantedVotes} vote${ctx.wantedVotes === 1 ? '' : 's'}.`;
+      return `Proposed, unverified: ${combo} × ${model}.${basisNote}${voteNote}`;
     }
     case 'rejected-only':
-      return (
-        `${combo} × ${model} was tried and is recorded as rejected. Read the notes before trying it yourself — ` +
-        `that is the point of keeping them.`
-      );
+      return `${combo} × ${model} is recorded as not working.`;
     case 'no-match':
-      return `Nothing in the dataset matches ${[q.hw, q.model, q.runtime].filter(Boolean).map(String).join(' × ') || 'that query'} — not even a hardware-level claim. Check the spelling, or widen the query.`;
+      return `No entries match ${[q.hw, q.model, q.runtime].filter(Boolean).map(String).join(' × ') || 'that query'}.`;
     case 'no-claim':
     default:
-      return `No claim on record for ${combo} × ${model}.${neighbour}`;
+      return `No entry for ${combo} × ${model}.${neighbour}`;
   }
 }
 
